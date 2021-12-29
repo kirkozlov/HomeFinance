@@ -11,7 +11,6 @@ namespace HomeFinance.Domain.Models
         public HomeFinanceUser HomeFinanceUser { get; set; }
 
         [Required]
-        [Display(Name ="Name", ResourceType =typeof(Localization.Common))]
         public string Name { get; set; }
 
         public Category? Parent { get; set; } = null;
