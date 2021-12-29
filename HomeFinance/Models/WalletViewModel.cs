@@ -28,7 +28,7 @@ namespace HomeFinance.Models
             return new WalletDto(Id,Name, GroupName, Comment);
         }
 
-        // Needs For View
+        // Needed For View
         public WalletViewModel()
         {
 

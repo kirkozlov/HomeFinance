@@ -7,44 +7,39 @@ namespace HomeFinance.Domain.Repositories
 {
     public interface IWalletRepository
     {
-        public Task<List<WalletDto>> GetAll();
-        public Task<WalletDto?> GetById(int id);
-        public Task Add(WalletDto dto, string userName);
-        public Task Update(WalletDto dto);
-        public Task Remove(int id);
+        public Task<List<WalletDto>> GetForUser(string userId);
+        public Task<WalletDto?> GetById(int id, string userId);
+        public Task Add(WalletDto dto, string userId);
+        public Task Update(WalletDto dto, string userId);
+        public Task Remove(int id, string userId);
     }
 
     public class WalletRepository:IWalletRepository
     {
         HomeFinanceContext _homeFinanceContext;
-        UserManager<HomeFinanceUser> _userManager;
-        public WalletRepository(HomeFinanceContext homeFinanceContext, UserManager<HomeFinanceUser> userManager)
+        public WalletRepository(HomeFinanceContext homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
-            _userManager = userManager;
         }
 
-        public async Task<List<WalletDto>> GetAll()
+        public async Task<List<WalletDto>> GetForUser(string userId)
         {
-           return await _homeFinanceContext.Wallets.Select(i => new WalletDto(i)).ToListAsync();
+            return await _homeFinanceContext.Wallets.Where(i=>i.HomeFinanceUserId==userId).Select(i => new WalletDto(i)).ToListAsync();
         }
 
-        public async Task<WalletDto?> GetById(int id)
+        public async Task<WalletDto?> GetById(int id, string userId)
         {
-            var wallet = await _homeFinanceContext.Wallets.SingleOrDefaultAsync(i => i.Id == id);
+            var wallet = await _homeFinanceContext.Wallets.SingleOrDefaultAsync(i => i.Id == id && i.HomeFinanceUserId == userId);
             if (wallet == null)
                 return null;
             return new WalletDto(wallet);
         }
 
-        public async Task Add(WalletDto dto, string userName)
+        public async Task Add(WalletDto dto, string userId)
         {
-            var user=_userManager.FindByNameAsync(userName).Result;
-            if (user == null)
-                throw new Exception();
             await _homeFinanceContext.Wallets.AddAsync(new Wallet()
             {
-                HomeFinanceUser = user,
+                HomeFinanceUserId = userId,
                 Name = dto.Name,
                 GroupName = dto.GroupName,
                 Comment = dto.Comment
@@ -52,9 +47,9 @@ namespace HomeFinance.Domain.Repositories
             await _homeFinanceContext.SaveChangesAsync();
         }
 
-        public async Task Update(WalletDto dto)
+        public async Task Update(WalletDto dto, string userId)
         {
-            var wallet =await  _homeFinanceContext.Wallets.SingleOrDefaultAsync(i => i.Id == dto.Id);
+            var wallet =await  _homeFinanceContext.Wallets.SingleOrDefaultAsync(i => i.Id == dto.Id && i.HomeFinanceUserId==userId);
             if (wallet == null)
                 throw new Exception();
             wallet.Name = dto.Name;
@@ -66,13 +61,18 @@ namespace HomeFinance.Domain.Repositories
 
         }
 
-        public async Task Remove(int id)
+        public async Task Remove(int id, string userId)
         {
-            var wallet =await _homeFinanceContext.Wallets.SingleOrDefaultAsync(i => i.Id == id);
+            var wallet =await _homeFinanceContext.Wallets.SingleOrDefaultAsync(i => i.Id == id && i.HomeFinanceUserId == userId);
             if (wallet == null)
                 throw new Exception();
             _homeFinanceContext.Wallets.Remove(wallet);
             await _homeFinanceContext.SaveChangesAsync();
         }
     }
+
+
+
+
 }
+ 

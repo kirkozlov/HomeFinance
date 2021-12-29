@@ -8,7 +8,9 @@ namespace HomeFinance.Domain.Models
         public int Id { get; set; }
 
         [Required]
-        public HomeFinanceUser HomeFinanceUser { get; set; }
+        public string HomeFinanceUserId { get; set; }
+
+        public virtual HomeFinanceUser HomeFinanceUser { get; set; }
 
         [Required]
         public string Name { get; set; }

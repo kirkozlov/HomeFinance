@@ -4,18 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HomeFinance.Domain;
-using HomeFinance.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using HomeFinance.Domain.Repositories;
 using HomeFinance.Models;
+using System.Security.Claims;
 
 namespace HomeFinance.Controllers
 {
     public class WalletsController : Controller
     {
-        IWalletRepository _walletRepository;
+        readonly IWalletRepository _walletRepository;
         public WalletsController(IWalletRepository walletRepository )
         {
             _walletRepository = walletRepository;
@@ -24,7 +22,9 @@ namespace HomeFinance.Controllers
         // GET: Wallets
         public async Task<IActionResult> Index()
         {
-            return View((await _walletRepository.GetAll()).Select(i=>new WalletViewModel(i)).ToList());
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+            return View((await _walletRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i=>new WalletViewModel(i)).ToList());
         }
 
         // GET: Wallets/Details/5
@@ -35,7 +35,7 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var wallet = await _walletRepository.GetById(id.Value);
+            var wallet = await _walletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (wallet == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace HomeFinance.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _walletRepository.Add(wallet.ToDto(), User.Identity.Name);
+                await _walletRepository.Add(wallet.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
             return View(wallet);
@@ -73,12 +73,11 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var wallet = await _walletRepository.GetById(id.Value);
+            var wallet = await _walletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (wallet == null)
             {
                 return NotFound();
             }
-            var wm=new WalletViewModel(wallet);
             return View(new WalletViewModel(wallet));
         }
 
@@ -96,7 +95,7 @@ namespace HomeFinance.Controllers
 
             if (ModelState.IsValid)
             {
-                await _walletRepository.Update(wallet.ToDto());
+                await _walletRepository.Update(wallet.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
             return View(wallet);
@@ -110,13 +109,13 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var wallet = await _walletRepository.GetById(id.Value);
+            var wallet = await _walletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (wallet == null)
             {
                 return NotFound();
             }
 
-            return View(new WalletViewModel( wallet));
+            return View(new WalletViewModel(wallet));
         }
 
         // POST: Wallets/Delete/5
@@ -124,8 +123,7 @@ namespace HomeFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var wallet = await _walletRepository.GetById(id);
-            await _walletRepository.Remove(id);
+            await _walletRepository.Remove(id,User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return RedirectToAction(nameof(Index));
         }
 

@@ -7,11 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("HomeFinanceContextConnection");
-builder.Services.AddDbContext<HomeFinanceContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<HomeFinanceContext>(options => {
+    options.UseSqlServer(connectionString);
+    options.UseLazyLoadingProxies();
+    });
 builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<HomeFinanceContext>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
