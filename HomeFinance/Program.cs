@@ -3,7 +3,11 @@ using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 //using Microsoft.AspNetCore.Authentication.Cookies;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("HomeFinanceContextConnection");
@@ -15,6 +19,7 @@ builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<HomeFinanceContext>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOperationRepository, OperationRepository>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

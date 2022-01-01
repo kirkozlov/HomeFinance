@@ -5,13 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinance.Domain.Repositories
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository: IUserDependentRepository<CategoryDto>
     {
-        public Task<List<CategoryDto>> GetForUser(string userId);
-        public Task<CategoryDto?> GetById(int id, string userId);
-        public Task Add(CategoryDto dto, string userId);
-        public Task Update(CategoryDto dto, string userId);
-        public Task Remove(int id, string userId);
     }
 
     public class CategoryRepository : ICategoryRepository
@@ -22,7 +17,7 @@ namespace HomeFinance.Domain.Repositories
             _homeFinanceContext = homeFinanceContext;
         }
 
-        public async Task<List<CategoryDto>> GetForUser(string userId)
+        public async Task<List<CategoryDto>> GetAll(string userId)
         {
             return await _homeFinanceContext.Categories.Where(i=>i.HomeFinanceUserId== userId).Select(i => new CategoryDto(i)).ToListAsync();
         }
@@ -56,8 +51,6 @@ namespace HomeFinance.Domain.Repositories
             category.Name = dto.Name;
             category.ParentId = dto.ParentId;
             category.Comment = dto.Comment;
-
-            _homeFinanceContext.Categories.Update(category);
             await _homeFinanceContext.SaveChangesAsync();
 
         }

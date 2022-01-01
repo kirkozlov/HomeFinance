@@ -4,43 +4,43 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HomeFinance.Models
 {
-    public class CategoryViewModelBase
+    public class CategoryViewModel
     {
         public int? Id { get; set; }
 
         [Display(Name = "Name", ResourceType = typeof(Domain.Localization.Common))]
         public string Name { get; set; }
 
+        public int? ParentId { get; set; }
+
         public bool Outgo { get; set; }
 
-        public CategoryViewModelBase(CategoryDto category)
+        public string? Comment { get; set; } = null;
+
+        public CategoryViewModel(CategoryDto category)
         {
             Id = category.Id;
             Name = category.Name;
             Outgo = category.Outgo;
+            ParentId = category.ParentId;
+            Comment = category.Comment;
         }
 
 
         // Needed for view
-        public CategoryViewModelBase()
+        public CategoryViewModel()
         {
            
         }
     }
 
-    public class AddEditCategoryViewModel: CategoryViewModelBase
+    public class AddEditCategoryViewModel: CategoryViewModel
     {
+        public IEnumerable<CategoryViewModel>? PossibleParents { get; set; }
 
-        public int? ParentId { get; set; }
-
-        public IEnumerable<CategoryViewModelBase>? PossibleParents { get; set; }
-
-        public string? Comment { get; set; } = null;
 
         public AddEditCategoryViewModel(CategoryDto category):base(category)
         {
-            ParentId = category.ParentId;
-            Comment = category.Comment;
         }
 
         public CategoryDto ToDto()

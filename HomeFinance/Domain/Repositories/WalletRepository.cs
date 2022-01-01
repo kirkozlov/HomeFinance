@@ -5,16 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinance.Domain.Repositories
 {
-    public interface IWalletRepository
+
+
+
+
+    public interface IWalletRepository: IUserDependentRepository<WalletDto>
     {
-        public Task<List<WalletDto>> GetForUser(string userId);
-        public Task<WalletDto?> GetById(int id, string userId);
-        public Task Add(WalletDto dto, string userId);
-        public Task Update(WalletDto dto, string userId);
-        public Task Remove(int id, string userId);
     }
 
-    public class WalletRepository:IWalletRepository
+    public class WalletRepository : IWalletRepository
     {
         HomeFinanceContext _homeFinanceContext;
         public WalletRepository(HomeFinanceContext homeFinanceContext)
@@ -22,7 +21,7 @@ namespace HomeFinance.Domain.Repositories
             _homeFinanceContext = homeFinanceContext;
         }
 
-        public async Task<List<WalletDto>> GetForUser(string userId)
+        public async Task<List<WalletDto>> GetAll(string userId)
         {
             return await _homeFinanceContext.Wallets.Where(i=>i.HomeFinanceUserId==userId).Select(i => new WalletDto(i)).ToListAsync();
         }
@@ -55,8 +54,6 @@ namespace HomeFinance.Domain.Repositories
             wallet.Name = dto.Name;
             wallet.GroupName = dto.GroupName;
             wallet.Comment = dto.Comment;
-
-            _homeFinanceContext.Wallets.Update(wallet);
             await _homeFinanceContext.SaveChangesAsync();
 
         }

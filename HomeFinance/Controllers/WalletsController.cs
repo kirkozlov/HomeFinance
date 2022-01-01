@@ -24,7 +24,7 @@ namespace HomeFinance.Controllers
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
-            return View((await _walletRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i=>new WalletViewModel(i)).ToList());
+            return View((await _walletRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i=>new WalletViewModel(i)).ToList());
         }
 
         // GET: Wallets/Details/5

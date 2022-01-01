@@ -30,7 +30,7 @@ namespace HomeFinance.Controllers
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
 
-            return View((await _categoryRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new CategoryViewModelBase(i)).ToList());
+            return View((await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new CategoryViewModel(i)).ToList());
         }
 
         // GET: Categories/Details/5
@@ -53,8 +53,8 @@ namespace HomeFinance.Controllers
         // GET: Categories/Create
         public async Task< IActionResult> Create()
         {
-            var allCategories = (await _categoryRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
-            return View(new AddEditCategoryViewModel() { PossibleParents = allCategories });
+            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            return View(new AddEditCategoryViewModel() { PossibleParents = allCategories, Outgo=true });
         }
 
         // POST: Categories/Create
@@ -69,7 +69,7 @@ namespace HomeFinance.Controllers
                 await _categoryRepository.Add(category.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
-            var allCategories = (await _categoryRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             category.PossibleParents = allCategories;
             return View(category);
         }
@@ -87,7 +87,7 @@ namespace HomeFinance.Controllers
             {
                 return NotFound();
             }
-            var allCategories = (await _categoryRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             return View(new AddEditCategoryViewModel(category) { PossibleParents=allCategories});
         }
 
@@ -108,7 +108,7 @@ namespace HomeFinance.Controllers
                 await _categoryRepository.Update(category.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
-            var allCategories = (await _categoryRepository.GetForUser(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             category.PossibleParents = allCategories;
             return View(category);
         }

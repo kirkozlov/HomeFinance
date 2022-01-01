@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using HomeFinance.Models;
 
 namespace HomeFinance.Domain;
 
@@ -23,4 +24,6 @@ public class HomeFinanceContext : IdentityDbContext<HomeFinanceUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
+
+    public DbSet<HomeFinance.Models.OperationViewModel> OperationViewModel { get; set; }
 }
