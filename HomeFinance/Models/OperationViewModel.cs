@@ -52,4 +52,13 @@ namespace HomeFinance.Models
             return new OperationDto(Id, WalletId, CategoryId, DateTime, Outgo, Amount, Comment);
         }
     }
+
+    public class OperationsOverviewViewModel
+    {
+        public DateTime Month { get; set; }
+        public IEnumerable<OperationViewModel> RelevantOperations { get; set; }
+        public double MonthBegin { get; set; }
+        public double MonthDiff { get; set; }
+        public double MonthEnd { get; set; }
+    }
 }

@@ -23,11 +23,41 @@ namespace HomeFinance.Controllers
 
 
         // GET: OperationsController
-        public ActionResult Index()
+        public async Task<IActionResult> Index(DateTime? month)
         {
             if (!(User.Identity?.IsAuthenticated == true))
                 return RedirectToAction("Index", "Home");
-            return View();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                throw new Exception();
+
+            if (month == null)
+            {
+                month = DateTime.Today;
+            }
+            month = month.Value.Date;
+            month.Value.AddDays(-month.Value.Day + 1);
+
+
+
+            var allOperations = (await _operationRepository.GetAll(userId)).ToList();
+
+            var oldOperations = allOperations.Where(i => i.DateTime < month).ToList();
+            var relevantOperations = allOperations.Where(i => month <= i.DateTime && i.DateTime <  month.Value.AddMonths(1)).ToList();
+
+            var monthBegin = oldOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
+            var monthDiff = relevantOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
+            var monthEnd=monthBegin+ monthDiff;
+
+            var vm = new OperationsOverviewViewModel
+            {
+                Month = month.Value,
+                RelevantOperations = relevantOperations.Select(i => new OperationViewModel(i)).ToList(),
+                MonthBegin = monthBegin,
+                MonthDiff = monthDiff,
+                MonthEnd = monthEnd
+            };
+            return View(vm);
         }
 
         // GET: OperationsController/Details/5
