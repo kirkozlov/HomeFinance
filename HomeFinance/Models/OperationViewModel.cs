@@ -60,5 +60,8 @@ namespace HomeFinance.Models
         public double MonthBegin { get; set; }
         public double MonthDiff { get; set; }
         public double MonthEnd { get; set; }
+
+        public IEnumerable<WalletViewModel> AllWallets { get; set; }
+        public IEnumerable<CategoryViewModel> AllCategories { get; set; }
     }
 }

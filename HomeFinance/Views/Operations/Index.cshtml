@@ -2,21 +2,72 @@
 
 @{
     ViewData["Title"] = "Index";
+    var groupedOperations = Model.RelevantOperations.GroupBy(i => i.DateTime.Date).ToList();
 }
 
-<h1>@Model.Month.ToString("MMMM yyyy")</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 
 <div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-3 text-center">
-            <h2 class="text-primary">Category List</h2>
+    <div class="row pt-4 text-center border-bottom">
+        <h1>@Model.Month.ToString("MMMM yyyy")</h1>
+    </div>
+    <div class="row pt-4 border-bottom">
+        <div class="col-4 text-center">
+            <h3 class="text-success">@Model.MonthBegin</h3>
+            <h4 class="text-success">Begin</h4>
         </div>
-        <div class="col-3 text-center">
-            <h2 class="text-primary">Category List2</h2>
+        <div class="col-4 text-center">
+            <h3 >@Model.MonthDiff</h3>
+            <h4 >Diff</h4>
         </div>
-        <div class="col-3 text-center">
-            <h2 class="text-primary">Category List3</h2>
+        <div class="col-4 text-center">
+            <h3 class="text-danger">@Model.MonthEnd</h3>
+            <h4 class="text-danger">End</h4>
         </div>
     </div>
     <br/><br/>
+
+    @foreach(var day in groupedOperations)
+    {
+        <div class="border row">
+            <div class="row pt-4 border-bottom">
+                <div class="col-8 ">
+                    <h4 >@day.Key.Day</h4>
+                </div>
+                <div class="col-2 text-end">
+                    <h5 class="text-primary">@day.Where(i=>!i.Outgo).Sum(i=>i.Amount)</h5>
+                </div>
+                <div class="col-2 text-end">
+                    <h5 class="text-danger">@day.Where(i=>i.Outgo).Sum(i=>i.Amount)</h5>
+                </div>
+            </div>
+            @foreach(var operation in day)
+            {
+                var categoryName = Model.AllCategories.Single(i => i.Id == operation.CategoryId).Name;
+                
+                <div class="row pt-4">
+                    <div class="col-2 ">
+                        <h7 >@categoryName</h7>
+                    </div>
+                    <div class="col-8 ">
+                        <h5 class="text-@(operation.Outgo?"danger":"primary")">@(string.IsNullOrWhiteSpace(operation.Comment)?categoryName:operation.Comment)</h5>
+                    </div>
+                    <div class="col-2 text-end">
+                            @if (operation.Outgo)
+                            {
+                                <h5 class="text-danger">@operation.Amount</h5>
+                            }
+                            else
+                            {
+                                <h5 class="text-primary">@operation.Amount</h5>
+                            }
+                    </div>
+                </div>
+            }
+        </div>
+        <br/><br/>
+    }
+
 </div>

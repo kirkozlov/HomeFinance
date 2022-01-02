@@ -36,7 +36,7 @@ namespace HomeFinance.Controllers
                 month = DateTime.Today;
             }
             month = month.Value.Date;
-            month.Value.AddDays(-month.Value.Day + 1);
+            month = month.Value.AddDays(-month.Value.Day + 1);
 
 
 
@@ -49,13 +49,18 @@ namespace HomeFinance.Controllers
             var monthDiff = relevantOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
             var monthEnd=monthBegin+ monthDiff;
 
+            var wallets = (await _walletRepository.GetAll(userId)).Select(i=>new WalletViewModel(i)).ToList();
+            var categories= (await _categoryRepository.GetAll(userId)).Select(i=>new CategoryViewModel(i)).ToList();
+
             var vm = new OperationsOverviewViewModel
             {
                 Month = month.Value,
-                RelevantOperations = relevantOperations.Select(i => new OperationViewModel(i)).ToList(),
+                RelevantOperations = relevantOperations.OrderByDescending(i=>i.DateTime).Select(i => new OperationViewModel(i)).ToList(),
                 MonthBegin = monthBegin,
                 MonthDiff = monthDiff,
-                MonthEnd = monthEnd
+                MonthEnd = monthEnd,
+                AllWallets=wallets,
+                AllCategories=categories
             };
             return View(vm);
         }
