@@ -100,9 +100,8 @@ namespace HomeFinance.Controllers
         // POST: OperationsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,WalletId,CategoryId,DateTime,Outgo,Comment")] AddEditOperationViewModel operation)
+        public async Task<IActionResult> Create([Bind("Name,WalletId,CategoryId,DateTime,Outgo,Amount,Comment")] AddEditOperationViewModel operation)
         {
-            operation.Amount = double.Parse(Request.Form["Amount"], System.Globalization.CultureInfo.InvariantCulture);
             if (ModelState.IsValid)
             {
                 await _operationRepository.Add(operation.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -116,31 +115,58 @@ namespace HomeFinance.Controllers
             return View(operation);
         }
 
-        // GET: OperationsController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Operations/Edit/5
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            if (!(User.Identity?.IsAuthenticated == true))
+                return RedirectToAction("Index", "Home");
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                throw new Exception();
+
+            var operation = await _operationRepository.GetById(id, userId);
+            if (operation == null)
+                return NotFound();
+
+            var vm = new AddEditOperationViewModel(operation)
+            {
+                PossibleWallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList(),
+                PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList(),
+            };
+            return View(vm);
         }
 
-        // POST: OperationsController/Edit/5
+        // POST: Operations/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,WalletId,CategoryId,DateTime,Outgo,Amount,Comment")] AddEditOperationViewModel operation)
         {
-            return RedirectToAction(nameof(Index));
+            if (id != operation.Id)
+            {
+                return NotFound();
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                throw new Exception();
+
+            if (ModelState.IsValid)
+            {
+                await _operationRepository.Update(operation.ToDto(), userId);
+                return RedirectToAction(nameof(Index));
+            }
+            operation.PossibleWallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList();
+            operation.PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList();
+            return View(operation);
         }
 
-        // GET: OperationsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: OperationsController/Delete/5
+        // POST: Operations/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id)
         {
+            await _operationRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return RedirectToAction(nameof(Index));
         }
     }

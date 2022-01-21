@@ -36,7 +36,8 @@ namespace HomeFinance.Models
 
     public class AddEditOperationViewModel: OperationViewModel
     {
-        public IEnumerable<WalletViewModel>? PossibleWallets { get; set; }
+        public IEnumerable<WalletViewModel>? PossibleWallets { get; set;  }
+        
         public IEnumerable<CategoryViewModel>? PossibleCategories { get; set; }
 
         public AddEditOperationViewModel(OperationDto operation):base(operation)

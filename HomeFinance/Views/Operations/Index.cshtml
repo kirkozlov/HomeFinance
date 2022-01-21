@@ -20,6 +20,11 @@
          btnHidden.click();
      }
  }
+
+  function OperationDivClicked(id)
+ {
+     window.location.href = 'Operations/Edit/'+id;
+ }
  </script>
 
 <div class="container p-3">
@@ -69,7 +74,7 @@
             {
                 var categoryName = Model.AllCategories.Single(i => i.Id == operation.CategoryId).Name;
                 var walletName = Model.AllWallets.Single(i => i.Id == operation.WalletId).Name;
-                <div class="row pt-4">
+                <div class="row pt-4" onclick=@("javascript:OperationDivClicked("+operation.Id+"); return true;")>
                     <div class="col-2 align-self-center">
                         <h7 >@walletName</h7>
                     </div>
