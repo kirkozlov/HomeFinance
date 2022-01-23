@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    var groupedOperations = Model.RelevantOperations.GroupBy(i => i.DateTime.Date).ToList();
 }
 
 <p>
@@ -12,13 +11,9 @@
 
  <script>
  
- function DayDivClicked(id)
+ function DayDivClicked(day)
  {
-     var btnHidden = document.getElementById(id)
-     if(btnHidden != null)
-     {
-         btnHidden.click();
-     }
+     window.location.href = 'Operations/Create?day='+day;
  }
 
   function OperationDivClicked(id)
@@ -27,75 +22,4 @@
  }
  </script>
 
-<div class="container p-3">
-    <div class="row pt-4 text-center border-bottom">
-        <div class="col-4 text-end align-self-center">
-             <a  asp-action="Index" asp-route-monthB="@Model.Month.AddMonths(-1).ToBinary()">Back</a>
-        </div>
-        <div class="col-4 text-center">
-            <h1>@Model.Month.ToString("MMMM yyyy")</h1>
-        </div>
-        <div class="col-4 align-self-center text-start">
-            <a  asp-action="Index" asp-route-monthB="@Model.Month.AddMonths(1).ToBinary()">Forward</a>
-        </div>
-    </div>
-    <div class="row pt-4 border-bottom">
-        <div class="col-4 text-center">
-            <h3 class="text-success">@Model.MonthBegin</h3>
-            <h4 class="text-success">Begin</h4>
-        </div>
-        <div class="col-4 text-center">
-            <h3 >@Model.MonthDiff</h3>
-            <h4 >Diff</h4>
-        </div>
-        <div class="col-4 text-center">
-            <h3 class="text-danger">@Model.MonthEnd</h3>
-            <h4 class="text-danger">End</h4>
-        </div>
-    </div>
-    <br/><br/>
-
-    @foreach(var day in groupedOperations)
-    {
-        <div class="border row">
-            <a class="invisible" id="@("dayButton"+day.Key.Day)" asp-action="Create" asp-route-day="@day.Key.ToBinary()">Create New</a>
-            <div class="row pt-0 border-bottom" onclick=@("javascript:DayDivClicked('dayButton"+day.Key.Day+"'); return true;") >
-                <div class="col-8 ">
-                    <h4 >@day.Key.Day</h4>
-                </div>
-                <div class="col-2 text-end">
-                    <h5 class="text-primary">@day.Where(i=>!i.Outgo).Sum(i=>i.Amount)</h5>
-                </div>
-                <div class="col-2 text-end">
-                    <h5 class="text-danger">@day.Where(i=>i.Outgo).Sum(i=>i.Amount)</h5>
-                </div>
-            </div>
-            @foreach(var operation in day)
-            {
-                var categoryName = Model.AllCategories.Single(i => i.Id == operation.CategoryId).Name;
-                var walletName = Model.AllWallets.Single(i => i.Id == operation.WalletId).Name;
-                <div class="row pt-4" onclick=@("javascript:OperationDivClicked("+operation.Id+"); return true;")>
-                    <div class="col-2 align-self-center">
-                        <h7 >@walletName</h7>
-                    </div>
-                    <div class="col-8 ">
-                        <h5 class="text-@(operation.Outgo?"danger":"primary")">@(string.IsNullOrWhiteSpace(operation.Comment)?categoryName:operation.Comment)</h5>
-                        <h7>@categoryName</h7>
-                    </div>
-                    <div class="col-2 text-end">
-                            @if (operation.Outgo)
-                            {
-                                <h5 class="text-danger">@operation.Amount</h5>
-                            }
-                            else
-                            {
-                                <h5 class="text-primary">@operation.Amount</h5>
-                            }
-                    </div>
-                </div>
-            }
-        </div>
-        <br/><br/>
-    }
-
-</div>
+<partial name="_OperationsListPartial" />

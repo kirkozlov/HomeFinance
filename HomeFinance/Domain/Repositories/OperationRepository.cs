@@ -6,7 +6,8 @@ namespace HomeFinance.Domain.Repositories
 {
     public interface IOperationRepository : IUserDependentRepository<OperationDto>
     {
-
+        public Task<List<OperationDto>> GetForWallet(string userId, int walletId);
+        
     }
     public class OperationRepository : IOperationRepository
     {
@@ -20,7 +21,10 @@ namespace HomeFinance.Domain.Repositories
         {
             return await _homeFinanceContext.Operations.Where(i => i.HomeFinanceUserId == userId).Select(i => new OperationDto(i)).ToListAsync();
         }
-
+        public async Task<List<OperationDto>> GetForWallet(string userId, int walletId)
+        {
+            return await _homeFinanceContext.Operations.Where(i => i.HomeFinanceUserId == userId && i.WalletId==walletId).Select(i => new OperationDto(i)).ToListAsync();
+        }
         public async Task<OperationDto?> GetById(int id, string userId)
         {
             var category = await _homeFinanceContext.Operations.SingleOrDefaultAsync(i => i.Id == id && i.HomeFinanceUserId == userId);

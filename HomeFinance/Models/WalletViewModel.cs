@@ -13,6 +13,8 @@ namespace HomeFinance.Models
 
         public string? GroupName { get; set; } = null;
 
+        public double Balance { get; set; } = 0;
+
         public string? Comment { get; set; } = null;
 
         public WalletViewModel(WalletDto wallet)
@@ -35,5 +37,15 @@ namespace HomeFinance.Models
         }
 
 
+    }
+
+    public class WalletOperationsViewModel: WalletViewModel
+    {
+        public OperationsOverviewViewModel OperationsOverviewViewModel { get; set; }
+
+        public WalletOperationsViewModel(WalletDto wallet):base(wallet)
+        {
+           
+        }
     }
 }

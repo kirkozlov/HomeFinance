@@ -37,8 +37,6 @@ namespace HomeFinance.Controllers
             month = month.Date;
             month = month.AddDays(-month.Day + 1);
 
-
-
             var allOperations = (await _operationRepository.GetAll(userId)).ToList();
 
             var oldOperations = allOperations.Where(i => i.DateTime < month).ToList();
@@ -71,10 +69,8 @@ namespace HomeFinance.Controllers
         }
 
         // GET: OperationsController/Create
-        public async Task<IActionResult> Create(long? day)
+        public async Task<IActionResult> Create(long? day, int? walletId)
         {
-
-
             if (!(User.Identity?.IsAuthenticated == true))
                 return RedirectToAction("Index", "Home");
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -94,6 +90,8 @@ namespace HomeFinance.Controllers
                 PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList(),
                 DateTime = datetime
             };
+            if(walletId.HasValue)
+                vm.WalletId = walletId.Value;
             return View(vm);
         }
 

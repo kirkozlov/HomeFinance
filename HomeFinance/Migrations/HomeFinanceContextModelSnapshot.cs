@@ -53,7 +53,7 @@ namespace HomeFinance.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("HomeFinance.Domain.Models.HomeFinanceUser", b =>
@@ -159,7 +159,7 @@ namespace HomeFinance.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Operations");
+                    b.ToTable("Operations", (string)null);
                 });
 
             modelBuilder.Entity("HomeFinance.Domain.Models.Wallet", b =>
@@ -188,7 +188,7 @@ namespace HomeFinance.Migrations
 
                     b.HasIndex("HomeFinanceUserId");
 
-                    b.ToTable("Wallets");
+                    b.ToTable("Wallets", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

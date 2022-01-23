@@ -1,4 +1,4 @@
-﻿@model HomeFinance.Models.WalletViewModel
+﻿@model HomeFinance.Models.WalletOperationsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -34,3 +34,19 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+ <script>
+ 
+ function DayDivClicked(day)
+ {
+     window.location.href = '/Operations/Create?day='+day+'&walletId='+@Model.Id;
+ }
+
+  function OperationDivClicked(id)
+ {
+     window.location.href = '/Operations/Edit/'+id;
+ }
+ </script>
+
+<partial name="_OperationsListPartial" model=Model.OperationsOverviewViewModel />

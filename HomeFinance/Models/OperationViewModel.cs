@@ -16,8 +16,9 @@ namespace HomeFinance.Models
 
         public double Amount { get; set; }
 
-        public string? Comment { get; set; }
+        public double? Balance { get; set; }
 
+        public string? Comment { get; set; }
 
         public OperationViewModel(OperationDto operation)
         {
