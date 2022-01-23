@@ -11,6 +11,7 @@ public class HomeFinanceContext : IdentityDbContext<HomeFinanceUser>
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Operation> Operations { get; set; }
+    public DbSet<Transfer> Transfers { get; set; }
 
     public HomeFinanceContext(DbContextOptions<HomeFinanceContext> options)
         : base(options)
