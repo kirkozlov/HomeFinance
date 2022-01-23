@@ -17,9 +17,10 @@ namespace HomeFinance.Domain.Models
 
         public virtual Wallet Wallet { get; set; }
 
-        public int? CategoryId { get; set; }
+        [Required]
+        public int CategoryId { get; set; }
 
-        public virtual Category? Category { get; set; }
+        public virtual Category Category { get; set; }
 
         [Required]
         public DateTime DateTime { get; set; }

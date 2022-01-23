@@ -12,14 +12,15 @@ namespace HomeFinance.Controllers
         readonly IWalletRepository _walletRepository;
         readonly ICategoryRepository _categoryRepository;
         readonly IOperationRepository _operationRepository;
+        readonly ITransferRepository _transferRepository;
 
-        public OperationsController(IWalletRepository walletRepository, ICategoryRepository categoryRepository, IOperationRepository operationRepository)
+        public OperationsController(IWalletRepository walletRepository, ICategoryRepository categoryRepository, IOperationRepository operationRepository, ITransferRepository transferRepository)
         {
             _walletRepository = walletRepository;
             _categoryRepository = categoryRepository;
             _operationRepository = operationRepository;
+            _transferRepository = transferRepository;
         }
-
 
 
         // GET: OperationsController
@@ -38,26 +39,56 @@ namespace HomeFinance.Controllers
             month = month.AddDays(-month.Day + 1);
 
             var allOperations = (await _operationRepository.GetAll(userId)).ToList();
+            var allTransfers= (await _transferRepository.GetAll(userId)).ToList();
 
             var oldOperations = allOperations.Where(i => i.DateTime < month).ToList();
             var relevantOperations = allOperations.Where(i => month <= i.DateTime && i.DateTime < month.AddMonths(1)).ToList();
+
+            var oldTransfers = allTransfers.Where(i => i.DateTime < month).ToList();
+            var relevantTransfers = allTransfers.Where(i => month <= i.DateTime && i.DateTime < month.AddMonths(1)).ToList();
 
             var monthBegin = oldOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
             var monthDiff = relevantOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
             var monthEnd = monthBegin + monthDiff;
 
-            var wallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList();
-            var categories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList();
+            var wallets = (await _walletRepository.GetAll(userId)).ToDictionary(i=>i.Id.Value);
+            var categories = (await _categoryRepository.GetAll(userId)).ToDictionary(i => i.Id.Value);
 
-            var vm = new OperationsOverviewViewModel
+
+           var operationVMs= relevantOperations.Select(i => new OperationViewModel()
+            {
+                Id = i.Id.Value,
+                DateTime = i.DateTime,
+                Wallet = wallets[i.WalletId].Name,
+                Category = categories[i.CategoryId].Name,
+                Income = i.Outgo ? null : i.Amount,
+                Outgo = i.Outgo ? i.Amount : null,
+                Comment = i.Comment ?? categories[i.CategoryId].Name,
+            }).ToList();
+
+
+            operationVMs.AddRange(relevantTransfers.Select(i=>new OperationViewModel()
+            {
+                Id = i.Id.Value,
+                DateTime = i.DateTime,
+                Wallet = $"{wallets[i.WalletIdFrom].Name} -> {wallets[i.WalletIdTo].Name}",
+                Transfer=i.Amount,
+                Category = "Transfer",
+                Comment = i.Comment ?? "Transfer",
+            }));
+
+            var groupedOperations=operationVMs.GroupBy(i => i.DateTime.Date);
+
+            var dayVMs = groupedOperations.Select(i => new DayViewModel(i.Key,i)).OrderByDescending(i=>i.Day).ToList();
+
+
+            var vm = new MonthViewModel
             {
                 Month = month,
-                RelevantOperations = relevantOperations.OrderByDescending(i => i.DateTime).Select(i => new OperationViewModel(i)).ToList(),
+                Days = dayVMs,
                 MonthBegin = monthBegin,
                 MonthDiff = monthDiff,
-                MonthEnd = monthEnd,
-                AllWallets = wallets,
-                AllCategories = categories
+                MonthEnd = monthEnd               
             };
             return View(vm);
         }

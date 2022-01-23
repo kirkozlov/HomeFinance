@@ -47,7 +47,7 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            return View(new CategoryViewModel(category));
         }
 
         // GET: Categories/Create

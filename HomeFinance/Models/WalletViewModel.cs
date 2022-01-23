@@ -41,7 +41,7 @@ namespace HomeFinance.Models
 
     public class WalletOperationsViewModel: WalletViewModel
     {
-        public OperationsOverviewViewModel OperationsOverviewViewModel { get; set; }
+        public MonthViewModel MonthViewModel { get; set; }
 
         public WalletOperationsViewModel(WalletDto wallet):base(wallet)
         {

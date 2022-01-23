@@ -1,8 +1,6 @@
-﻿@model HomeFinance.Models.OperationsOverviewViewModel
+﻿@model HomeFinance.Models.MonthViewModel
 
-@{
-    var groupedOperations = Model.RelevantOperations.GroupBy(i => i.DateTime.Date).ToList();
-}
+
 
 <div class="container p-3">
     <div class="row pt-4 text-center border-bottom">
@@ -32,55 +30,62 @@
     </div>
     <br/><br/>
 
-    @foreach(var day in groupedOperations)
+    @foreach(var day in @Model.Days)
     {
         <div class="border row m-0">
-            <div class="row border-bottom m-0 mt-2" onclick=@("javascript:DayDivClicked("+day.Key.ToBinary()+"); return true;") >
+            <div class="row border-bottom m-0 mt-2" onclick=@("javascript:DayDivClicked("+day.Day.ToBinary()+"); return true;") >
                 <div class="col-8 ">
-                    <h4 >@day.Key.Day</h4>
+                    <h4 >@day.Day.Day</h4>
                 </div>
                 <div class="col-2 text-end">
-                    <h5 class="text-primary">@day.Where(i=>!i.Outgo).Sum(i=>i.Amount)</h5>
+                    <h5 class="text-primary">@day.Income</h5>
                 </div>
                 <div class="col-2 text-end">
-                    <h5 class="text-danger">@day.Where(i=>i.Outgo).Sum(i=>i.Amount)</h5>
+                    <h5 class="text-danger">@day.Outgo</h5>
                 </div>
             </div>
-            @foreach(var operation in day)
+            @foreach(var operation in day.Operations)
             {
-                var categoryName = Model.AllCategories.Single(i => i.Id == operation.CategoryId).Name;
-                var walletName = Model.AllWallets.Single(i => i.Id == operation.WalletId).Name;
                 <div class="row pt-4 m-0" onclick=@("javascript:OperationDivClicked("+operation.Id+"); return true;")>
                     <div class="col-2 align-self-center">
-                        <h7 >@walletName</h7>
+                        <h7 >@operation.Category</h7>
                     </div>
                     <div class="col-6 ">
-                        <h5 class="text-@(operation.Outgo?"danger":"primary")">@(string.IsNullOrWhiteSpace(operation.Comment)?categoryName:operation.Comment)</h5>
-                        <h7>@categoryName</h7>
+                        <h5 >@operation.Comment</h5>
+                        <h7>@operation.Wallet</h7>
                     </div>
 
-                    <div class="col-2 text-end">
-                            @if (!operation.Outgo)
+                    @if (operation.Transfer.HasValue)
+                    {
+                         <div class="col-4 text-center">
+                             <h5 >@operation.Transfer</h5>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-2 text-end">
+                            @if (operation.Income.HasValue)
                             {
-                                <h5 class="text-primary">@operation.Amount</h5>
+                                <h5 class="text-primary">@operation.Income</h5>
                                 @if (operation.Balance.HasValue)
                                 {
                                     <h7>@operation.Balance.Value</h7>
                                 }
                             }
-                    </div>
+                        </div>
                     
 
-                    <div class="col-2 text-end">
-                            @if (operation.Outgo)
+                        <div class="col-2 text-end">
+                            @if (operation.Outgo.HasValue)
                             {
-                                <h5 class="text-danger">@operation.Amount</h5>
+                                <h5 class="text-danger">@operation.Outgo</h5>
                                 @if (operation.Balance.HasValue)
                                 {
                                     <h7>@operation.Balance.Value</h7>
                                 }
                             }
-                    </div>
+                        </div>
+                    }
                 </div>
             }
         </div>

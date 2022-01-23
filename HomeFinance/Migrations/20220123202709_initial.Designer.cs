@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeFinance.Migrations
 {
     [DbContext(typeof(HomeFinanceContext))]
-    [Migration("20211230231445_OutgoCategories")]
-    partial class OutgoCategories
+    [Migration("20220123202709_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -134,11 +134,18 @@ namespace HomeFinance.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HomeFinanceUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Outgo")
                         .HasColumnType("bit");
@@ -150,9 +157,49 @@ namespace HomeFinance.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("HomeFinanceUserId");
+
                     b.HasIndex("WalletId");
 
                     b.ToTable("Operations");
+                });
+
+            modelBuilder.Entity("HomeFinance.Domain.Models.Transfer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HomeFinanceUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("WalletIdFrom")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WalletIdTo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HomeFinanceUserId");
+
+                    b.HasIndex("WalletIdFrom");
+
+                    b.HasIndex("WalletIdTo");
+
+                    b.ToTable("Transfers");
                 });
 
             modelBuilder.Entity("HomeFinance.Domain.Models.Wallet", b =>
@@ -342,17 +389,54 @@ namespace HomeFinance.Migrations
                 {
                     b.HasOne("HomeFinance.Domain.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
+                        .WithMany()
+                        .HasForeignKey("HomeFinanceUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HomeFinance.Domain.Models.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
 
+                    b.Navigation("HomeFinanceUser");
+
                     b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("HomeFinance.Domain.Models.Transfer", b =>
+                {
+                    b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
+                        .WithMany()
+                        .HasForeignKey("HomeFinanceUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeFinance.Domain.Models.Wallet", "WalletFrom")
+                        .WithMany()
+                        .HasForeignKey("WalletIdFrom")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeFinance.Domain.Models.Wallet", "WalletTo")
+                        .WithMany()
+                        .HasForeignKey("WalletIdTo")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("HomeFinanceUser");
+
+                    b.Navigation("WalletFrom");
+
+                    b.Navigation("WalletTo");
                 });
 
             modelBuilder.Entity("HomeFinance.Domain.Models.Wallet", b =>

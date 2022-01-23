@@ -46,7 +46,6 @@ namespace HomeFinance.Domain.Repositories
             });
             await _homeFinanceContext.SaveChangesAsync();
         }
-
         public async Task Update(OperationDto dto, string userId)
         {
             var operation = await _homeFinanceContext.Operations.SingleOrDefaultAsync(i => i.Id == dto.Id && i.HomeFinanceUserId == userId);
@@ -61,7 +60,6 @@ namespace HomeFinance.Domain.Repositories
             operation.Comment = dto.Comment;
             await _homeFinanceContext.SaveChangesAsync();
         }
-
         public async Task Remove(int id, string userId)
         {
             var operation = await _homeFinanceContext.Operations.SingleOrDefaultAsync(i => i.Id == id && i.HomeFinanceUserId == userId);
@@ -71,6 +69,7 @@ namespace HomeFinance.Domain.Repositories
             await _homeFinanceContext.SaveChangesAsync();
         }
 
-      
     }
+
+  
 }
