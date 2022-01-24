@@ -52,7 +52,14 @@
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
-            </form>
+    </form>
+   
+    <form asp-action="Delete"  
+                    asp-route-id="@Model.Operation.Id"
+                    asp-route-navigateToWallet="@(Model.Operation.NavigateToWallet?Model.Operation.WalletId:null)" 
+                    asp-route-monthB="@Model.Operation.DateTime.ToBinary()">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
 }
 else
 {
@@ -97,6 +104,12 @@ else
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
      </form>
+      <form asp-action="Delete"  
+                    asp-route-id="@Model.Transfer.Id"
+                    asp-route-navigateToWallet="@(Model.Transfer.NavigateToWallet?Model.Transfer.WalletIdFrom:null)" 
+                    asp-route-monthB="@Model.Transfer.DateTime.ToBinary()">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </form>
 }
 
 <div>

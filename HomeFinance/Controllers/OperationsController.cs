@@ -286,10 +286,24 @@ namespace HomeFinance.Controllers
         // POST: Operations/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, int? navigateToWallet=null, long? monthB=null)
         {
             await _operationRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return RedirectToAction(nameof(Index));
+            if (navigateToWallet.HasValue)
+                return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = navigateToWallet.Value, monthB = monthB });
+
+            return RedirectToAction(nameof(Index),new {  monthB = monthB });
+        }
+
+        // POST: Operations/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteTransfer(int id, int? navigateToWallet = null, long? monthB = null)
+        {
+            await _transferRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (navigateToWallet.HasValue)
+                return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = navigateToWallet.Value, monthB = monthB });
+            return RedirectToAction(nameof(Index), new { monthB = monthB });
         }
     }
 }
