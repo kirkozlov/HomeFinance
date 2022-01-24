@@ -43,9 +43,9 @@
      window.location.href = '/Operations/Create?day='+day+'&walletId='+@Model.Id;
  }
 
-  function OperationDivClicked(id)
+  function OperationDivClicked(id,transfer)
  {
-     window.location.href = '/Operations/Edit/'+id;
+     window.location.href = '/Operations/Edit/'+id+'?isTransfer='+transfer+'&fromWallet=true';
  }
  </script>
 

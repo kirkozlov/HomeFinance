@@ -58,7 +58,8 @@ namespace HomeFinance.Controllers
            var operationVMs= relevantOperations.Select(i => new OperationViewModel()
             {
                 Id = i.Id.Value,
-                DateTime = i.DateTime,
+               IsTransfer = false,
+               DateTime = i.DateTime,
                 Wallet = wallets[i.WalletId].Name,
                 Category = categories[i.CategoryId].Name,
                 Income = i.Outgo ? null : i.Amount,
@@ -67,15 +68,16 @@ namespace HomeFinance.Controllers
             }).ToList();
 
 
-            operationVMs.AddRange(relevantTransfers.Select(i=>new OperationViewModel()
+            operationVMs.AddRange(relevantTransfers.Select(i => new OperationViewModel()
             {
                 Id = i.Id.Value,
+                IsTransfer = true,
                 DateTime = i.DateTime,
                 Wallet = $"{wallets[i.WalletIdFrom].Name} -> {wallets[i.WalletIdTo].Name}",
-                Transfer=i.Amount,
+                Transfer = i.Amount,
                 Category = "Transfer",
                 Comment = i.Comment ?? "Transfer",
-            }));
+            })) ;
 
             var groupedOperations=operationVMs.GroupBy(i => i.DateTime.Date);
 
@@ -115,54 +117,113 @@ namespace HomeFinance.Controllers
                 datetime = DateTime.FromBinary(day.Value) + datetime.TimeOfDay;
             }
 
+            var vm =await CreateVM(datetime, userId);
+            if (walletId.HasValue)
+            {
+                vm.Operation.WalletId = walletId.Value;
+                vm.Transfer.WalletIdFrom = walletId.Value;
+                vm.Operation.NavigateToWallet = true;
+                vm.Transfer.NavigateToWallet = true;
+            }
+            return View(vm);
+        }
+
+        async Task<AddEditOperationViewModel> CreateVM(DateTime datetime, string userId)
+        {
+            var allCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList();
             var vm = new AddEditOperationViewModel()
             {
                 PossibleWallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList(),
-                PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList(),
-                DateTime = datetime
+                IncomeCategories = allCategories.Where(i => !i.Outgo).ToList(),
+                OutgoCategories = allCategories.Where(i => i.Outgo).ToList(),
+                Operation = new AddEditIncomeOutgoOperationViewModel() {  DateTime = datetime },
+                Transfer = new AddEditTransferViewModel() { DateTime = datetime }
             };
-            if(walletId.HasValue)
-                vm.WalletId = walletId.Value;
-            return View(vm);
+            return vm;
         }
 
         // POST: OperationsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,WalletId,CategoryId,DateTime,Outgo,Amount,Comment")] AddEditOperationViewModel operation)
+        public async Task<IActionResult> Create([Bind("WalletId,CategoryId,DateTime,Outgo,Amount,Comment,NavigateToWallet")] AddEditIncomeOutgoOperationViewModel operation)
         {
             if (ModelState.IsValid)
             {
                 await _operationRepository.Add(operation.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (operation.NavigateToWallet)
+                    return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = operation.WalletId, monthB = operation.DateTime.Date.ToBinary() });
                 return RedirectToAction(nameof(Index),new { monthB= operation.DateTime.Date.ToBinary()});
             }
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 throw new Exception();
-            operation.PossibleWallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList();
-            operation.PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList();
-            return View(operation);
+
+
+            var vm = await CreateVM(operation.DateTime, userId);
+            vm.Operation=operation;
+            vm.Transfer.NavigateToWallet = operation.NavigateToWallet;
+           
+
+            return View(vm);
+        }
+
+        // POST: OperationsController/CreateTransfer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTransfer([Bind("WalletIdFrom,WalletIdTo,DateTime,Amount,Comment,NavigateToWallet")] AddEditTransferViewModel transfer)
+        {
+            if (ModelState.IsValid)
+            {
+                await _transferRepository.Add(transfer.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (transfer.NavigateToWallet)
+                    return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = transfer.WalletIdFrom, monthB = transfer.DateTime.Date.ToBinary() });
+                return RedirectToAction(nameof(Index), new { monthB = transfer.DateTime.Date.ToBinary() });
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                throw new Exception();
+
+
+            var vm = await CreateVM(transfer.DateTime, userId);
+            vm.Transfer = transfer;
+            vm.Operation.NavigateToWallet = transfer.NavigateToWallet;
+
+            return View(nameof(Create),vm);
         }
 
         // GET: Operations/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, bool isTransfer=false,  bool fromWallet=false)
         {
+
             if (!(User.Identity?.IsAuthenticated == true))
                 return RedirectToAction("Index", "Home");
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 throw new Exception();
 
-            var operation = await _operationRepository.GetById(id, userId);
-            if (operation == null)
-                return NotFound();
-
-            var vm = new AddEditOperationViewModel(operation)
+            if (!isTransfer)
             {
-                PossibleWallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList(),
-                PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList(),
-            };
-            return View(vm);
+                var operation = await _operationRepository.GetById(id, userId);
+                if (operation == null)
+                    return NotFound();
+
+                var vm = await CreateVM(operation.DateTime, userId);
+                vm.Operation = new AddEditIncomeOutgoOperationViewModel( operation);
+                vm.Operation.NavigateToWallet = fromWallet;
+                return View(vm);
+            }
+            else
+            {
+                var transfer = await _transferRepository.GetById(id, userId);
+                if (transfer == null)
+                    return NotFound();
+
+                var vm = await CreateVM(transfer.DateTime, userId);
+                vm.Transfer = new AddEditTransferViewModel( transfer);
+                vm.Transfer.NavigateToWallet = fromWallet;
+                return View(vm);
+            }
+            
         }
 
         // POST: Operations/Edit/5
@@ -170,8 +231,9 @@ namespace HomeFinance.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,WalletId,CategoryId,DateTime,Outgo,Amount,Comment")] AddEditOperationViewModel operation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,WalletId,CategoryId,DateTime,Outgo,Amount,Comment,NavigateToWallet")] AddEditIncomeOutgoOperationViewModel operation)
         {
+
             if (id != operation.Id)
             {
                 return NotFound();
@@ -183,11 +245,42 @@ namespace HomeFinance.Controllers
             if (ModelState.IsValid)
             {
                 await _operationRepository.Update(operation.ToDto(), userId);
+                if (operation.NavigateToWallet)
+                    return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = operation.WalletId, monthB = operation.DateTime.Date.ToBinary() });
                 return RedirectToAction(nameof(Index));
             }
-            operation.PossibleWallets = (await _walletRepository.GetAll(userId)).Select(i => new WalletViewModel(i)).ToList();
-            operation.PossibleCategories = (await _categoryRepository.GetAll(userId)).Select(i => new CategoryViewModel(i)).ToList();
+
+            var vm = await CreateVM(operation.DateTime, userId);
+            vm.Operation = operation;
+            vm.Transfer.NavigateToWallet = operation.NavigateToWallet;
             return View(operation);
+        }
+
+        // POST: OperationsController/EditTransfer/3
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditTransfer(int id, [Bind("Id,WalletIdFrom,WalletIdTo,DateTime,Amount,Comment,NavigateToWallet")] AddEditTransferViewModel transfer)
+        {
+            
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                throw new Exception();
+
+            if (ModelState.IsValid)
+            {
+                await _transferRepository.Update(transfer.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (transfer.NavigateToWallet)
+                    return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = transfer.WalletIdFrom, monthB = transfer.DateTime.Date.ToBinary() });
+                return RedirectToAction(nameof(Index), new { monthB = transfer.DateTime.Date.ToBinary() });
+            }
+            
+
+
+            var vm = await CreateVM(transfer.DateTime, userId);
+            vm.Transfer = transfer;
+            vm.Transfer.NavigateToWallet = transfer.NavigateToWallet;
+
+            return View(nameof(Edit),vm);
         }
 
         // POST: Operations/Delete/5

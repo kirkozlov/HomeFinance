@@ -46,7 +46,7 @@
             </div>
             @foreach(var operation in day.Operations)
             {
-                <div class="row pt-4 m-0" onclick=@("javascript:OperationDivClicked("+operation.Id+"); return true;")>
+                <div class="row pt-4 m-0" onclick=@("javascript:OperationDivClicked("+operation.Id+","+(operation.IsTransfer?"true":"false")+"); return true;")>
                     <div class="col-2 align-self-center">
                         <h7 >@operation.Category</h7>
                     </div>

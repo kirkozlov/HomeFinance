@@ -5,6 +5,7 @@ namespace HomeFinance.Models
     public class OperationViewModel
     {
         public int Id { get; set; }
+        public bool IsTransfer { get; set; }
 
         public string Wallet { get; set; }
 
@@ -52,7 +53,10 @@ namespace HomeFinance.Models
     }
 
 
-    public class AddEditOperationViewModel
+
+
+
+    public class AddEditIncomeOutgoOperationViewModel
     {
         public int? Id { get; set; }
 
@@ -68,12 +72,9 @@ namespace HomeFinance.Models
 
         public string? Comment { get; set; }
 
+        public bool NavigateToWallet { get; set; }
 
-        public IEnumerable<WalletViewModel>? PossibleWallets { get; set;  }
-        
-        public IEnumerable<CategoryViewModel>? PossibleCategories { get; set; }
-
-        public AddEditOperationViewModel(OperationDto operation)
+        public AddEditIncomeOutgoOperationViewModel(OperationDto operation)
         {
             Id=operation.Id;
             WalletId=operation.WalletId;
@@ -84,7 +85,7 @@ namespace HomeFinance.Models
             Comment = operation.Comment;
         }
 
-        public AddEditOperationViewModel()
+        public AddEditIncomeOutgoOperationViewModel()
         {
         }
 
@@ -94,5 +95,57 @@ namespace HomeFinance.Models
         }
     }
 
-  
+    public class AddEditTransferViewModel
+    {
+        public int? Id { get; set; }
+
+        public int WalletIdFrom { get; set; }
+
+        public int WalletIdTo { get; set; }
+
+        public DateTime DateTime { get; set; }
+
+        public double Amount { get; set; }
+
+        public string? Comment { get; set; }
+
+        public bool NavigateToWallet { get; set; }
+
+        public AddEditTransferViewModel(TransferDto transfer)
+        {
+            Id = transfer.Id;
+            WalletIdFrom = transfer.WalletIdFrom;
+            WalletIdTo = transfer.WalletIdTo;
+            DateTime = transfer.DateTime;
+            Amount = transfer.Amount;
+            Comment = transfer.Comment;            
+        }
+
+        public AddEditTransferViewModel()
+        {
+
+        }
+
+        public TransferDto ToDto()
+        {
+            return new TransferDto(Id, WalletIdFrom, WalletIdTo, DateTime, Amount, Comment);
+        }
+    }
+
+    public class AddEditOperationViewModel
+    {
+
+        public AddEditIncomeOutgoOperationViewModel Operation { get; set; }
+        public AddEditTransferViewModel Transfer { get; set; }
+
+        public IEnumerable<WalletViewModel>? PossibleWallets { get; set; }
+        public IEnumerable<CategoryViewModel>? IncomeCategories { get; set; }
+        public IEnumerable<CategoryViewModel>? OutgoCategories { get; set; }
+        
+    }
+
+
+
+
+
 }

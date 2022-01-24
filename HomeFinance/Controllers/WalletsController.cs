@@ -114,6 +114,7 @@ namespace HomeFinance.Controllers
             var operationVMs = relevantOperations.Select(i => new OperationViewModel()
             {
                 Id = i.Id.Value,
+                IsTransfer = false,
                 DateTime = i.DateTime,
                 Wallet = wallets[i.WalletId].Name,
                 Category = categories[i.CategoryId].Name,
@@ -125,6 +126,7 @@ namespace HomeFinance.Controllers
             operationVMs.AddRange(relevantTransfers.TransfersTo(wallet.Id.Value).Select(i => new OperationViewModel()
             {
                 Id = i.Id.Value,
+                IsTransfer = true,
                 DateTime = i.DateTime,
                 Wallet = $"{wallets[i.WalletIdFrom].Name} -> {wallets[i.WalletIdTo].Name}",
                 Income = i.Amount,
@@ -134,6 +136,7 @@ namespace HomeFinance.Controllers
             operationVMs.AddRange(relevantTransfers.TransfersFrom(wallet.Id.Value).Select(i => new OperationViewModel()
             {
                 Id = i.Id.Value,
+                IsTransfer = true,
                 DateTime = i.DateTime,
                 Wallet = $"{wallets[i.WalletIdFrom].Name} -> {wallets[i.WalletIdTo].Name}",
                 Outgo = i.Amount,
