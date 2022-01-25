@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HomeFinance.Domain.Repositories;
-using HomeFinance.Models;
+using HomeFinance.ViewModels;
 using System.Security.Claims;
 
 namespace HomeFinance.Controllers

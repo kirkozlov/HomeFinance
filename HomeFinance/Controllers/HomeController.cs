@@ -1,4 +1,4 @@
-﻿using HomeFinance.Models;
+﻿using HomeFinance.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

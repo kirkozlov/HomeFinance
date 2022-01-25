@@ -1,14 +1,9 @@
 ﻿using HomeFinance.Domain.Dtos;
 using HomeFinance.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinance.Domain.Repositories
 {
-    public interface ICategoryRepository: IUserDependentRepository<CategoryDto>
-    {
-    }
-
     public class CategoryRepository : ICategoryRepository
     {
         HomeFinanceContext _homeFinanceContext;

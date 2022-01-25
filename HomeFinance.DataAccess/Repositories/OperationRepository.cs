@@ -4,11 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinance.Domain.Repositories
 {
-    public interface IOperationRepository : IUserDependentRepository<OperationDto>
-    {
-        public Task<List<OperationDto>> GetForWallet(string userId, int walletId);
-        
-    }
+  
     public class OperationRepository : IOperationRepository
     {
         HomeFinanceContext _homeFinanceContext;

@@ -1,6 +1,6 @@
 ﻿using HomeFinance.Domain.Dtos;
 
-namespace HomeFinance.Models
+namespace HomeFinance.ViewModels
 {
     public class OperationViewModel
     {

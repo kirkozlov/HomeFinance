@@ -4,10 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinance.Domain.Repositories
 {
-    public interface ITransferRepository : IUserDependentRepository<TransferDto>
-    {
 
-    }
     public class TransferRepository : ITransferRepository
     {
         HomeFinanceContext _homeFinanceContext;

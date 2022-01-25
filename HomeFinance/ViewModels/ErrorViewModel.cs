@@ -1,4 +1,4 @@
-namespace HomeFinance.Models
+namespace HomeFinance.ViewModels
 {
     public class ErrorViewModel
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using HomeFinance.Domain.Repositories;
-using HomeFinance.Models;
+using HomeFinance.ViewModels;
 using System.Security.Claims;
 using HomeFinance.Domain.Dtos;
 

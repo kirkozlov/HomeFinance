@@ -1,18 +1,9 @@
 ﻿using HomeFinance.Domain.Dtos;
 using HomeFinance.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinance.Domain.Repositories
 {
-
-
-
-
-    public interface IWalletRepository: IUserDependentRepository<WalletDto>
-    {
-    }
-
     public class WalletRepository : IWalletRepository
     {
         HomeFinanceContext _homeFinanceContext;

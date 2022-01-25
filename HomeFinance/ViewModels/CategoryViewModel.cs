@@ -2,7 +2,7 @@
 using HomeFinance.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace HomeFinance.Models
+namespace HomeFinance.ViewModels
 {
     public class CategoryViewModel
     {

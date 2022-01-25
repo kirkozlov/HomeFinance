@@ -1,5 +1,5 @@
 ﻿using HomeFinance.Domain.Repositories;
-using HomeFinance.Models;
+using HomeFinance.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

@@ -2,10 +2,24 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using HomeFinance.Models;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace HomeFinance.Domain;
 
+
+
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HomeFinanceContext>
+{
+    public HomeFinanceContext CreateDbContext(string[] args)
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(@Directory.GetCurrentDirectory() + "/../HomeFinance/appsettings.json").Build();
+        var builder = new DbContextOptionsBuilder<HomeFinanceContext>();
+        var connectionString = configuration.GetConnectionString("HomeFinanceContextConnection");
+        builder.UseSqlServer(connectionString);
+        return new HomeFinanceContext(builder.Options);
+    }
+}
 public class HomeFinanceContext : IdentityDbContext<HomeFinanceUser>
 {
     public DbSet<Wallet> Wallets { get; set; }
