@@ -6,7 +6,5 @@ namespace HomeFinance.Domain.Repositories
     public interface ICategoryRepository: IUserDependentRepository<CategoryDto>
     {
     }
-
-   
 }
  

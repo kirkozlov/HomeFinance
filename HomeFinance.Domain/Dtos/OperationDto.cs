@@ -9,4 +9,13 @@ namespace HomeFinance.Domain.Dtos
         }
     }
 
+
+
+    public record RepeatableOperationDto(int? Id, int WalletId, OperationType OperationType, int? CategoryId, int? WalletIdTo, DateTime NextExecution, RepeatableType RepeatableType, double Amount, string? Comment)
+    {
+        public RepeatableOperationDto(RepeatableOperation ro) : this(ro.Id, ro.WalletId, ro.OperationType, ro.CategoryId, ro.WalletIdTo, ro.NextExecution, ro.RepeatableType, ro.Amount, ro.Comment)
+        {
+        }
+    }
+
 }
