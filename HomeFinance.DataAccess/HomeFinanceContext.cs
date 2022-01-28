@@ -25,7 +25,6 @@ public class HomeFinanceContext : IdentityDbContext<HomeFinanceUser>
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Operation> Operations { get; set; }
-    public DbSet<Transfer> Transfers { get; set; }
     public DbSet<RepeatableOperation> RepeatableOperations { get; set; }
 
     public HomeFinanceContext(DbContextOptions<HomeFinanceContext> options)
@@ -42,9 +41,6 @@ public class HomeFinanceContext : IdentityDbContext<HomeFinanceUser>
 
         builder.Entity<Operation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Operation>().HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
-
-        builder.Entity<Transfer>().HasOne(x => x.WalletFrom).WithMany().HasForeignKey(x => x.WalletIdFrom).OnDelete(DeleteBehavior.Restrict);
-        builder.Entity<Transfer>().HasOne(x => x.WalletTo).WithMany().HasForeignKey(x => x.WalletIdTo).OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<RepeatableOperation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Restrict);
     }

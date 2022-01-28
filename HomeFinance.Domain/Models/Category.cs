@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HomeFinance.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace HomeFinance.Domain.Models
 {
@@ -14,16 +15,18 @@ namespace HomeFinance.Domain.Models
 
         [Required]
         public string Name { get; set; }
-
-        /// <summary>
-        /// true if it is outgo, otherwise it is income
-        /// </summary>
+       
         [Required]
-        public bool Outgo { get; set; } = true;
+        public OperationType OperationType { get; set; }
 
         public int? ParentId { get; set; }
         public virtual Category? Parent { get; set; } = null;
 
         public string? Comment { get; set; } = null;
+
+        public bool IsValid()
+        {
+            return OperationType != OperationType.Transfer;
+        }
     }
 }

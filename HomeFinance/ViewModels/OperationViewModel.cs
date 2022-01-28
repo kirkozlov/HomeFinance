@@ -78,9 +78,9 @@ namespace HomeFinance.ViewModels
         {
             Id=operation.Id;
             WalletId=operation.WalletId;
-            CategoryId=operation.CategoryId;
+            CategoryId=operation.CategoryId.Value;
             DateTime = operation.DateTime;
-            Outgo=operation.Outgo;
+            Outgo=operation.OperationType==Domain.Enums.OperationType.Expense;
             Amount = operation.Amount;
             Comment = operation.Comment;
         }
@@ -91,7 +91,7 @@ namespace HomeFinance.ViewModels
 
         public OperationDto ToDto()
         {
-            return new OperationDto(Id, WalletId, CategoryId, DateTime, Outgo, Amount, Comment);
+            return new OperationDto(Id, WalletId, Outgo ? Domain.Enums.OperationType.Expense:Domain.Enums.OperationType.Income,CategoryId,null,  Amount, Comment, DateTime);
         }
     }
 
@@ -111,11 +111,11 @@ namespace HomeFinance.ViewModels
 
         public bool NavigateToWallet { get; set; }
 
-        public AddEditTransferViewModel(TransferDto transfer)
+        public AddEditTransferViewModel(OperationDto transfer)
         {
             Id = transfer.Id;
-            WalletIdFrom = transfer.WalletIdFrom;
-            WalletIdTo = transfer.WalletIdTo;
+            WalletIdFrom = transfer.WalletId;
+            WalletIdTo = transfer.WalletIdTo.Value;
             DateTime = transfer.DateTime;
             Amount = transfer.Amount;
             Comment = transfer.Comment;            
@@ -126,9 +126,9 @@ namespace HomeFinance.ViewModels
 
         }
 
-        public TransferDto ToDto()
+        public OperationDto ToDto()
         {
-            return new TransferDto(Id, WalletIdFrom, WalletIdTo, DateTime, Amount, Comment);
+            return new OperationDto(Id, WalletIdFrom,  Domain.Enums.OperationType.Transfer , null, WalletIdTo, Amount, Comment, DateTime);
         }
     }
 

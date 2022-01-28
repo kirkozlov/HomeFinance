@@ -31,6 +31,7 @@ namespace HomeFinance.Domain.Repositories
             {
                 HomeFinanceUserId = userId,
                 Name = dto.Name,
+                OperationType = dto.OperationType,
                 ParentId = dto.ParentId,
                 Comment = dto.Comment
             });
@@ -44,8 +45,10 @@ namespace HomeFinance.Domain.Repositories
                 throw new Exception();
 
             category.Name = dto.Name;
+            category.OperationType = dto.OperationType;
             category.ParentId = dto.ParentId;
             category.Comment = dto.Comment;
+
             await _homeFinanceContext.SaveChangesAsync();
 
         }

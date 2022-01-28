@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HomeFinance.DataAccess.Migrations
 {
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -162,7 +162,7 @@ namespace HomeFinance.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HomeFinanceUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Outgo = table.Column<bool>(type: "bit", nullable: false),
+                    OperationType = table.Column<int>(type: "int", nullable: false),
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -210,11 +210,13 @@ namespace HomeFinance.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HomeFinanceUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     WalletId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Outgo = table.Column<bool>(type: "bit", nullable: false),
+                    OperationType = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    WalletIdTo = table.Column<int>(type: "int", nullable: true),
+                    WalletToId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<double>(type: "float", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -239,42 +241,55 @@ namespace HomeFinance.DataAccess.Migrations
                         principalTable: "Wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Operations_Wallets_WalletToId",
+                        column: x => x.WalletToId,
+                        principalTable: "Wallets",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transfers",
+                name: "RepeatableOperations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NextExecution = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RepeatableType = table.Column<int>(type: "int", nullable: false),
                     HomeFinanceUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    WalletIdFrom = table.Column<int>(type: "int", nullable: false),
-                    WalletIdTo = table.Column<int>(type: "int", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WalletId = table.Column<int>(type: "int", nullable: false),
+                    OperationType = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    WalletIdTo = table.Column<int>(type: "int", nullable: true),
+                    WalletToId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<double>(type: "float", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transfers", x => x.Id);
+                    table.PrimaryKey("PK_RepeatableOperations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transfers_AspNetUsers_HomeFinanceUserId",
+                        name: "FK_RepeatableOperations_AspNetUsers_HomeFinanceUserId",
                         column: x => x.HomeFinanceUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transfers_Wallets_WalletIdFrom",
-                        column: x => x.WalletIdFrom,
+                        name: "FK_RepeatableOperations_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RepeatableOperations_Wallets_WalletId",
+                        column: x => x.WalletId,
                         principalTable: "Wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Transfers_Wallets_WalletIdTo",
-                        column: x => x.WalletIdTo,
+                        name: "FK_RepeatableOperations_Wallets_WalletToId",
+                        column: x => x.WalletToId,
                         principalTable: "Wallets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -342,19 +357,29 @@ namespace HomeFinance.DataAccess.Migrations
                 column: "WalletId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transfers_HomeFinanceUserId",
-                table: "Transfers",
+                name: "IX_Operations_WalletToId",
+                table: "Operations",
+                column: "WalletToId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RepeatableOperations_CategoryId",
+                table: "RepeatableOperations",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RepeatableOperations_HomeFinanceUserId",
+                table: "RepeatableOperations",
                 column: "HomeFinanceUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transfers_WalletIdFrom",
-                table: "Transfers",
-                column: "WalletIdFrom");
+                name: "IX_RepeatableOperations_WalletId",
+                table: "RepeatableOperations",
+                column: "WalletId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transfers_WalletIdTo",
-                table: "Transfers",
-                column: "WalletIdTo");
+                name: "IX_RepeatableOperations_WalletToId",
+                table: "RepeatableOperations",
+                column: "WalletToId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallets_HomeFinanceUserId",
@@ -383,7 +408,7 @@ namespace HomeFinance.DataAccess.Migrations
                 name: "Operations");
 
             migrationBuilder.DropTable(
-                name: "Transfers");
+                name: "RepeatableOperations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -23,7 +23,6 @@ builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.R
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOperationRepository, OperationRepository>();
-builder.Services.AddScoped<ITransferRepository, TransferRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -21,7 +21,7 @@ namespace HomeFinance.ViewModels
         {
             Id = category.Id;
             Name = category.Name;
-            Outgo = category.Outgo;
+            Outgo =  category.OperationType==Domain.Enums.OperationType.Expense;
             ParentId = category.ParentId;
             Comment = category.Comment;
         }
@@ -45,7 +45,7 @@ namespace HomeFinance.ViewModels
 
         public CategoryDto ToDto()
         {
-            return new CategoryDto(Id, Name, Outgo, ParentId, Comment) ;
+            return new CategoryDto(Id, Name, Outgo?Domain.Enums.OperationType.Expense:Domain.Enums.OperationType.Income, ParentId, Comment) ;
         }
 
         // Needed For View

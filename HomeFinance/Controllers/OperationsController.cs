@@ -12,14 +12,12 @@ namespace HomeFinance.Controllers
         readonly IWalletRepository _walletRepository;
         readonly ICategoryRepository _categoryRepository;
         readonly IOperationRepository _operationRepository;
-        readonly ITransferRepository _transferRepository;
 
-        public OperationsController(IWalletRepository walletRepository, ICategoryRepository categoryRepository, IOperationRepository operationRepository, ITransferRepository transferRepository)
+        public OperationsController(IWalletRepository walletRepository, ICategoryRepository categoryRepository, IOperationRepository operationRepository)
         {
             _walletRepository = walletRepository;
             _categoryRepository = categoryRepository;
             _operationRepository = operationRepository;
-            _transferRepository = transferRepository;
         }
 
 
@@ -39,16 +37,13 @@ namespace HomeFinance.Controllers
             month = month.AddDays(-month.Day + 1);
 
             var allOperations = (await _operationRepository.GetAll(userId)).ToList();
-            var allTransfers= (await _transferRepository.GetAll(userId)).ToList();
 
             var oldOperations = allOperations.Where(i => i.DateTime < month).ToList();
             var relevantOperations = allOperations.Where(i => month <= i.DateTime && i.DateTime < month.AddMonths(1)).ToList();
 
-            var oldTransfers = allTransfers.Where(i => i.DateTime < month).ToList();
-            var relevantTransfers = allTransfers.Where(i => month <= i.DateTime && i.DateTime < month.AddMonths(1)).ToList();
-
-            var monthBegin = oldOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
-            var monthDiff = relevantOperations.Sum(i => (i.Outgo ? -1 : 1) * i.Amount);
+          
+            var monthBegin = oldOperations.Where(i=>i.OperationType!=Domain.Enums.OperationType.Transfer).Sum(i => (i.OperationType==Domain.Enums.OperationType.Income ? -1 : 1) * i.Amount);
+            var monthDiff = relevantOperations.Where(i => i.OperationType != Domain.Enums.OperationType.Transfer).Sum(i => (i.OperationType == Domain.Enums.OperationType.Expense ? -1 : 1) * i.Amount);
             var monthEnd = monthBegin + monthDiff;
 
             var wallets = (await _walletRepository.GetAll(userId)).ToDictionary(i=>i.Id.Value);
@@ -58,26 +53,16 @@ namespace HomeFinance.Controllers
            var operationVMs= relevantOperations.Select(i => new OperationViewModel()
             {
                 Id = i.Id.Value,
-               IsTransfer = false,
-               DateTime = i.DateTime,
-                Wallet = wallets[i.WalletId].Name,
-                Category = categories[i.CategoryId].Name,
-                Income = i.Outgo ? null : i.Amount,
-                Outgo = i.Outgo ? i.Amount : null,
-                Comment = i.Comment ?? categories[i.CategoryId].Name,
+                IsTransfer = i.OperationType == Domain.Enums.OperationType.Transfer,
+                DateTime = i.DateTime,
+                Wallet = i.OperationType == Domain.Enums.OperationType.Transfer? $"{wallets[i.WalletId].Name} -> {wallets[i.WalletIdTo.Value].Name}" : wallets[i.WalletId].Name,
+                Category = i.OperationType == Domain.Enums.OperationType.Transfer? "Transfer": categories[i.CategoryId.Value].Name,
+                Income = i.OperationType == Domain.Enums.OperationType.Income ? i.Amount : null,
+                Outgo = i.OperationType == Domain.Enums.OperationType.Expense ? i.Amount : null,
+                Transfer = i.OperationType == Domain.Enums.OperationType.Transfer ? i.Amount : null,
+                Comment = i.Comment ?? (i.OperationType == Domain.Enums.OperationType.Transfer ? "Transfer" : categories[i.CategoryId.Value].Name),
             }).ToList();
 
-
-            operationVMs.AddRange(relevantTransfers.Select(i => new OperationViewModel()
-            {
-                Id = i.Id.Value,
-                IsTransfer = true,
-                DateTime = i.DateTime,
-                Wallet = $"{wallets[i.WalletIdFrom].Name} -> {wallets[i.WalletIdTo].Name}",
-                Transfer = i.Amount,
-                Category = "Transfer",
-                Comment = i.Comment ?? "Transfer",
-            })) ;
 
             var groupedOperations=operationVMs.GroupBy(i => i.DateTime.Date);
 
@@ -174,7 +159,7 @@ namespace HomeFinance.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _transferRepository.Add(transfer.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _operationRepository.Add(transfer.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 if (transfer.NavigateToWallet)
                     return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = transfer.WalletIdFrom, monthB = transfer.DateTime.Date.ToBinary() });
                 return RedirectToAction(nameof(Index), new { monthB = transfer.DateTime.Date.ToBinary() });
@@ -214,7 +199,7 @@ namespace HomeFinance.Controllers
             }
             else
             {
-                var transfer = await _transferRepository.GetById(id, userId);
+                var transfer = await _operationRepository.GetById(id, userId);
                 if (transfer == null)
                     return NotFound();
 
@@ -268,7 +253,7 @@ namespace HomeFinance.Controllers
 
             if (ModelState.IsValid)
             {
-                await _transferRepository.Update(transfer.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _operationRepository.Update(transfer.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 if (transfer.NavigateToWallet)
                     return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = transfer.WalletIdFrom, monthB = transfer.DateTime.Date.ToBinary() });
                 return RedirectToAction(nameof(Index), new { monthB = transfer.DateTime.Date.ToBinary() });
@@ -300,7 +285,7 @@ namespace HomeFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTransfer(int id, int? navigateToWallet = null, long? monthB = null)
         {
-            await _transferRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _operationRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (navigateToWallet.HasValue)
                 return RedirectToAction(nameof(WalletsController.Details), "Wallets", new { id = navigateToWallet.Value, monthB = monthB });
             return RedirectToAction(nameof(Index), new { monthB = monthB });

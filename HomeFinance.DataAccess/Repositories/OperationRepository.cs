@@ -19,7 +19,7 @@ namespace HomeFinance.Domain.Repositories
         }
         public async Task<List<OperationDto>> GetForWallet(string userId, int walletId)
         {
-            return await _homeFinanceContext.Operations.Where(i => i.HomeFinanceUserId == userId && i.WalletId==walletId).Select(i => new OperationDto(i)).ToListAsync();
+            return await _homeFinanceContext.Operations.Where(i => i.HomeFinanceUserId == userId && (i.WalletId==walletId || i.WalletIdTo==walletId)).Select(i => new OperationDto(i)).ToListAsync();
         }
         public async Task<OperationDto?> GetById(int id, string userId)
         {
@@ -34,9 +34,10 @@ namespace HomeFinance.Domain.Repositories
             {
                 HomeFinanceUserId=userId,
                 WalletId=dto.WalletId,
-                CategoryId=dto.CategoryId,
+                OperationType = dto.OperationType,
+                CategoryId =dto.CategoryId,
+                WalletIdTo=dto.WalletIdTo,
                 DateTime=dto.DateTime,
-                Outgo=dto.Outgo,
                 Amount=dto.Amount,
                 Comment = dto.Comment
             });
@@ -49,9 +50,10 @@ namespace HomeFinance.Domain.Repositories
                 throw new Exception();
 
             operation.WalletId = dto.WalletId;
+            operation.OperationType = dto.OperationType;
             operation.CategoryId = dto.CategoryId;
+            operation.WalletIdTo = dto.WalletIdTo;
             operation.DateTime = dto.DateTime;
-            operation.Outgo = dto.Outgo;
             operation.Amount = dto.Amount;
             operation.Comment = dto.Comment;
             await _homeFinanceContext.SaveChangesAsync();
