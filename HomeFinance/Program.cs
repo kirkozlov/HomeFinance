@@ -1,6 +1,8 @@
+using HomeFinance.DataAccess;
 using HomeFinance.Domain;
 using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
+using HomeFinance.Domain.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +14,6 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("HomeFinanceContextConnection");
-//builder.Services.AddDbContext
 builder.Services.AddDbContext<HomeFinanceContext>(options =>
 {
     options.UseSqlServer(connectionString);
@@ -20,9 +21,7 @@ builder.Services.AddDbContext<HomeFinanceContext>(options =>
 });
 builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<HomeFinanceContext>();
-builder.Services.AddScoped<IWalletRepository, WalletRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IOperationRepository, OperationRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -1,10 +1,11 @@
 ﻿using HomeFinance.Domain.Dtos;
 using HomeFinance.Domain.Models;
+using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.Domain.Repositories
+namespace HomeFinance.DataAccess.Repositories
 {
-    public class WalletRepository : IWalletRepository
+    internal class WalletRepository : IWalletRepository
     {
         HomeFinanceContext _homeFinanceContext;
         public WalletRepository(HomeFinanceContext homeFinanceContext)

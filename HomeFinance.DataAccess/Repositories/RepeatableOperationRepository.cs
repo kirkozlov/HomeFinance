@@ -1,14 +1,15 @@
 ﻿using HomeFinance.Domain.Dtos;
 using HomeFinance.Domain.Models;
+using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.Domain.Repositories
+namespace HomeFinance.DataAccess.Repositories
 {
-    public class RepeatableOperationsRepository : IRepeatableOperationRepository
+    internal class RepeatableOperationRepository : IRepeatableOperationRepository
     {
         HomeFinanceContext _homeFinanceContext;
 
-        public RepeatableOperationsRepository(HomeFinanceContext homeFinanceContext)
+        public RepeatableOperationRepository(HomeFinanceContext homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
         }

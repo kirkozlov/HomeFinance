@@ -1,10 +1,11 @@
 ﻿using HomeFinance.Domain.Dtos;
 using HomeFinance.Domain.Models;
+using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.Domain.Repositories
+namespace HomeFinance.DataAccess.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    internal class CategoryRepository : ICategoryRepository
     {
         HomeFinanceContext _homeFinanceContext;
         public CategoryRepository(HomeFinanceContext homeFinanceContext)

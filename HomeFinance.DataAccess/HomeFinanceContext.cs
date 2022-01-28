@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace HomeFinance.Domain;
-
-
+namespace HomeFinance.DataAccess;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HomeFinanceContext>
 {

@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 using HomeFinance.Domain.Repositories;
 using HomeFinance.ViewModels;
 using System.Security.Claims;
+using HomeFinance.Domain.Utils;
 
 namespace HomeFinance.Controllers
 {
     public class CategoriesController : Controller
     {
-        readonly ICategoryRepository _categoryRepository;
+        readonly IUnitOfWork _unitOfWork;
 
-        public CategoriesController(ICategoryRepository categoryRepository)
+        public CategoriesController(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         #region Helpers
@@ -30,7 +31,7 @@ namespace HomeFinance.Controllers
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
 
-            return View((await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new CategoryViewModel(i)).ToList());
+            return View((await _unitOfWork.CategoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new CategoryViewModel(i)).ToList());
         }
 
         // GET: Categories/Details/5
@@ -41,7 +42,7 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var category = await _categoryRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var category = await _unitOfWork.CategoryRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (category == null)
             {
                 return NotFound();
@@ -53,7 +54,7 @@ namespace HomeFinance.Controllers
         // GET: Categories/Create
         public async Task< IActionResult> Create()
         {
-            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _unitOfWork.CategoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             return View(new AddEditCategoryViewModel() { PossibleParents = allCategories, Outgo=true });
         }
 
@@ -66,10 +67,10 @@ namespace HomeFinance.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _categoryRepository.Add(category.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _unitOfWork.CategoryRepository.Add(category.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
-            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _unitOfWork.CategoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             category.PossibleParents = allCategories;
             return View(category);
         }
@@ -82,12 +83,12 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var category = await _categoryRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var category = await _unitOfWork.CategoryRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (category == null)
             {
                 return NotFound();
             }
-            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _unitOfWork.CategoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             return View(new AddEditCategoryViewModel(category) { PossibleParents=allCategories});
         }
 
@@ -105,10 +106,10 @@ namespace HomeFinance.Controllers
 
             if (ModelState.IsValid)
             {
-                await _categoryRepository.Update(category.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _unitOfWork.CategoryRepository.Update(category.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
-            var allCategories = (await _categoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
+            var allCategories = (await _unitOfWork.CategoryRepository.GetAll(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Select(i => new AddEditCategoryViewModel(i)).ToList();
             category.PossibleParents = allCategories;
             return View(category);
         }
@@ -121,7 +122,7 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var category = await _categoryRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var category = await _unitOfWork.CategoryRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (category == null)
             {
                 return NotFound();
@@ -135,7 +136,7 @@ namespace HomeFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _categoryRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _unitOfWork.CategoryRepository.Remove(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return RedirectToAction(nameof(Index));
         }
 

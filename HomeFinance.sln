@@ -5,9 +5,11 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance", "HomeFinance\HomeFinance.csproj", "{DFFCCE70-A121-47D5-9BBB-11F31198DE7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeFinance.Domain", "HomeFinance.Domain\HomeFinance.Domain.csproj", "{5C9584C9-7D31-477A-9C28-0E2BD26F0972}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.Domain", "HomeFinance.Domain\HomeFinance.Domain.csproj", "{5C9584C9-7D31-477A-9C28-0E2BD26F0972}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeFinance.DataAccess", "HomeFinance.DataAccess\HomeFinance.DataAccess.csproj", "{82A52A67-AF65-4C9B-91E7-3379B6F6411E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.DataAccess", "HomeFinance.DataAccess\HomeFinance.DataAccess.csproj", "{82A52A67-AF65-4C9B-91E7-3379B6F6411E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeFinanceApi", "HomeFinanceApi\HomeFinanceApi.csproj", "{D5711717-2A75-4F63-AD42-7C487863E31C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{82A52A67-AF65-4C9B-91E7-3379B6F6411E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82A52A67-AF65-4C9B-91E7-3379B6F6411E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82A52A67-AF65-4C9B-91E7-3379B6F6411E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5711717-2A75-4F63-AD42-7C487863E31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5711717-2A75-4F63-AD42-7C487863E31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5711717-2A75-4F63-AD42-7C487863E31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5711717-2A75-4F63-AD42-7C487863E31C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

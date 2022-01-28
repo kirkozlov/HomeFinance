@@ -9,6 +9,7 @@ using HomeFinance.Domain.Repositories;
 using HomeFinance.ViewModels;
 using System.Security.Claims;
 using HomeFinance.Domain.Dtos;
+using HomeFinance.Domain.Utils;
 
 namespace HomeFinance.Controllers
 {
@@ -57,14 +58,11 @@ namespace HomeFinance.Controllers
 
     public class WalletsController : Controller
     {
-        readonly IWalletRepository _walletRepository;
-        readonly IOperationRepository _operationRepository;
-        readonly ICategoryRepository _categoryRepository;
-        public WalletsController(IWalletRepository walletRepository, IOperationRepository operationRepository, ICategoryRepository categoryRepository)
+        readonly IUnitOfWork _unitOfWork;
+
+        public WalletsController(IUnitOfWork unitOfWork)
         {
-            _walletRepository = walletRepository;
-            _operationRepository= operationRepository;
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Wallets
@@ -77,8 +75,8 @@ namespace HomeFinance.Controllers
                 throw new Exception();
 
 
-            var allOperations = (await _operationRepository.GetAll(userId)).ToList();
-            var wallets = await _walletRepository.GetAll(userId);
+            var allOperations = (await _unitOfWork.OperationRepository.GetAll(userId)).ToList();
+            var wallets = await _unitOfWork.WalletRepository.GetAll(userId);
 
             return View(wallets.Select(i=>new WalletViewModel(i) { Balance=allOperations.GetSumFor(i.Id.Value)}).ToList());
         }
@@ -96,7 +94,7 @@ namespace HomeFinance.Controllers
             {
                 return NotFound();
             }
-            var wallet = await _walletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var wallet = await _unitOfWork.WalletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (wallet == null)
             {
                 return NotFound();
@@ -109,7 +107,7 @@ namespace HomeFinance.Controllers
             month = month.Date;
             month = month.AddDays(-month.Day + 1);
 
-            var allOperations = (await _operationRepository.GetForWallet(userId, wallet.Id.Value)).ToList();
+            var allOperations = (await _unitOfWork.OperationRepository.GetForWallet(userId, wallet.Id.Value)).ToList();
            
 
             
@@ -122,8 +120,8 @@ namespace HomeFinance.Controllers
             var monthDiff = relevantOperations.GetSumFor(wallet.Id.Value);
             var monthEnd = monthBegin + monthDiff;
 
-            var wallets = (await _walletRepository.GetAll(userId)).ToDictionary(i => i.Id.Value);
-            var categories = (await _categoryRepository.GetAll(userId)).ToDictionary(i => i.Id.Value);
+            var wallets = (await _unitOfWork.WalletRepository.GetAll(userId)).ToDictionary(i => i.Id.Value);
+            var categories = (await _unitOfWork.CategoryRepository.GetAll(userId)).ToDictionary(i => i.Id.Value);
 
             var operationVMs = relevantOperations.Where(i=>i.OperationType!=Domain.Enums.OperationType.Transfer).Select(i => new OperationViewModel()
             {
@@ -196,7 +194,7 @@ namespace HomeFinance.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _walletRepository.Add(wallet.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _unitOfWork.WalletRepository.Add(wallet.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
             return View(wallet);
@@ -210,7 +208,7 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var wallet = await _walletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var wallet = await _unitOfWork.WalletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (wallet == null)
             {
                 return NotFound();
@@ -232,7 +230,7 @@ namespace HomeFinance.Controllers
 
             if (ModelState.IsValid)
             {
-                await _walletRepository.Update(wallet.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _unitOfWork.WalletRepository.Update(wallet.ToDto(), User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Index));
             }
             return View(wallet);
@@ -246,7 +244,7 @@ namespace HomeFinance.Controllers
                 return NotFound();
             }
 
-            var wallet = await _walletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var wallet = await _unitOfWork.WalletRepository.GetById(id.Value, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (wallet == null)
             {
                 return NotFound();
@@ -260,7 +258,7 @@ namespace HomeFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _walletRepository.Remove(id,User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await _unitOfWork.WalletRepository.Remove(id,User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return RedirectToAction(nameof(Index));
         }
 

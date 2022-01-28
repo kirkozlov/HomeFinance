@@ -1,11 +1,12 @@
 ﻿using HomeFinance.Domain.Dtos;
 using HomeFinance.Domain.Models;
+using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.Domain.Repositories
+namespace HomeFinance.DataAccess.Repositories
 {
-  
-    public class OperationRepository : IOperationRepository
+
+    internal class OperationRepository : IOperationRepository
     {
         HomeFinanceContext _homeFinanceContext;
 
