@@ -17,6 +17,7 @@ input.form-control:focus{
 }
 
 button[type=submit].btn{
+    margin-top: 5px;
     border-radius: 20px;
     background-color: #000;
     color: #fff;
