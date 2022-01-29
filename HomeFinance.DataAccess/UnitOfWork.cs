@@ -12,13 +12,20 @@ namespace HomeFinance.DataAccess
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public ICategoryRepository CategoryRepository { get;  }
 
-        public IOperationRepository OperationRepository { get;  }
+        Lazy<ICategoryRepository> _categoryRepository;
+        Lazy<IOperationRepository> _operationRepository;
+        Lazy<IWalletRepository> _walletRepository;
+        Lazy<IRepeatableOperationRepository> _repeatableOperationRepository;
 
-        public IWalletRepository WalletRepository { get;  }
 
-        public IRepeatableOperationRepository RepeatableOperationRepository { get; }
+
+        public ICategoryRepository CategoryRepository => _categoryRepository.Value;
+        public IOperationRepository OperationRepository =>_operationRepository.Value;
+        public IWalletRepository WalletRepository =>_walletRepository.Value;
+        public IRepeatableOperationRepository RepeatableOperationRepository =>_repeatableOperationRepository.Value;
+
+
 
         readonly HomeFinanceContext _homeFinanceContext;
         readonly IDbContextTransaction _transaction;
@@ -28,10 +35,10 @@ namespace HomeFinance.DataAccess
             _homeFinanceContext = homeFinanceContext;
 
 
-            CategoryRepository = new CategoryRepository(homeFinanceContext);
-            OperationRepository = new OperationRepository(homeFinanceContext);
-            WalletRepository = new WalletRepository(homeFinanceContext);
-            RepeatableOperationRepository = new RepeatableOperationRepository(homeFinanceContext);
+            _categoryRepository = new Lazy<ICategoryRepository>(() => new CategoryRepository(_homeFinanceContext));
+            _operationRepository = new Lazy<IOperationRepository>(()=>new OperationRepository(_homeFinanceContext));
+            _walletRepository = new Lazy<IWalletRepository>(() => new WalletRepository(_homeFinanceContext));
+            _repeatableOperationRepository =new Lazy<IRepeatableOperationRepository>(()=>new RepeatableOperationRepository(_homeFinanceContext));
 
             _transaction = _homeFinanceContext.Database.BeginTransaction();
         }
