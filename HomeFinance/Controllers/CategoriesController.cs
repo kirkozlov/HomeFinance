@@ -28,6 +28,7 @@ namespace HomeFinance.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
+            
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
 

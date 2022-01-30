@@ -18,6 +18,7 @@ button[type=submit].btn{
     border-radius: 20px;
     background-color: #04c582;
     color: #fff;
+    margin: 15px 0px;
 }
 
 div.form-group label:not(.text-danger){
