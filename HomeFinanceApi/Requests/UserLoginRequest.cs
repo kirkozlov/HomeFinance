@@ -1,6 +1,6 @@
-﻿namespace HomeFinanceApi.ViewModels
+﻿namespace HomeFinanceApi.Requests
 {
-    public class UserLoginViewModel
+    public class UserLoginRequest
     {
         public string UserNameOrEmail { get; set; }
         public string Password { get; set; }

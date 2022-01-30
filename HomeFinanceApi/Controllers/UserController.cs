@@ -1,5 +1,5 @@
 ﻿using HomeFinance.Domain.Models;
-using HomeFinanceApi.ViewModels;
+using HomeFinanceApi.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,7 @@ namespace HomeFinanceApi.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<object> PostApplicationUser(UserRegistrationViewModel userVM)
+        public async Task<object> PostApplicationUser(UserRegistrationRequest userVM)
         {
             var user = new HomeFinanceUser()
             {
@@ -50,7 +50,7 @@ namespace HomeFinanceApi.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login(UserLoginViewModel userVM)
+        public async Task<IActionResult> Login(UserLoginRequest userVM)
         {
             var user = await _userManager.FindByEmailAsync(userVM.UserNameOrEmail) ??
                        await _userManager.FindByNameAsync(userVM.UserNameOrEmail);
@@ -63,7 +63,7 @@ namespace HomeFinanceApi.Controllers
                     {
                         new Claim("UserId", user.Id, ToString())
                     }),
-                    Expires = DateTime.UtcNow.AddMinutes(5),
+                    Expires = DateTime.UtcNow.AddDays(5),
                     SigningCredentials = new SigningCredentials(
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ApplicationSettings:JWT_Secret"])),
                         SecurityAlgorithms.HmacSha256Signature

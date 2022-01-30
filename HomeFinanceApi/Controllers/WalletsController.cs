@@ -26,7 +26,15 @@ namespace HomeFinanceApi.Controllers
 
             var wallets = await _unitOfWork.WalletRepository.GetAll(userId);
 
-            return wallets;
+            var allOperations = (await _unitOfWork.OperationRepository.GetAll(userId)).ToList();
+
+            return wallets.Select(i =>  new { 
+                id=i.Id.Value,
+                name=i.Name,
+                groupName=i.GroupName,
+                comment=i.Comment,
+                balance = allOperations.GetSumFor(i.Id.Value) 
+            });
         }
 
         
