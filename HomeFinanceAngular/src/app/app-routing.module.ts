@@ -6,10 +6,17 @@ import { UserComponent } from './user/user.component';
 import { OverviewComponent } from './overview/overview.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
+import { WalletsComponent } from './wallets/wallets.component';
 const routes: Routes = [
   {path:'',redirectTo:'user/login', pathMatch:'full'},
   {
     path:'home', component:HomeComponent
+  },
+  {
+    path:'overview', component:OverviewComponent, canActivate:[AuthGuard]
+  },
+  {
+    path:'wallets', component:WalletsComponent, canActivate:[AuthGuard]
   },
   {
     path:'user', component:UserComponent, 
@@ -17,9 +24,6 @@ const routes: Routes = [
       {path:'registration', component:RegistrationComponent},
       {path:'login', component:LoginComponent}
     ]
-  },
-  {
-    path:'overview', component:OverviewComponent, canActivate:[AuthGuard]
   }
 ];
 

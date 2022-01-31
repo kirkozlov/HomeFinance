@@ -15,6 +15,8 @@ import { LoginComponent } from './user/login/login.component';
 import { OverviewComponent } from './overview/overview.component';
 import { HomeComponent } from './home/home.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { WalletsComponent } from './wallets/wallets.component';
+import { WalletFormComponent } from './wallets/wallet-form/wallet-form.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     RegistrationComponent,
     LoginComponent,
     OverviewComponent,
-    HomeComponent
+    HomeComponent,
+    WalletsComponent,
+    WalletFormComponent
   ],
   imports: [
     BrowserModule,

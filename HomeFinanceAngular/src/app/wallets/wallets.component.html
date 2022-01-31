@@ -1,0 +1,34 @@
+<div>
+    <div class="container p-0 mt-1 " *ngIf="this.walletsService.walletGroups">
+        <div class="card mb-3" *ngFor="let group of this.walletsService.walletGroups | async">
+            <div class="card-header p-2 ps-1" *ngIf="group[0].groupName">
+                {{group[0].groupName}}
+            </div>
+            <div class="card-header p-2 ps-1" *ngIf="!group[0].groupName">
+                Another
+            </div>
+            <ul class="list-group list-group-flush">
+                <li *ngFor="let wallet of group" class="list-group-item list-group-item-action m-0 p-1 ">
+                    <div class="row m-0 ps-2" (click)="onWalletClick(wallet.id)">
+                        <div class="col-8  text-start card-text p-0 m-0 ">
+                            {{wallet.name}}
+                        </div>
+                        <div class="col-4 text-end card-text p-0 m-0 pe-1">
+                            {{wallet.balance}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container mb-1">
+        <button class="btn btn-outline-success d-flex ms-auto p-0 rounded-circle">
+            <img src="/assets/img/AddWallet.png" class="ms-auto  d-block  " height="50px" width="50px">
+        </button>
+    </div>
+</div>
+<div>
+    <div class="container">
+        <app-wallet-form></app-wallet-form>
+    </div>  
+</div>
