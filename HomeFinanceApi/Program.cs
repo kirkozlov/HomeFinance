@@ -28,7 +28,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     });
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IGateway, Gateway>();
 
 builder.Services.AddCors();
 

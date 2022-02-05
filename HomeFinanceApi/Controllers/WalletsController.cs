@@ -1,4 +1,5 @@
 ﻿using HomeFinance.Domain.Utils;
+using HomeFinanceApi.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,9 @@ namespace HomeFinanceApi.Controllers
     [ApiController]
     public class WalletsController : ControllerBase
     {
-        IUnitOfWork _unitOfWork;
+        IGateway _unitOfWork;
 
-        public WalletsController(IUnitOfWork unitOfWork)
+        public WalletsController(IGateway unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -37,6 +38,28 @@ namespace HomeFinanceApi.Controllers
             });
         }
 
-        
+        [HttpPost]
+        [Authorize]
+        public async Task Post(WalletRequest walletRequest)
+        {
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+            await _unitOfWork.WalletRepository.Add(walletRequest.ToDto(), userId);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task Put(int id, WalletRequest walletRequest)
+        {
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+            await _unitOfWork.WalletRepository.Update(walletRequest.ToDto(), userId);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task Delete(int id)
+        {
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+            await _unitOfWork.WalletRepository.Remove(id, userId);
+        }
     }
 }

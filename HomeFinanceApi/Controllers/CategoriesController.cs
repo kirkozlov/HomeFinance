@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HomeFinance.Domain.Utils;
+using HomeFinanceApi.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,60 @@ namespace HomeFinanceApi.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
+        IGateway _unitOfWork;
+
+        public CategoriesController(IGateway unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+
         // GET: api/<CategoriesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<object>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+
+            var categories = await _unitOfWork.CategoryRepository.GetAll(userId);
+
+            return categories.Select(i => new {
+                id = i.Id.Value,
+                name = i.Name,
+                operationType=i.OperationType,
+                parentId= i.ParentId,
+                comment = i.Comment
+            });
         }
 
-        // GET api/<CategoriesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //// GET api/<CategoriesController>/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
-        // POST api/<CategoriesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize]
+        public async Task Post(CategoryRequest categoryRequest)
         {
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+            await _unitOfWork.CategoryRepository.Add(categoryRequest.ToDto(), userId);
         }
 
-        // PUT api/<CategoriesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [Authorize]
+        public async Task Put(int id, CategoryRequest categoryRequest)
         {
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+            await _unitOfWork.CategoryRepository.Update(categoryRequest.ToDto(), userId);
         }
 
-        // DELETE api/<CategoriesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize]
+        public async Task Delete(int id)
         {
+            var userId = User.Claims.First(i => i.Type == "UserId").Value;
+            await _unitOfWork.CategoryRepository.Remove(id, userId);
         }
     }
 }

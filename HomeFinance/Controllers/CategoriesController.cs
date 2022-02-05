@@ -13,9 +13,9 @@ namespace HomeFinance.Controllers
 {
     public class CategoriesController : Controller
     {
-        readonly IUnitOfWork _unitOfWork;
+        readonly IGateway _unitOfWork;
 
-        public CategoriesController(IUnitOfWork unitOfWork)
+        public CategoriesController(IGateway unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

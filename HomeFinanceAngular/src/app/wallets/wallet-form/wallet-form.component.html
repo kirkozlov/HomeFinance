@@ -1,5 +1,5 @@
-<form #form="ngForm">
-    <input type="hidden" name="id" [value]="formData.id">
+<form #form="ngForm" (submit)="onSubmit(form)">
+    <input type="hidden" name="id" [value]="formData.id" [(ngModel)]="formData.id">
 
     <div class="form-group">
         <label>Name</label>
@@ -22,10 +22,11 @@
                 Save
             </button>
         </div>
-        <div class="form-froup col-auto">
-            <button  class="btn btn-danger m-2 ms-0 ">
-                Delete
-            </button>
-        </div>
+        
     </div>
 </form>
+<div class="form-froup col-auto" *ngIf="formData.id!=null">
+    <button  class="btn btn-danger m-2 ms-0 " (click)="onDelete()">
+        Delete
+    </button>
+</div>

@@ -10,9 +10,9 @@ namespace HomeFinance.Controllers
     public class OperationsController : Controller
     {
 
-        readonly IUnitOfWork _unitOfWork;
+        readonly IGateway _unitOfWork;
 
-        public OperationsController(IUnitOfWork unitOfWork)
+        public OperationsController(IGateway unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

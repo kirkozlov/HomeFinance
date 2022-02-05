@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HomeFinance.DataAccess
 {
-    public class UnitOfWork : IUnitOfWork
+    public class Gateway : IGateway
     {
 
         Lazy<ICategoryRepository> _categoryRepository;
@@ -28,9 +28,8 @@ namespace HomeFinance.DataAccess
 
 
         readonly HomeFinanceContext _homeFinanceContext;
-        readonly IDbContextTransaction _transaction;
 
-        public UnitOfWork(HomeFinanceContext homeFinanceContext)
+        public Gateway(HomeFinanceContext homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
 
@@ -40,22 +39,8 @@ namespace HomeFinance.DataAccess
             _walletRepository = new Lazy<IWalletRepository>(() => new WalletRepository(_homeFinanceContext));
             _repeatableOperationRepository =new Lazy<IRepeatableOperationRepository>(()=>new RepeatableOperationRepository(_homeFinanceContext));
 
-            _transaction = _homeFinanceContext.Database.BeginTransaction();
         }
 
-        public void Dispose()
-        {
-            Commit();
-        }
-
-        public void Rollback()
-        {
-            _transaction.Rollback();
-        }
-
-        public void  Commit()
-        {
-            _transaction.Commit();
-        }
+        
     }
 }

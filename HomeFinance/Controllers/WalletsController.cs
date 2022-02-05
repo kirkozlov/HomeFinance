@@ -17,9 +17,9 @@ namespace HomeFinance.Controllers
 
     public class WalletsController : Controller
     {
-        readonly IUnitOfWork _unitOfWork;
+        readonly IGateway _unitOfWork;
 
-        public WalletsController(IUnitOfWork unitOfWork)
+        public WalletsController(IGateway unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

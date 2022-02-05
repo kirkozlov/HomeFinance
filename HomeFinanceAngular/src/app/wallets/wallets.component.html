@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!showForm">
     <div class="container p-0 mt-1 " *ngIf="this.walletsService.walletGroups">
         <div class="card mb-3" *ngFor="let group of this.walletsService.walletGroups | async">
             <div class="card-header p-2 ps-1" *ngIf="group[0].groupName">
@@ -9,7 +9,7 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li *ngFor="let wallet of group" class="list-group-item list-group-item-action m-0 p-1 ">
-                    <div class="row m-0 ps-2" (click)="onWalletClick(wallet.id)">
+                    <div class="row m-0 ps-2" (click)="onWalletClick(wallet)">
                         <div class="col-8  text-start card-text p-0 m-0 ">
                             {{wallet.name}}
                         </div>
@@ -22,13 +22,18 @@
         </div>
     </div>
     <div class="container mb-1">
-        <button class="btn btn-outline-success d-flex ms-auto p-0 rounded-circle">
+        <button class="btn btn-outline-success d-flex ms-auto p-0 rounded-circle" (click)="onAddNewWallet()">
             <img src="/assets/img/AddWallet.png" class="ms-auto  d-block  " height="50px" width="50px">
         </button>
     </div>
 </div>
-<div>
+<div *ngIf="showForm">
+    <div class="container mb-1 mt-1">
+        <button class="btn btn-outline-danger d-flex ms-auto p-2 rounded-circle" (click)="onExitForm()">
+            <img src="/assets/img/close.png" class="ms-auto  d-block  " height="20px" width="20px">
+        </button>
+    </div>
     <div class="container">
-        <app-wallet-form></app-wallet-form>
+        <app-wallet-form (onExitForm)="onExitForm()" [formData]="walletModel"></app-wallet-form>
     </div>  
 </div>

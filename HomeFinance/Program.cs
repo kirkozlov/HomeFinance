@@ -32,7 +32,7 @@ builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.R
 
 //});
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IGateway, Gateway>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

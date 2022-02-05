@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace HomeFinance.Domain.Utils
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IGateway
     {
         ICategoryRepository CategoryRepository { get; }
         IOperationRepository OperationRepository { get; }
         IWalletRepository WalletRepository { get; }
         IRepeatableOperationRepository RepeatableOperationRepository { get; }
 
-        public void Rollback();
-        public void Commit();
+
 
     }
 }
