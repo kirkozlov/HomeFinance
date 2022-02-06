@@ -23,16 +23,16 @@ export class WalletsComponent implements OnInit {
   }
   
   onWalletClick(walletModel:WalletModel){
-    this.showForm=true;
     this.walletModel=Object.assign({}, walletModel);
+    this.showForm=true;
   }
 
   showForm:boolean=false;
 
 
   onAddNewWallet(){
-    this.showForm=true;
     this.walletModel=new WalletModel();
+    this.showForm=true;
   }
 
   onExitForm(){

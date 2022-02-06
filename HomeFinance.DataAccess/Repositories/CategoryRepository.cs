@@ -15,7 +15,9 @@ namespace HomeFinance.DataAccess.Repositories
 
         public async Task<List<CategoryDto>> GetAll(string userId)
         {
-            return await _homeFinanceContext.Categories.Where(i=>i.HomeFinanceUserId== userId).Select(i => new CategoryDto(i)).ToListAsync();
+
+            var categories= await _homeFinanceContext.Categories.Where(i => i.HomeFinanceUserId == userId).Select(i => new CategoryDto(i)).ToListAsync();
+            return categories;
         }
 
         public async Task<CategoryDto?> GetById(int id, string userId)

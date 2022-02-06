@@ -21,6 +21,7 @@ namespace HomeFinanceApi.Controllers
 
         // GET: api/<CategoriesController>
         [HttpGet]
+        [Authorize]
         public async Task<IEnumerable<object>> Get()
         {
             var userId = User.Claims.First(i => i.Type == "UserId").Value;
