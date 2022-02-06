@@ -7,7 +7,7 @@ namespace HomeFinanceApi.Requests
     {
         public int? Id { get; set; }
         public string Name { get; set; }
-        OperationType OperationType { get; set; }
+        public OperationType OperationType { get; set; }
         public int? ParentId { get; set; }
         public string? Comment { get; set; }
 

@@ -17,6 +17,8 @@ import { HomeComponent } from './home/home.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { WalletsComponent } from './wallets/wallets.component';
 import { WalletFormComponent } from './wallets/wallet-form/wallet-form.component';
+import { CategoriesComponent } from './categories/categories.component';
+import { CategoriesFormComponent } from './categories/categories-form/categories-form.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { WalletFormComponent } from './wallets/wallet-form/wallet-form.component
     OverviewComponent,
     HomeComponent,
     WalletsComponent,
-    WalletFormComponent
+    WalletFormComponent,
+    CategoriesComponent,
+    CategoriesFormComponent
   ],
   imports: [
     BrowserModule,

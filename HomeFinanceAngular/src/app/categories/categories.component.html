@@ -1,0 +1,28 @@
+<div *ngIf="!showForm">
+    <div class="container p-0 mt-1 " >
+    <ul class="list-group" *ngIf="categoriesService.categoryGroups">
+        <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ groups: categoriesService.categoryGroups }">
+        </ng-container>
+    </ul>
+    </div>
+    <ng-template #recursiveListTmpl let-groups="groups">
+        <li *ngFor="let item of groups" class="list-group-item list-group-item-action">
+            {{ item.categoryParent.name }}
+            <ul *ngIf="item.categoryChildren.length > 0" class="list-group">
+                <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ groups: item.categoryChildren }">
+                </ng-container>
+            </ul>
+        </li>
+    </ng-template>
+</div>
+
+<div *ngIf="!showForm">
+    <div class="container mb-1 mt-1">
+        <button class="btn btn-outline-danger d-flex ms-auto p-2 rounded-circle" (click)="onExitForm()">
+            <img src="/assets/img/close.png" class="ms-auto  d-block  " height="20px" width="20px">
+        </button>
+    </div>
+    <div class="container">
+        <app-categories-form (onExitForm)="onExitForm()" [formData]="categoryModel"></app-categories-form>
+    </div>
+</div>

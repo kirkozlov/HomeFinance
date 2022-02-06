@@ -1,0 +1,53 @@
+<form #form="ngForm" (submit)="onSubmit(form)">
+    <input type="hidden" name="id" [value]="formData.id" [(ngModel)]="formData.id">
+
+    <div class="form-group">
+        <label>Name</label>
+        <input class="form-control form-control-lg" placeholder="Name" name="name" #name="ngModel"
+            [(ngModel)]="formData.name" required [class.invalid]="name.invalid && name.touched">
+    </div>
+
+
+    <div class="form-group">
+        <label>OperationType</label>
+        <select class="form-select form-select-lg" name="OperationType" #operationType="ngModel" [(ngModel)]="formData.operationType" >
+            <option value="1">Expense</option>
+            <option value="0">Income</option>
+        </select>
+    </div>
+
+
+    <div class="form-group" *ngIf="formData.operationType==1 && this.possibleExpenseParents.length>0">
+        <label>Parent Expense</label>
+        <select class="form-select form-select-lg" name="ParentId" #parentId="ngModel" [(ngModel)]="formData.parentId">
+            <option *ngFor="let possibleParent of this.possibleExpenseParents" [value]="possibleParent.id">{{possibleParent.name}}</option>
+        </select>
+    </div>
+
+    <div class="form-group" *ngIf="formData.operationType==0 && this.possibleIncomeParents.length>0">
+        <label>Parent Income</label>
+        <select class="form-select form-select-lg" name="ParentId" #parentId="ngModel" [(ngModel)]="formData.parentId">
+            <option *ngFor="let possibleParent of this.possibleIncomeParents" [value]="possibleParent.id">{{possibleParent.name}}</option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <label>Comment</label>
+        <input class="form-control form-control-lg" placeholder="Comment" name="comment" #comment="ngModel"
+            [(ngModel)]="formData.comment">
+    </div>
+    <div class="row">
+        <div class="form-froup col-auto">
+            <button type="submit" class="btn btn-success m-2 me-0" [disabled]="form.invalid">
+                Save
+            </button>
+        </div>
+
+    </div>
+</form>
+<div class="form-froup col-auto" *ngIf="formData.id!=null">
+    <button class="btn btn-danger m-2 ms-0 " (click)="onDelete()">
+        Delete
+    </button>
+</div>
