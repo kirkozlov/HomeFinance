@@ -3,12 +3,12 @@ using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.DataAccess.Repositories
+namespace HomeFinance.DataAccess.EFBasic.Repositories
 {
     internal class CategoryRepository : ICategoryRepository
     {
-        HomeFinanceContext _homeFinanceContext;
-        public CategoryRepository(HomeFinanceContext homeFinanceContext)
+        HomeFinanceContextBase _homeFinanceContext;
+        public CategoryRepository(HomeFinanceContextBase homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
         }

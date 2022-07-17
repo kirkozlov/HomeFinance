@@ -3,12 +3,12 @@ using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.DataAccess.Repositories
+namespace HomeFinance.DataAccess.EFBasic.Repositories
 {
     internal class WalletRepository : IWalletRepository
     {
-        HomeFinanceContext _homeFinanceContext;
-        public WalletRepository(HomeFinanceContext homeFinanceContext)
+        HomeFinanceContextBase _homeFinanceContext;
+        public WalletRepository(HomeFinanceContextBase homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
         }

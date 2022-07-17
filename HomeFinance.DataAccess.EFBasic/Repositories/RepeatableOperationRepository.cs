@@ -3,13 +3,13 @@ using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.DataAccess.Repositories
+namespace HomeFinance.DataAccess.EFBasic.Repositories
 {
     internal class RepeatableOperationRepository : IRepeatableOperationRepository
     {
-        HomeFinanceContext _homeFinanceContext;
+        HomeFinanceContextBase _homeFinanceContext;
 
-        public RepeatableOperationRepository(HomeFinanceContext homeFinanceContext)
+        public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
         }

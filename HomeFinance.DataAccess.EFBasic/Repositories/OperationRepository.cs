@@ -3,14 +3,14 @@ using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeFinance.DataAccess.Repositories
+namespace HomeFinance.DataAccess.EFBasic.Repositories
 {
 
     internal class OperationRepository : IOperationRepository
     {
-        HomeFinanceContext _homeFinanceContext;
+        HomeFinanceContextBase _homeFinanceContext;
 
-        public OperationRepository(HomeFinanceContext homeFinanceContext)
+        public OperationRepository(HomeFinanceContextBase homeFinanceContext)
         {
             _homeFinanceContext = homeFinanceContext;
         }

@@ -1,31 +1,27 @@
-﻿using HomeFinance.Domain.Models;
+﻿using HomeFinance.DataAccess.EFBasic;
+using HomeFinance.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace HomeFinance.DataAccess;
+namespace HomeFinance.DataAccess.MsSql;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HomeFinanceContext>
 {
     public HomeFinanceContext CreateDbContext(string[] args)
     {
         IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(@Directory.GetCurrentDirectory() + "/../HomeFinance/appsettings.json").Build();
-        var builder = new DbContextOptionsBuilder<HomeFinanceContext>();
+        var builder = new DbContextOptionsBuilder();
         var connectionString = configuration.GetConnectionString("HomeFinanceContextConnection");
         builder.UseSqlServer(connectionString);
         return new HomeFinanceContext(builder.Options);
     }
 }
-public class HomeFinanceContext : IdentityDbContext<HomeFinanceUser>
+public class HomeFinanceContext : HomeFinanceContextBase
 {
-    public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Operation> Operations { get; set; }
-    public DbSet<RepeatableOperation> RepeatableOperations { get; set; }
-
-    public HomeFinanceContext(DbContextOptions<HomeFinanceContext> options)
+    public HomeFinanceContext(DbContextOptions options)
         : base(options)
     {
     }

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeFinance.DataAccess\HomeFinance.DataAccess.csproj" />
+    <ProjectReference Include="..\HomeFinance.DataAccess\HomeFinance.DataAccess.MsSql.csproj" />
     <ProjectReference Include="..\HomeFinance.Domain\HomeFinance.Domain.csproj" />
   </ItemGroup>
 

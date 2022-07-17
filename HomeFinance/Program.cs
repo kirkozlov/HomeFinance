@@ -1,4 +1,6 @@
 using HomeFinance.DataAccess;
+using HomeFinance.DataAccess.EFBasic;
+using HomeFinance.DataAccess.Sqlite;
 using HomeFinance.Domain;
 using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Repositories;
@@ -16,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("HomeFinanceContextConnection");
 builder.Services.AddDbContext<HomeFinanceContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+    //options.UseSqlServer(connectionString);
+    options.UseSqlite($@"Data Source = C:\Users\User\AppData\Local\dbtest.db");
     options.UseLazyLoadingProxies();
 });
 builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -32,6 +35,7 @@ builder.Services.AddDefaultIdentity<HomeFinanceUser>(options => options.SignIn.R
 
 //});
 
+builder.Services.AddScoped<HomeFinanceContextBase, HomeFinanceContext>();
 builder.Services.AddScoped<IGateway, Gateway>();
 
 // Add services to the container.
