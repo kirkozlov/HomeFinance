@@ -17,13 +17,122 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
 
-            modelBuilder.Entity("HomeFinance.Domain.Models.Category", b =>
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Operation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HomeFinanceUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OperationType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("WalletIdTo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("WalletToId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HomeFinanceUserId");
+
+                    b.HasIndex("WalletId");
+
+                    b.HasIndex("WalletToId");
+
+                    b.ToTable("Operations");
+                });
+
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HomeFinanceUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("NextExecution")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OperationType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RepeatableType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("WalletIdTo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("WalletToId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HomeFinanceUserId");
+
+                    b.HasIndex("WalletId");
+
+                    b.HasIndex("WalletToId");
+
+                    b.ToTable("RepeatableOperations");
+                });
+
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Tag", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HomeFinanceUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("HomeFinanceUserId");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Wallet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GroupName")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HomeFinanceUserId")
@@ -34,19 +143,11 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("OperationType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("HomeFinanceUserId");
 
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Categories");
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("HomeFinance.Domain.Models.HomeFinanceUser", b =>
@@ -111,130 +212,6 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("HomeFinance.Domain.Models.Operation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("HomeFinanceUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("OperationType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WalletId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("WalletIdTo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("WalletToId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("HomeFinanceUserId");
-
-                    b.HasIndex("WalletId");
-
-                    b.HasIndex("WalletToId");
-
-                    b.ToTable("Operations");
-                });
-
-            modelBuilder.Entity("HomeFinance.Domain.Models.RepeatableOperation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("HomeFinanceUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("NextExecution")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("OperationType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RepeatableType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WalletId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("WalletIdTo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("WalletToId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("HomeFinanceUserId");
-
-                    b.HasIndex("WalletId");
-
-                    b.HasIndex("WalletToId");
-
-                    b.ToTable("RepeatableOperations");
-                });
-
-            modelBuilder.Entity("HomeFinance.Domain.Models.Wallet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("GroupName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("HomeFinanceUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HomeFinanceUserId");
-
-                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -365,47 +342,53 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HomeFinance.Domain.Models.Category", b =>
+            modelBuilder.Entity("OperationTag", b =>
                 {
-                    b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
-                        .WithMany()
-                        .HasForeignKey("HomeFinanceUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("OperationsId")
+                        .HasColumnType("TEXT");
 
-                    b.HasOne("HomeFinance.Domain.Models.Category", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
+                    b.Property<string>("TagsName")
+                        .HasColumnType("TEXT");
 
-                    b.Navigation("HomeFinanceUser");
+                    b.HasKey("OperationsId", "TagsName");
 
-                    b.Navigation("Parent");
+                    b.HasIndex("TagsName");
+
+                    b.ToTable("OperationTag");
                 });
 
-            modelBuilder.Entity("HomeFinance.Domain.Models.Operation", b =>
+            modelBuilder.Entity("RepeatableOperationTag", b =>
                 {
-                    b.HasOne("HomeFinance.Domain.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Property<Guid>("RepeatableOperationId")
+                        .HasColumnType("TEXT");
 
+                    b.Property<string>("TagsName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("RepeatableOperationId", "TagsName");
+
+                    b.HasIndex("TagsName");
+
+                    b.ToTable("RepeatableOperationTag");
+                });
+
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Operation", b =>
+                {
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
                         .HasForeignKey("HomeFinanceUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinance.Domain.Models.Wallet", "Wallet")
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HomeFinance.Domain.Models.Wallet", "WalletTo")
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "WalletTo")
                         .WithMany()
                         .HasForeignKey("WalletToId");
-
-                    b.Navigation("Category");
 
                     b.Navigation("HomeFinanceUser");
 
@@ -414,29 +397,23 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Navigation("WalletTo");
                 });
 
-            modelBuilder.Entity("HomeFinance.Domain.Models.RepeatableOperation", b =>
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation", b =>
                 {
-                    b.HasOne("HomeFinance.Domain.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
-
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
                         .HasForeignKey("HomeFinanceUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinance.Domain.Models.Wallet", "Wallet")
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HomeFinance.Domain.Models.Wallet", "WalletTo")
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "WalletTo")
                         .WithMany()
                         .HasForeignKey("WalletToId");
-
-                    b.Navigation("Category");
 
                     b.Navigation("HomeFinanceUser");
 
@@ -445,7 +422,18 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Navigation("WalletTo");
                 });
 
-            modelBuilder.Entity("HomeFinance.Domain.Models.Wallet", b =>
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Tag", b =>
+                {
+                    b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
+                        .WithMany()
+                        .HasForeignKey("HomeFinanceUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HomeFinanceUser");
+                });
+
+            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Wallet", b =>
                 {
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
@@ -503,6 +491,36 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OperationTag", b =>
+                {
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Operation", null)
+                        .WithMany()
+                        .HasForeignKey("OperationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RepeatableOperationTag", b =>
+                {
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation", null)
+                        .WithMany()
+                        .HasForeignKey("RepeatableOperationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

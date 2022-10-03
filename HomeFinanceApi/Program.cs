@@ -1,5 +1,5 @@
 using HomeFinance.DataAccess;
-using HomeFinance.DataAccess.MsSql;
+using HomeFinance.DataAccess.Sqlite;
 using HomeFinance.Domain;
 using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Utils;
@@ -8,13 +8,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using HomeFinance.DataAccess.EFBasic;
+using HomeFinanceApi;
+using HomeFinanceApi.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("HomeFinanceContextConnection");
-builder.Services.AddDbContext<HomeFinanceContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
+
+builder.Services.AddDataAccess(builder.Configuration);
+
 builder.Services.AddDefaultIdentity<HomeFinanceUser>()
     .AddEntityFrameworkStores<HomeFinanceContext>();
 
@@ -28,7 +29,7 @@ builder.Services.Configure<IdentityOptions>(options =>
         options.Password.RequiredLength = 4;
 
     });
-
+builder.Services.AddScoped<HomeFinanceContextBase, HomeFinanceContext>();
 builder.Services.AddScoped<IGateway, Gateway>();
 
 builder.Services.AddCors();
@@ -64,6 +65,7 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddScoped<UserService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,9 +75,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-
-
 app.UseHttpsRedirection();
 
 app.UseCors(builder=>builder.WithOrigins(app.Configuration["ApplicationSettings:Client_URL"]).AllowAnyHeader().AllowAnyMethod());
@@ -84,5 +83,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+TagApiSet.Map(app);
+WalletApiSet.Map(app); 
+OperationApiSet.Map(app);
 
 app.Run();

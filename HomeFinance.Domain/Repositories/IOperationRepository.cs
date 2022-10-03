@@ -1,13 +1,9 @@
-﻿using HomeFinance.Domain.Dtos;
+﻿using HomeFinance.Domain.DomainModels;
 
-namespace HomeFinance.Domain.Repositories
+namespace HomeFinance.Domain.Repositories;
+
+public interface IOperationRepository : IUserDependentRepository<Operation, Guid>
 {
-    public interface IOperationRepository : IUserDependentRepository<OperationDto>
-    {
-        public Task<List<OperationDto>> GetForWallet(string userId, int walletId);
+    public Task<List<Operation>> GetForWallet(string userId, Guid walletId);
         
-    }
-   
-
-  
 }

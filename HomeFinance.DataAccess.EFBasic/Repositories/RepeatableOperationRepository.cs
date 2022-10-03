@@ -1,79 +1,45 @@
-﻿using HomeFinance.Domain.Dtos;
-using HomeFinance.Domain.Models;
-using HomeFinance.Domain.Repositories;
+﻿using HomeFinance.Domain.DomainModels;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using Tag = HomeFinanace.DataAccess.Core.DBModels.Tag;
 
-namespace HomeFinance.DataAccess.EFBasic.Repositories
+namespace HomeFinance.DataAccess.EFBasic.Repositories;
+
+class RepeatableOperationRepository : UserDependentRepository<RepeatableOperation, HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, Guid>
 {
-    internal class RepeatableOperationRepository : IRepeatableOperationRepository
+    readonly DbSet<Tag> _tags;
+    public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext) : base(homeFinanceContext, homeFinanceContext.RepeatableOperations)
     {
-        HomeFinanceContextBase _homeFinanceContext;
+        this._tags = homeFinanceContext.Tags;
+    }
 
-        public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext)
+    protected override RepeatableOperation ToDomain(HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation db)
+    {
+
+        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletIdTo, db.NextExecution, db.RepeatableType);
+    }
+
+    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToDb(RepeatableOperation domain, string userId)
+    {
+        var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
+        return new HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation()
         {
-            _homeFinanceContext = homeFinanceContext;
-        }
+            Id = domain.Id ?? Guid.NewGuid(),
+            WalletId = domain.WalletId,
+            OperationType = domain.OperationType,
+            Tags = tags,
+            WalletIdTo = domain.WalletIdTo,
+            Amount = domain.Amount,
+            Comment = domain.Comment,
+            NextExecution = domain.NextExecution,
+            RepeatableType = domain.RepeatableType,
+            HomeFinanceUserId = userId
+        };
+    }
 
-        public async Task<List<RepeatableOperationDto>> GetAll(string userId)
-        {
-            return await _homeFinanceContext.RepeatableOperations.Where(i => i.HomeFinanceUserId == userId).Select(i => new RepeatableOperationDto(i)).ToListAsync();
-
-        }
-
-        public async Task<RepeatableOperationDto?> GetById(int id, string userId)
-        {
-            var operation = await _homeFinanceContext.RepeatableOperations.SingleOrDefaultAsync(i => i.Id == id && i.HomeFinanceUserId == userId);
-            if (operation == null)
-                return null;
-            return new RepeatableOperationDto(operation);
-        }
-
-        public async Task Add(RepeatableOperationDto dto, string userId)
-        {
-            await _homeFinanceContext.RepeatableOperations.AddAsync(new RepeatableOperation()
-            {
-                HomeFinanceUserId = userId,
-                OperationType = dto.OperationType,
-                WalletId = dto.WalletId,
-                CategoryId = dto.CategoryId,
-                WalletIdTo=dto.WalletIdTo,
-                NextExecution = dto.NextExecution,
-                RepeatableType = dto.RepeatableType,
-                Amount = dto.Amount,
-                Comment = dto.Comment
-            });
-            await _homeFinanceContext.SaveChangesAsync();
-        }
-
-        
-
-        public async Task Update(RepeatableOperationDto dto, string userId)
-        {
-            var operation = await _homeFinanceContext.RepeatableOperations.SingleOrDefaultAsync(i => i.Id == dto.Id && i.HomeFinanceUserId == userId);
-            if (operation == null)
-                throw new Exception();
-
-
-            operation.WalletId = dto.WalletId;
-            operation.OperationType = dto.OperationType;
-            operation.CategoryId = dto.CategoryId;
-            operation.WalletIdTo = dto.WalletIdTo;
-            operation.NextExecution = dto.NextExecution;
-            operation.RepeatableType = dto.RepeatableType;
-            operation.Amount = dto.Amount;
-            operation.Comment = dto.Comment;
-
-            await _homeFinanceContext.SaveChangesAsync();
-        }
-
-        public async Task Remove(int id, string userId)
-        {
-            var operation = await _homeFinanceContext.RepeatableOperations.SingleOrDefaultAsync(i => i.Id == id && i.HomeFinanceUserId == userId);
-            if (operation == null)
-                throw new Exception();
-            _homeFinanceContext.RepeatableOperations.Remove(operation);
-            await _homeFinanceContext.SaveChangesAsync();
-        }
+    protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, bool>> CheckKey(Guid key)
+    {
+        Expression<Func<HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, bool>> exp = db => db.Id == key;
+        return exp;
     }
 }
- 

@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeFinance.Domain.Enums
+namespace HomeFinance.Domain.Enums;
+
+public enum OperationType
 {
-    public enum OperationType
-    {
-        Income, Expense, Transfer
-    }
+    Income, Expense, Transfer
+}
 
-    public enum RepeatableType
-    {
-        Month, Quarter, Year
-    }
-
+public enum RepeatableType
+{
+    Month, Quarter, Year
 }

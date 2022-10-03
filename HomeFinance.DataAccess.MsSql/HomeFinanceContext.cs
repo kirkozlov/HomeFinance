@@ -1,10 +1,12 @@
-﻿using HomeFinance.DataAccess.EFBasic;
+﻿using HomeFinanace.DataAccess.Core.DBModels;
+using HomeFinance.DataAccess.EFBasic;
 using HomeFinance.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HomeFinance.DataAccess.MsSql;
 
@@ -19,6 +21,21 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HomeFinanc
         return new HomeFinanceContext(builder.Options);
     }
 }
+
+public static class DBExtension
+{
+    public static IServiceCollection AddDataAccess(this IServiceCollection self, ConfigurationManager configuration)
+    {
+        var connectionString = configuration.GetConnectionString("HomeFinanceContextConnection");
+        self.AddDbContext<HomeFinanceContext>(options =>
+        {
+            options.UseSqlServer(connectionString);
+            //options.UseLazyLoadingProxies();
+        });
+        return self;
+    }
+}
+
 public class HomeFinanceContext : HomeFinanceContextBase
 {
     public HomeFinanceContext(DbContextOptions options)
@@ -34,7 +51,6 @@ public class HomeFinanceContext : HomeFinanceContextBase
         // Add your customizations after calling base.OnModelCreating(builder);
 
         builder.Entity<Operation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Restrict);
-        builder.Entity<Operation>().HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<RepeatableOperation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Restrict);
     }

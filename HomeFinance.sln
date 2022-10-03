@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance", "HomeFinance\HomeFinance.csproj", "{DFFCCE70-A121-47D5-9BBB-11F31198DE7A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.Domain", "HomeFinance.Domain\HomeFinance.Domain.csproj", "{5C9584C9-7D31-477A-9C28-0E2BD26F0972}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinanceApi", "HomeFinanceApi\HomeFinanceApi.csproj", "{D5711717-2A75-4F63-AD42-7C487863E31C}"
@@ -15,16 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.DataAccess.EFBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.DataAccess.MsSql", "HomeFinance.DataAccess.MsSql\HomeFinance.DataAccess.MsSql.csproj", "{0E6E528C-8AFE-4794-A931-40D6B8A4DB75}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.DataAccess.Core", "HomeFinance.DataAccess.Core\HomeFinance.DataAccess.Core.csproj", "{7B6F437E-FCF1-4505-9985-7E9E4B168FEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DFFCCE70-A121-47D5-9BBB-11F31198DE7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFFCCE70-A121-47D5-9BBB-11F31198DE7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFFCCE70-A121-47D5-9BBB-11F31198DE7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFFCCE70-A121-47D5-9BBB-11F31198DE7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C9584C9-7D31-477A-9C28-0E2BD26F0972}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5C9584C9-7D31-477A-9C28-0E2BD26F0972}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C9584C9-7D31-477A-9C28-0E2BD26F0972}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{0E6E528C-8AFE-4794-A931-40D6B8A4DB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E6E528C-8AFE-4794-A931-40D6B8A4DB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E6E528C-8AFE-4794-A931-40D6B8A4DB75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B6F437E-FCF1-4505-9985-7E9E4B168FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B6F437E-FCF1-4505-9985-7E9E4B168FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B6F437E-FCF1-4505-9985-7E9E4B168FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B6F437E-FCF1-4505-9985-7E9E4B168FEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
