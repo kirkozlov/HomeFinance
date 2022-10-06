@@ -3,15 +3,18 @@ import React,{useEffect, useState} from "react";
 import useForm from "./useForm";
 import { connect } from "react-redux";
 import * as actions from "../actions/wallet";
+import { constants } from "buffer";
 const initialFieldValues={
     name:"",
     groupName:"",
     comment:""
 }
 
-const WalletForm=(props)=>{
+const WalletForm=(props:any)=>{
+
+
     const validate=(fieldValues=values)=>{
-        let tmp={...errors}
+        let tmp=errors;
         if('name' in fieldValues)
             tmp.name = fieldValues.name?"":"This field is required"
         if('groupName' in fieldValues)
@@ -27,7 +30,7 @@ const WalletForm=(props)=>{
    
 
    
-    const handleSubmit=e=>{
+    const handleSubmit=(e:any)=>{
         e.preventDefault()
         if(validate()){
             if(props.currentId!=0)
@@ -41,7 +44,7 @@ const WalletForm=(props)=>{
     useEffect(()=>{
         if(props.currentId!=0){
             setValues({
-                ...props.walletList.find(x=>x.id==props.currentId)
+                ...props.walletList.find((x:actions.IWallet)=>x.id==props.currentId)
             })
             setErrors({})
         }
@@ -64,7 +67,7 @@ const WalletForm=(props)=>{
         </form>
      );
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state:any) => ({
     walletList: state.wallet.list
 })
 

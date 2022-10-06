@@ -1,10 +1,13 @@
 import { useState } from "react"
 
-const useForm = (initialFieldValues, validate, setCurrentId)=>{
+
+const useForm = (initialFieldValues:any, validate:any, setCurrentId:any)=>{
+
     const [values,setValues]=useState(initialFieldValues)
-    const [errors,setErrors]=useState({})
+    let b:any ={};
+    const [errors,setErrors]=useState(b)
     
-    const handleInputChanges= e=>{
+    const handleInputChanges= (e:any)=>{
         const {name,value}=e.target
         const fieldValue={[name]:value}
         setValues({

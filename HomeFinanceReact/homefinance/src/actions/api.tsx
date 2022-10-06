@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import {IWallet} from "./wallet";
 const baseUrl = "https://localhost:7080/api/";
 //const baseUrl="http://localhost:5080/api/";
 
@@ -12,9 +12,9 @@ export default {
         return {
            
             fetchAll: () => axios.get(url, config),
-            create: newWallet => axios.post(url, newWallet, config),
-            update: wallet => axios.put(url, wallet,config),
-            delete: id => axios.delete(url + id, config),
+            create: (newWallet:IWallet) => axios.post(url, newWallet, config),
+            update: (wallet:IWallet) => axios.put(url, wallet,config),
+            delete: (id:string) => axios.delete(url + id, config),
         }
     }
 }

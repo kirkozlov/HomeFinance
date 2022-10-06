@@ -1,12 +1,13 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import React from 'react';
 import { store } from "./actions/store";
 import { Provider } from "react-redux";
 import Wallets from './components/Wallets';
 import { Container } from "@mui/material";
 
 
-function App() {
+const App=()=> {
   return (
     <Provider store={store}>
       <Container maxWidth="lg">

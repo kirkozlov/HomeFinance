@@ -9,7 +9,15 @@ export const ACTION_TYPES ={
 
 }
 
-export const fetchAll = ()=> dispatch=>{
+export interface IWallet{
+    id?:string;
+    name:string;
+    groupName:string;
+    comment:string;
+    balance?:number;
+}
+
+export const fetchAll = ()=> (dispatch:any)=>{
     api.wallet().fetchAll()
     .then(
         response=>{
@@ -23,7 +31,7 @@ export const fetchAll = ()=> dispatch=>{
     .catch(err=> console.log(err));
 }
 
-export const create = (data, onSuccess)=> dispatch=>{
+export const create = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
     api.wallet().create(data)
     .then(
         response=>{
@@ -38,7 +46,7 @@ export const create = (data, onSuccess)=> dispatch=>{
     .catch(err=> console.log(err));
 }
 
-export const update = (data, onSuccess)=> dispatch=>{
+export const update = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
     api.wallet().update(data)
     .then(
         response=>{
@@ -53,7 +61,7 @@ export const update = (data, onSuccess)=> dispatch=>{
     .catch(err=> console.log(err));
 }
 
-export const deleteWallet = (id, onSuccess)=> dispatch=>{
+export const deleteWallet = (id:string, onSuccess:any)=> (dispatch:any)=>{
     api.wallet().delete(id)
     .then(
         response=>{

@@ -1,10 +1,26 @@
 import { ACTION_TYPES } from "../actions/wallet";
 
-const initialState = {
+
+
+
+interface IWallet{
+    id:string;
+    name:string;
+    groupName:string;
+    comment:string;
+    balance:number;
+}
+interface IWalletList{
+    list: IWallet[]
+}
+
+const initialState:IWalletList = {
     list: []
 }
 
-export const wallet = (state = initialState, action) => {
+
+
+export const wallet = (state = initialState, action:{type:any,payload:any}) => {
     switch (action.type) {
         case ACTION_TYPES.FETCH_ALL:
             return {
