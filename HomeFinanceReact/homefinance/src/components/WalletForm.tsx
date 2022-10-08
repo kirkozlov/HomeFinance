@@ -4,7 +4,12 @@ import useForm from "./useForm";
 import { connect } from "react-redux";
 import * as actions from "../actions/wallet";
 import { constants } from "buffer";
-const initialFieldValues={
+
+import { notify } from "../App";
+import { IWallet } from "../contracts/Models";
+
+const initialFieldValues:IWallet={
+    id:null,
     name:"",
     groupName:"",
     comment:""
@@ -13,7 +18,7 @@ const initialFieldValues={
 const WalletForm=(props:any)=>{
 
 
-    const validate=(fieldValues=values)=>{
+    const validate:any=(fieldValues=values)=>{
         let tmp=errors;
         if('name' in fieldValues)
             tmp.name = fieldValues.name?"":"This field is required"
@@ -34,17 +39,17 @@ const WalletForm=(props:any)=>{
         e.preventDefault()
         if(validate()){
             if(props.currentId!=0)
-                props.updateWallet(values,()=>{window.alert("changed")})
+                props.updateWallet(values,()=>{notify("changed");resetForm()})
             else
-                props.createWallet(values,()=>{window.alert("saved")})
+                props.createWallet(values,()=>{notify("saved");resetForm()})
         }
-        resetForm()
+        
     }
 
     useEffect(()=>{
         if(props.currentId!=0){
             setValues({
-                ...props.walletList.find((x:actions.IWallet)=>x.id==props.currentId)
+                ...props.walletList.find((x:IWallet)=>x.id==props.currentId)
             })
             setErrors({})
         }

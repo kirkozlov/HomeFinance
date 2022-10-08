@@ -1,13 +1,13 @@
-import { ACTION_TYPES_WALLET, IWallet } from "../contracts/Models";
+import { ACTION_TYPES_TAG, ITag } from "../contracts/Models";
 import api from './api'
 
 export const fetchAll = ()=> (dispatch:any)=>{
-    api.wallet().fetchAll()
+    api.tag().fetchAll()
     .then(
         response=>{
             console.log(response);
             dispatch({
-                type:ACTION_TYPES_WALLET.FETCH_ALL,
+                type:ACTION_TYPES_TAG.FETCH_ALL,
                 payload:response.data
             })
         }
@@ -15,14 +15,14 @@ export const fetchAll = ()=> (dispatch:any)=>{
     .catch(err=> console.log(err));
 }
 
-export const create = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
-    api.wallet().create(data)
+export const create = (data:ITag, onSuccess:any)=> (dispatch:any)=>{
+    api.tag().create(data)
     .then(
         response=>{
             console.log(response);
             dispatch({
-                type:ACTION_TYPES_WALLET.CREATE,
-                payload:{...response.data, balance:0}
+                type:ACTION_TYPES_TAG.CREATE,
+                payload:response.data
             })
             onSuccess()
         }
@@ -30,14 +30,14 @@ export const create = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
     .catch(err=> console.log(err));
 }
 
-export const update = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
-    api.wallet().update(data)
+export const update = (data:ITag, onSuccess:any)=> (dispatch:any)=>{
+    api.tag().update(data)
     .then(
         response=>{
             console.log(response);
             dispatch({
-                type:ACTION_TYPES_WALLET.UPDATE,
-                payload:{...response.data, balance:data.balance}
+                type:ACTION_TYPES_TAG.UPDATE,
+                payload:response.data
             })
             onSuccess()
         }
@@ -45,14 +45,14 @@ export const update = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
     .catch(err=> console.log(err));
 }
 
-export const deleteWallet = (id:string, onSuccess:any)=> (dispatch:any)=>{
-    api.wallet().delete(id)
+export const deleteWallet = (name:string, onSuccess:any)=> (dispatch:any)=>{
+    api.tag().delete(name)
     .then(
         response=>{
             console.log(response);
             dispatch({
-                type:ACTION_TYPES_WALLET.DELETE,
-                payload:{id:id}
+                type:ACTION_TYPES_TAG.DELETE,
+                payload:{name:name}
             })
             onSuccess()
         }

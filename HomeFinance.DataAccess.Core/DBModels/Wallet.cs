@@ -16,7 +16,7 @@ public class Wallet : UserDependentBase
     [Required]
     public string Name { get; set; }
 
-    public string? GroupName { get; set; } = null;
+    public string GroupName { get; set; } = "";
 
-    public string? Comment { get; set; } = null;
+    public string Comment { get; set; } = "";
 }

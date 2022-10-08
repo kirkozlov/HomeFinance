@@ -26,7 +26,7 @@ public abstract class OperationBase : UserDependentBase
     [Required]
     public double Amount { get; set; }
 
-    public string? Comment { get; set; } = null;
+    public string Comment { get; set; }="";
 
     public virtual bool IsValid()
     {

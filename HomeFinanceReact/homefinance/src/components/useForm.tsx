@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 
-const useForm = (initialFieldValues:any, validate:any, setCurrentId:any)=>{
+const useForm = <T,>(initialFieldValues:T, validate:any, setCurrentId:any)=>{
 
     const [values,setValues]=useState(initialFieldValues)
     let b:any ={};

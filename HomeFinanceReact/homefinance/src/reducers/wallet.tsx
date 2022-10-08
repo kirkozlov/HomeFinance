@@ -1,48 +1,32 @@
-import { ACTION_TYPES } from "../actions/wallet";
+import { ACTION_TYPES_WALLET, IWallet } from "../contracts/Models";
 
-
-
-
-interface IWallet{
-    id:string;
-    name:string;
-    groupName:string;
-    comment:string;
-    balance:number;
-}
-interface IWalletList{
-    list: IWallet[]
+const initialState = {
+    list: [] as IWallet[]
 }
 
-const initialState:IWalletList = {
-    list: []
-}
-
-
-
-export const wallet = (state = initialState, action:{type:any,payload:any}) => {
+export const wallet = (state = initialState, action:{type:any,payload:IWallet | IWallet[]| string} ) => {
     switch (action.type) {
-        case ACTION_TYPES.FETCH_ALL:
+        case ACTION_TYPES_WALLET.FETCH_ALL:
             return {
                 ...state,
-                list: [...action.payload]
+                list: [...action.payload as IWallet[]]
             }
 
-        case ACTION_TYPES.CREATE:
+        case ACTION_TYPES_WALLET.CREATE:
             return {
                 ...state,
                 list: [...state.list, action.payload]
             }
 
-        case ACTION_TYPES.UPDATE:
+        case ACTION_TYPES_WALLET.UPDATE:
             return {
                 ...state,
-                list: state.list.map(x=>x.id==action.payload.id?action.payload:x)
+                list: state.list.map(x=>x.id==(action.payload as IWallet).id?action.payload:x)
             }
-        case ACTION_TYPES.DELETE:
+        case ACTION_TYPES_WALLET.DELETE:
             return {
                 ...state,
-                list: state.list.filter(x=>x.id!=action.payload.id)
+                list: state.list.filter(x=>x.id!=action.payload)
             }
 
         default:

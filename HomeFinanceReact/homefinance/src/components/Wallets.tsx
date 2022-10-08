@@ -7,39 +7,10 @@ import * as actions from "../actions/wallet";
 import WalletForm from "./WalletForm";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-const customTheme = createTheme({
-    components: {
-        MuiPaper: {
-            styleOverrides: {
-                root: {
-                    margin: 16,
-                    padding: 16,
-                },
-            },
-        },
-        MuiTableCell: {
-            styleOverrides: {
-                head: {
-                    fontSize: "1.25rem"
-                },
-            },
-        },
-        MuiTextField: {
-            styleOverrides: {
-                root: {
-                    margin: 4,
-                },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    margin: 4,
-                },
-            },
-        },
-    },
-});
+import { notify } from "../App";
+import { IWallet } from "../contracts/Models";
+import { customTheme } from "../contracts/theme";
+
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     margin: 16,
@@ -74,7 +45,7 @@ const Wallets = (props:any) => {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        props.walletList.map((record:actions.IWallet, index:number) => {
+                                        props.walletList.map((record:IWallet, index:number) => {
                                             return (
                                                 <TableRow key={index} hover>
                                                     <TableCell>{record.name}</TableCell>
@@ -82,7 +53,7 @@ const Wallets = (props:any) => {
                                                     <TableCell>
                                                         <ButtonGroup>
                                                             <Button><EditIcon color="primary" onClick={()=>{setCurrentId(record.id!)}}/></Button>
-                                                            <Button><DeleteIcon color="secondary"  onClick={()=>props.deleteWallet(record.id,()=>{window.alert("deleted")})}  /></Button>
+                                                            <Button><DeleteIcon color="secondary"  onClick={()=>props.deleteWallet(record.id,()=>{notify("deleted")})}  /></Button>
                                                         </ButtonGroup>
                                                     </TableCell>
                                                 </TableRow>)

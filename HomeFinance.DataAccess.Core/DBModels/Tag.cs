@@ -11,5 +11,5 @@ public class Tag: UserDependentBase
     public ICollection<Operation> Operations { get; set; }
     public ICollection<RepeatableOperation> RepeatableOperation { get; set; }
 
-    public string? Comment { get; set; } = null;
+    public string Comment { get; set; } ="";
 }

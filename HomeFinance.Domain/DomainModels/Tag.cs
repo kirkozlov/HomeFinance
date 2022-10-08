@@ -3,6 +3,6 @@ using HomeFinance.Domain.Models;
 
 namespace HomeFinance.Domain.DomainModels;
 
-public record Tag(string Name, string? Comment)
+public record Tag(string Name, string Comment)
 {
 }
