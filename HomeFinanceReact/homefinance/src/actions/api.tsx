@@ -1,7 +1,8 @@
 import axios from "axios";
 import { OperationCanceledException } from "typescript";
 import { IOperation, ITag, IWallet } from "../contracts/Models";
-const baseUrl = "https://localhost:7080/api/";
+const baseUrl = "https://192.168.1.6:7080/api/";
+// const baseUrl = "https://localhost:7080/api/";
 //const baseUrl="http://localhost:5080/api/";
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJlMTQ4N2IzMS05NTY1LTRlNjEtOWI4NS1lZGQ3YjNjM2FkNGUiLCJuYmYiOjE2NjUyMjYxMDYsImV4cCI6MTY2NTY1ODEwNiwiaWF0IjoxNjY1MjI2MTA2fQ.PmaMTNTLd7msC70wV5ZFDzOqM3aARAJqTsctrAOCAYk";
 const config = {

@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using HomeFinance.DataAccess;
 using HomeFinance.DataAccess.Sqlite;
 using HomeFinance.Domain;
@@ -77,7 +78,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(builder=>builder.WithOrigins(app.Configuration["ApplicationSettings:Client_URL"]).AllowAnyHeader().AllowAnyMethod());
+app.UseCors(builder=>builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -86,5 +87,8 @@ app.MapControllers();
 TagApiSet.Map(app);
 WalletApiSet.Map(app); 
 OperationApiSet.Map(app);
-
+app.MapGet("api/test", () =>
+{
+    return Results.Ok("HAHA");
+});
 app.Run();

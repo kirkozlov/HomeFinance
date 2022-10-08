@@ -56,6 +56,9 @@ const OptionsForm = (props: any) => {
 
     }
 
+    const centeredStyle={display: 'flex',  alignItems: 'center', justifyContent: 'center' }
+
+
     const [showSelectWallet, setShowSelectWallet] = React.useState(true)
     const [showSelectType, setShowSelectType] = React.useState(false)
     const [showSelectTag, setShowSelectTag] = React.useState(false)
@@ -71,8 +74,8 @@ const OptionsForm = (props: any) => {
     const SelectWallet = () => (
         <div >
             <Grid >
-                <h2 >Select Wallet</h2>
-                <Grid container>
+                <h2 style={centeredStyle}>Select Wallet</h2>
+                <Grid container style={centeredStyle}>
                     {
                         props.walletList.map((record: IWallet, index: number) => {
                             return (
@@ -174,13 +177,13 @@ const OptionsForm = (props: any) => {
             <Grid >
                 <h2 >Select DateTime</h2>
                 <Grid container>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                        label="Date&Time picker"
-                        value={values.dateTime}
-                        onChange={handleDateTimeChange}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateTimePicker
+                            label="Date&Time picker"
+                            value={values.dateTime}
+                            onChange={handleDateTimeChange}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
                     </LocalizationProvider>
                 </Grid>
                 <Button onClick={() => handleDateTimeOk()}> Next </Button>
@@ -196,20 +199,6 @@ const OptionsForm = (props: any) => {
                 {showSelectTag ? <SelectTags /> : null}
                 {showSelectAmount ? <SelectAmount /> : null}
                 {showSelectDateTime ? <SelectDateTime /> : null}
-                {/* <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <TextField name="Namess" variant="outlined" label="Namess" value={values.name} onChange={handleInputChanges} {...(errors.name && { error: true, helperText: errors.name })} />
-
-                            <TextField name="groupName" variant="outlined" label="Group" value={values.groupName} onChange={handleInputChanges} {...(errors.groupName && { error: true, helperText: errors.groupName })} />
-                            <TextField name="comment" variant="outlined" label="Comment" value={values.comment} onChange={handleInputChanges} />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Button variant="contained" color="primary" type="submit"> Save </Button>
-                            <Button variant="contained" color="inherit" onClick={resetForm}> Reset </Button>
-                        </Grid>
-                    </Grid>
-                </form> */}
             </Paper>
         </ThemeProvider>
     );
