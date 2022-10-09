@@ -22,14 +22,14 @@ public  class Gateway : IGateway
 
     readonly HomeFinanceContextBase _homeFinanceContext;
 
-    public Gateway(HomeFinanceContextBase homeFinanceContext)
+    public Gateway(HomeFinanceContextBase homeFinanceContext, IUserService userService)
     {
         _homeFinanceContext = homeFinanceContext;
 
-        _categoryRepository = new Lazy<IUserDependentRepository<Tag, string>>(() => new TagRepository(_homeFinanceContext));
-        _operationRepository = new Lazy<IOperationRepository>(()=>new OperationRepository(_homeFinanceContext));
-        _walletRepository = new Lazy<IUserDependentRepository<Wallet, Guid>>(() => new WalletRepository(_homeFinanceContext));
-        _repeatableOperationRepository =new Lazy<IUserDependentRepository<RepeatableOperation, Guid>>(()=>new RepeatableOperationRepository(_homeFinanceContext));
+        _categoryRepository = new Lazy<IUserDependentRepository<Tag, string>>(() => new TagRepository(_homeFinanceContext, userService.UserId));
+        _operationRepository = new Lazy<IOperationRepository>(()=>new OperationRepository(_homeFinanceContext, userService.UserId));
+        _walletRepository = new Lazy<IUserDependentRepository<Wallet, Guid>>(() => new WalletRepository(_homeFinanceContext, userService.UserId));
+        _repeatableOperationRepository =new Lazy<IUserDependentRepository<RepeatableOperation, Guid>>(()=>new RepeatableOperationRepository(_homeFinanceContext, userService.UserId));
 
     }
 

@@ -9,7 +9,7 @@ namespace HomeFinance.DataAccess.EFBasic.Repositories;
 class OperationRepository : UserDependentRepository<Operation, HomeFinanace.DataAccess.Core.DBModels.Operation, Guid>, IOperationRepository
 {
     readonly DbSet<Tag> _tags;
-    public OperationRepository(HomeFinanceContextBase homeFinanceContext) : base(homeFinanceContext, homeFinanceContext.Operations)
+    public OperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Operations, userId)
     {
         this._tags = homeFinanceContext.Tags;
     }
@@ -44,8 +44,8 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         return exp;
     }
 
-    public async Task<List<Operation>> GetForWallet(string userId, Guid walletId)
+    public async Task<List<Operation>> GetForWallet(Guid walletId)
     {
-        return (await GetAll(userId)).Where(i => i.WalletId == walletId || i.WalletIdTo==walletId).ToList();
+        return await GetByPredicate(i=>i.WalletId==walletId);
     }
 }

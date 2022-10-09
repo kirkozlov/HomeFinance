@@ -9,7 +9,7 @@ namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
 class TagRepository : UserDependentRepository<Tag, TagDB, string>
 {
-    public TagRepository(HomeFinanceContextBase homeFinanceContext): base(homeFinanceContext, homeFinanceContext.Tags)
+    public TagRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Tags, userId)
     {
     }
 

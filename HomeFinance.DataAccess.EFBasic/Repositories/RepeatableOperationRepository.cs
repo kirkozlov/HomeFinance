@@ -8,7 +8,7 @@ namespace HomeFinance.DataAccess.EFBasic.Repositories;
 class RepeatableOperationRepository : UserDependentRepository<RepeatableOperation, HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, Guid>
 {
     readonly DbSet<Tag> _tags;
-    public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext) : base(homeFinanceContext, homeFinanceContext.RepeatableOperations)
+    public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.RepeatableOperations, userId)
     {
         this._tags = homeFinanceContext.Tags;
     }

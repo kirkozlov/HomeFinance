@@ -18,37 +18,37 @@ public static class OperationApiSet
     }
 
     [Authorize]
-    static async Task<IEnumerable<object>> Get(IGateway unitOfWork, UserService userService)
+    static async Task<IEnumerable<object>> Get(IGateway unitOfWork)
     {
-        var operations = await unitOfWork.OperationRepository.GetAll(userService.UserId);
+        var operations = await unitOfWork.OperationRepository.GetAll();
         return operations;
     }
 
     [Authorize]
-    static async Task<IEnumerable<object>> GetForWallet(Guid walletId, IGateway unitOfWork, UserService userService)
+    static async Task<IEnumerable<object>> GetForWallet(Guid walletId, IGateway unitOfWork)
     {
-        var operations = await unitOfWork.OperationRepository.GetForWallet(userService.UserId,walletId);
+        var operations = await unitOfWork.OperationRepository.GetForWallet(walletId);
         return operations;
     }
 
 
     [Authorize]
-    static async Task Post(Operation operation, IGateway unitOfWork, UserService userService)
+    static async Task Post(Operation operation, IGateway unitOfWork)
     {
-        await unitOfWork.OperationRepository.Add(operation, userService.UserId);
+        await unitOfWork.OperationRepository.Add(operation);
     }
 
 
     [Authorize]
-    static async Task Put(Operation operation, IGateway unitOfWork, UserService userService)
+    static async Task Put(Operation operation, IGateway unitOfWork)
     {
-        await unitOfWork.OperationRepository.Update(operation, userService.UserId);
+        await unitOfWork.OperationRepository.Update(operation);
     }
 
 
     [Authorize]
-    static async Task Delete(Guid id, IGateway unitOfWork, UserService userService)
+    static async Task Delete(Guid id, IGateway unitOfWork)
     {
-        await unitOfWork.OperationRepository.Remove(id, userService.UserId);
+        await unitOfWork.OperationRepository.Remove(id);
     }
 }

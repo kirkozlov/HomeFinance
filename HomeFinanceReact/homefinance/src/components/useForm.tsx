@@ -7,14 +7,18 @@ const useForm = <T,>(initialFieldValues:T, validate:any, setCurrentId:any)=>{
     let b:any ={};
     const [errors,setErrors]=useState(b)
     
-    const handleInputChanges= (e:any)=>{
+    const handleInputChanges= (e:any):T=>{
         const {name,value}=e.target
         const fieldValue={[name]:value}
-        setValues({
+        const newValues={
             ...values,
             ...fieldValue
-        })
+        }
+
+        setValues(newValues)
         validate(fieldValue)
+
+        return newValues;
     }
 
     const resetForm=()=>{

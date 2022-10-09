@@ -23,31 +23,31 @@ public static class TagApiSet
     }
 
     [Authorize]
-    static async Task<IEnumerable<object>> Get(IGateway unitOfWork, UserService userService)
+    static async Task<IEnumerable<object>> Get(IGateway unitOfWork)
     {
-        var tags = await unitOfWork.TagRepository.GetAll(userService.UserId);
+        var tags = await unitOfWork.TagRepository.GetAll();
 
         return tags;
     }
 
   
     [Authorize]
-    static async Task Post(Tag tag, IGateway unitOfWork, UserService userService)
+    static async Task Post(Tag tag, IGateway unitOfWork)
     {
-        await unitOfWork.TagRepository.Add(tag, userService.UserId);
+        await unitOfWork.TagRepository.Add(tag);
     }
 
 
     [Authorize]
-    static async Task Put(Tag tag, IGateway unitOfWork, UserService userService)
+    static async Task Put(Tag tag, IGateway unitOfWork)
     {
-        await unitOfWork.TagRepository.Update(tag, userService.UserId);
+        await unitOfWork.TagRepository.Update(tag);
     }
 
 
     [Authorize]
-    static async Task Delete(string name, IGateway unitOfWork, UserService userService)
+    static async Task Delete(string name, IGateway unitOfWork)
     {
-        await unitOfWork.TagRepository.Remove(name, userService.UserId);
+        await unitOfWork.TagRepository.Remove(name);
     }
 }

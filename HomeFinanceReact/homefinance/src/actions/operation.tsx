@@ -1,17 +1,17 @@
-import { ACTION_TYPES_OPERATION, IWallet } from "../contracts/Models";
+import { ACTION_TYPES_OPERATION, IOperation } from "../contracts/Models";
 import api from './api'
 
 
 
 
-export const create = (data:IWallet, onSuccess:any)=> (dispatch:any)=>{
-    api.wallet().create(data)
+export const create = (data:IOperation, onSuccess:any)=> (dispatch:any)=>{
+    api.operation().create(data)
     .then(
         response=>{
             console.log(response);
             dispatch({
                 type:ACTION_TYPES_OPERATION.CREATE,
-                payload:{...response.data, balance:0}
+                payload:{...response.data}
             })
             onSuccess()
         }

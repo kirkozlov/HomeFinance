@@ -20,11 +20,11 @@ public static class WalletApiSet
     }
 
     [Authorize]
-    static async Task<IEnumerable<object>> Get(IGateway unitOfWork, UserService userService)
+    static async Task<IEnumerable<object>> Get(IGateway unitOfWork)
     {
-        var wallets = await unitOfWork.WalletRepository.GetAll(userService.UserId);
+        var wallets = await unitOfWork.WalletRepository.GetAll();
         
-        var allOperations = (await unitOfWork.OperationRepository.GetAll(userService.UserId)).ToList();
+        var allOperations = (await unitOfWork.OperationRepository.GetAll()).ToList();
 
         return wallets.Select(i => new {
             id = i.Id ?? throw new ApplicationException(),
@@ -37,22 +37,22 @@ public static class WalletApiSet
 
 
     [Authorize]
-    static async Task<Wallet> Post(Wallet wallet, IGateway unitOfWork, UserService userService)
+    static async Task<Wallet> Post(Wallet wallet, IGateway unitOfWork)
     {
-        return await unitOfWork.WalletRepository.Add(wallet, userService.UserId);
+        return await unitOfWork.WalletRepository.Add(wallet);
     }
 
 
     [Authorize]
-    static async Task<Wallet> Put(Wallet wallet, IGateway unitOfWork, UserService userService)
+    static async Task<Wallet> Put(Wallet wallet, IGateway unitOfWork)
     {
-        return await unitOfWork.WalletRepository.Update(wallet, userService.UserId);
+        return await unitOfWork.WalletRepository.Update(wallet);
     }
 
 
     [Authorize]
-    static async Task Delete(Guid id, IGateway unitOfWork, UserService userService)
+    static async Task Delete(Guid id, IGateway unitOfWork)
     {
-        await unitOfWork.WalletRepository.Remove(id, userService.UserId);
+        await unitOfWork.WalletRepository.Remove(id);
     }
 }

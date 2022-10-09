@@ -1,11 +1,7 @@
 using System.Security.Claims;
+using HomeFinance.Domain.Utils;
 
 namespace HomeFinanceApi;
-
-public interface IUserService
-{
-    string UserId { get; }
-}
 
 public class UserService: IUserService
 {

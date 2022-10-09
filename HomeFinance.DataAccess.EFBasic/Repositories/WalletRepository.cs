@@ -5,7 +5,7 @@ namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
 class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess.Core.DBModels.Wallet, Guid>
 {
-    public WalletRepository(HomeFinanceContextBase homeFinanceContext) : base(homeFinanceContext, homeFinanceContext.Wallets)
+    public WalletRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Wallets, userId)
     {
     }
 

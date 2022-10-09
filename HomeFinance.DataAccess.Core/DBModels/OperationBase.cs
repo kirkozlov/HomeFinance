@@ -17,7 +17,7 @@ public abstract class OperationBase : UserDependentBase
     [Required]
     public OperationType OperationType { get; set; }
     
-    public ICollection<Tag> Tags { get; set; }
+    public virtual ICollection<Tag> Tags { get; set; }
     
     public Guid? WalletIdTo { get; set; }
     //[ForeignKey(nameof(WalletIdTo))]
