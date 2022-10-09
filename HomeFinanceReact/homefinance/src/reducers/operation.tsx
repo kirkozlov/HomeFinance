@@ -9,7 +9,7 @@ export const operation = (state = initialState, action:{type:any,payload:IOperat
         case ACTION_TYPES_OPERATION.FETCH_ALL:
             return {
                 ...state,
-                list: [...action.payload as IOperation[]]
+                list: [...(action.payload as IOperation[]).map(i=>{return {...i, dateTime:new Date(i.dateTime)}as IOperation} )]
             }
 
         case ACTION_TYPES_OPERATION.CREATE:

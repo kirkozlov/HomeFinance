@@ -80,7 +80,7 @@ const SelectAmount = ({ initialValue, handleAmountOk }: { initialValue: string, 
 }
 
 
-const OptionsForm = (props: any) => {
+const OperationForm = (props: any) => {
 
     useEffect(() => {
         props.fetchAllWallets()
@@ -261,4 +261,4 @@ const mapActionToProps = {
     fetchAllTags: tagActions.fetchAll,
 }
 
-export default connect(mapStateToProps, mapActionToProps)(OptionsForm);
+export default connect(mapStateToProps, mapActionToProps)(OperationForm);

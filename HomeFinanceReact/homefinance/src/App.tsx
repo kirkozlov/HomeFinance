@@ -9,6 +9,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import OperationForm from './components/Operations/OperationForm';
+import Operations from './components/Operations/Operations';
 import Layout from './Layout';
 
 export const notify = (s: string) => toast(s);
@@ -20,7 +21,9 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
-              <Route index element={<Wallets />} />
+              <Route index element={<Operations />} />
+              <Route path="operations" element={<Operations />} />
+              <Route path="wallets" element={<Wallets />} />
               <Route path="newOperation" element={<OperationForm />} />
               {/* <Route path="*" element={<NoPage />} /> */}
             </Route>
