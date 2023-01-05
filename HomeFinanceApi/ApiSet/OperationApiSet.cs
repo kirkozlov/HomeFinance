@@ -10,18 +10,26 @@ public static class OperationApiSet
 
     public static void Map(WebApplication app)
     {
-        app.MapGet("api/operation", OperationApiSet.Get);
-        app.MapGet("api/operation/{walletId:guid}", OperationApiSet.GetForWallet);
+        app.MapGet("api/operation", OperationApiSet.GetAll);
+        app.MapGet("api/operation/{id:guid}", OperationApiSet.GetById);
+        app.MapGet("api/operation/wallet/{walletId:guid}", OperationApiSet.GetForWallet);
         app.MapPost("api/operation", Post);
         app.MapPut("api/operation", Put);
         app.MapDelete("api/operation/{id:guid}", Delete);
     }
 
     [Authorize]
-    static async Task<IEnumerable<object>> Get(IGateway unitOfWork)
+    static async Task<IEnumerable<object>> GetAll(IGateway unitOfWork)
     {
         var operations = await unitOfWork.OperationRepository.GetAll();
         return operations;
+    }
+
+    [Authorize]
+    static async Task<object?> GetById([FromRoute] Guid id, IGateway unitOfWork)
+    {
+        var operations = await unitOfWork.OperationRepository.GetAll();
+        return operations.SingleOrDefault(i=>i.Id==id);
     }
 
     [Authorize]
