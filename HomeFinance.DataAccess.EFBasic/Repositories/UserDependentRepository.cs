@@ -15,7 +15,9 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
 {
     protected abstract T ToDomain(TDb db);
 
-    protected abstract TDb ToDb(T domain, string userId);
+    protected abstract TDb ToNewDb(T domain, string userId);
+
+    protected abstract TDb ToExistingDb(T domain, string userId);
 
     protected DbSet<TDb> DbSet { get; }
 
@@ -49,7 +51,7 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
 
     public async Task<T> Add(T domain)
     {
-        var entity = this.ToDb(domain, this.UserId);
+        var entity = this.ToNewDb(domain, this.UserId);
         await this.DbSet.AddAsync(entity);
         await this._homeFinanceContext.SaveChangesAsync();
         return ToDomain(entity);
@@ -57,8 +59,7 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
 
     public async Task<T> Update(T domain)
     {
-        var entity = this.ToDb(domain, this.UserId);
-        this.DbSet.Update(entity);
+        var entity = this.ToExistingDb(domain, this.UserId);
         await this._homeFinanceContext.SaveChangesAsync();
         return ToDomain(entity);
     }

@@ -17,10 +17,10 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
     protected override Operation ToDomain(HomeFinanace.DataAccess.Core.DBModels.Operation db)
     {
 
-        return new Operation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletIdTo, db.DateTime);
+        return new Operation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, db.DateTime);
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToDb(Operation domain, string userId)
+    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToNewDb(Operation domain, string userId)
     {
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
         return new HomeFinanace.DataAccess.Core.DBModels.Operation()
@@ -29,7 +29,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
             WalletId = domain.WalletId,
             OperationType = domain.OperationType,
             Tags = tags,
-            WalletIdTo = domain.WalletIdTo,
+            WalletToId = domain.WalletToId,
             Amount = domain.Amount,
             Comment = domain.Comment,
             DateTime = domain.DateTime,
@@ -37,7 +37,24 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         };
     }
 
-    
+    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToExistingDb(Operation domain, string userId)
+    {
+        var entity = this.DbSet.Where(i=>i.Id==domain.Id && i.HomeFinanceUserId==userId).Single();
+        var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
+
+        entity.WalletId = domain.WalletId;
+        entity.OperationType = domain.OperationType;
+        entity.Tags.Clear();
+        tags.ForEach(i => entity.Tags.Add(i));
+        entity.WalletToId = domain.WalletToId;
+        entity.Amount = domain.Amount;
+        entity.Comment = domain.Comment;
+        entity.DateTime = domain.DateTime;
+
+        return entity;
+    }
+
+
     protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Operation, bool>> CheckKey( Guid key)
     {
         Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Operation, bool>> exp = db => db.Id == key;

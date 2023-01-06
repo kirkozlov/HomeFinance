@@ -14,7 +14,7 @@ class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess
         return new Wallet(db.Id, db.Name, db.GroupName, db.Comment);
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToDb(Wallet domain, string userId)
+    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToNewDb(Wallet domain, string userId)
     {
         return new HomeFinanace.DataAccess.Core.DBModels.Wallet()
         {
@@ -24,6 +24,17 @@ class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess
             Comment = domain.Comment,
             HomeFinanceUserId = userId
         };
+    }
+
+    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToExistingDb(Wallet domain, string userId)
+    {
+        var entity = this.DbSet.Where(i => i.Id == domain.Id && i.HomeFinanceUserId == userId).Single();
+
+        entity.Name = domain.Name;
+        entity.GroupName = domain.GroupName;
+        entity.Comment = domain.Comment;
+
+        return entity;
     }
 
     protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Wallet, bool>> CheckKey(Guid key)

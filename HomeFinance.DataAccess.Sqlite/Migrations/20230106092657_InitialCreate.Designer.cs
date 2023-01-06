@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeFinance.DataAccess.Sqlite.Migrations
 {
     [DbContext(typeof(HomeFinanceContext))]
-    [Migration("20221007193326_NoNullStrings")]
-    partial class NoNullStrings
+    [Migration("20230106092657_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
             modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Operation", b =>
                 {
@@ -43,9 +43,6 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("WalletId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("WalletIdTo")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("WalletToId")
@@ -89,9 +86,6 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("WalletId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("WalletIdTo")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("WalletToId")
@@ -390,7 +384,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "WalletTo")
@@ -415,7 +409,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "WalletTo")

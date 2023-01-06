@@ -16,14 +16,14 @@ public static class Exctensions
 
     public static IEnumerable<Operation> TransfersTo(this IEnumerable<Operation> operations, Guid walletId)
     {
-        return operations.Where(i => i.WalletIdTo == walletId);
+        return operations.Where(i => i.WalletToId == walletId);
     }
 
 
     public static double GetSumFor(this IEnumerable<Operation> operations, Guid walletId)
     {
         double sum = 0;
-        foreach (var operation in operations.Where(i => i.WalletId == walletId || i.WalletIdTo == walletId))
+        foreach (var operation in operations.Where(i => i.WalletId == walletId || i.WalletToId == walletId))
         {
             switch (operation.OperationType)
             {
