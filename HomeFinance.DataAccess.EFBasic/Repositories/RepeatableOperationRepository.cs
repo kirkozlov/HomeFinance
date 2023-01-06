@@ -16,10 +16,10 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
     protected override RepeatableOperation ToDomain(HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation db)
     {
 
-        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletIdTo, db.NextExecution, db.RepeatableType);
+        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution, db.RepeatableType);
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToDb(RepeatableOperation domain, string userId)
+    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToNewDb(RepeatableOperation domain, string userId)
     {
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
         return new HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation()
@@ -28,13 +28,31 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
             WalletId = domain.WalletId,
             OperationType = domain.OperationType,
             Tags = tags,
-            WalletIdTo = domain.WalletIdTo,
+            WalletToId = domain.WalletToId,
             Amount = domain.Amount,
             Comment = domain.Comment,
             NextExecution = domain.NextExecution,
             RepeatableType = domain.RepeatableType,
             HomeFinanceUserId = userId
         };
+    }
+
+    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToExistingDb(RepeatableOperation domain, string userId)
+    {
+        var entity = this.DbSet.Where(i => i.Id == domain.Id && i.HomeFinanceUserId == userId).Single();
+        var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
+
+        entity.WalletId = domain.WalletId;
+        entity.OperationType = domain.OperationType;
+        entity.Tags.Clear();
+        tags.ForEach(i => entity.Tags.Add(i));
+        entity.WalletToId = domain.WalletToId;
+        entity.Amount = domain.Amount;
+        entity.Comment = domain.Comment;
+        entity.NextExecution = domain.NextExecution;
+        entity.RepeatableType = domain.RepeatableType;
+
+        return entity;
     }
 
     protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, bool>> CheckKey(Guid key)

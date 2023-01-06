@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HomeFinance.DataAccess.Sqlite.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -159,7 +159,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Comment = table.Column<string>(type: "TEXT", nullable: true),
+                    Comment = table.Column<string>(type: "TEXT", nullable: false),
                     HomeFinanceUserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -179,8 +179,8 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    GroupName = table.Column<string>(type: "TEXT", nullable: true),
-                    Comment = table.Column<string>(type: "TEXT", nullable: true),
+                    GroupName = table.Column<string>(type: "TEXT", nullable: false),
+                    Comment = table.Column<string>(type: "TEXT", nullable: false),
                     HomeFinanceUserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -203,10 +203,9 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     HomeFinanceUserId = table.Column<string>(type: "TEXT", nullable: false),
                     WalletId = table.Column<Guid>(type: "TEXT", nullable: false),
                     OperationType = table.Column<int>(type: "INTEGER", nullable: false),
-                    WalletIdTo = table.Column<Guid>(type: "TEXT", nullable: true),
                     WalletToId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Amount = table.Column<double>(type: "REAL", nullable: false),
-                    Comment = table.Column<string>(type: "TEXT", nullable: true)
+                    Comment = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,7 +221,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         column: x => x.WalletId,
                         principalTable: "Wallets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Operations_Wallets_WalletToId",
                         column: x => x.WalletToId,
@@ -240,10 +239,9 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     HomeFinanceUserId = table.Column<string>(type: "TEXT", nullable: false),
                     WalletId = table.Column<Guid>(type: "TEXT", nullable: false),
                     OperationType = table.Column<int>(type: "INTEGER", nullable: false),
-                    WalletIdTo = table.Column<Guid>(type: "TEXT", nullable: true),
                     WalletToId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Amount = table.Column<double>(type: "REAL", nullable: false),
-                    Comment = table.Column<string>(type: "TEXT", nullable: true)
+                    Comment = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -259,7 +257,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         column: x => x.WalletId,
                         principalTable: "Wallets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RepeatableOperations_Wallets_WalletToId",
                         column: x => x.WalletToId,

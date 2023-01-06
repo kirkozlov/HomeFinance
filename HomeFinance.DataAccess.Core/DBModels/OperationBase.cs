@@ -19,8 +19,8 @@ public abstract class OperationBase : UserDependentBase
     
     public virtual ICollection<Tag> Tags { get; set; }
     
-    public Guid? WalletIdTo { get; set; }
-    //[ForeignKey(nameof(WalletIdTo))]
+    public Guid? WalletToId { get; set; }
+
     public virtual Wallet? WalletTo { get; set; }
     
     [Required]
@@ -31,9 +31,9 @@ public abstract class OperationBase : UserDependentBase
     public virtual bool IsValid()
     {
         if (this.Amount <= 0) return false;
-        if (this.WalletId == this.WalletIdTo) return false;
-        return (this.OperationType == OperationType.Transfer && this.WalletIdTo != null)
-               || (this.OperationType != OperationType.Transfer && this.WalletIdTo == null);
+        if (this.WalletId == this.WalletToId) return false;
+        return (this.OperationType == OperationType.Transfer && this.WalletToId != null)
+               || (this.OperationType != OperationType.Transfer && this.WalletToId == null);
     }
 
 }

@@ -18,7 +18,7 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         return new Tag(db.Name, db.Comment);
     }
 
-    protected override TagDB ToDb(Tag domain, string userId)
+    protected override TagDB ToNewDb(Tag domain, string userId)
     {
         return new TagDB()
         {
@@ -28,9 +28,18 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         };
     }
 
+    protected override TagDB ToExistingDb(Tag domain, string userId)
+    {
+        var entity = this.DbSet.Where(i => i.Name == domain.Name && i.HomeFinanceUserId == userId).Single();
+        entity.Comment = domain.Comment;
+        return entity;
+    }
+
     protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Tag, bool>> CheckKey(string key)
     {
         Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Tag, bool>> exp = db => db.Name == key;
         return exp;
     }
+
+  
 }
