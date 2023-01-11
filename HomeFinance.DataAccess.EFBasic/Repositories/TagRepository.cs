@@ -15,7 +15,7 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
 
     protected override Tag ToDomain(TagDB db)
     {
-        return new Tag(db.Name, db.Comment);
+        return new Tag(db.Name, db.OperationType, db.SortId);
     }
 
     protected override TagDB ToNewDb(Tag domain, string userId)
@@ -23,7 +23,8 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         return new TagDB()
         {
             Name = domain.Name,
-            Comment = domain.Comment,
+            OperationType = domain.OperationType,
+            SortId = domain.SortId,
             HomeFinanceUserId = userId
         };
     }
@@ -31,7 +32,8 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
     protected override TagDB ToExistingDb(Tag domain, string userId)
     {
         var entity = this.DbSet.Where(i => i.Name == domain.Name && i.HomeFinanceUserId == userId).Single();
-        entity.Comment = domain.Comment;
+        entity.OperationType = domain.OperationType;
+        entity.SortId = domain.SortId;
         return entity;
     }
 
