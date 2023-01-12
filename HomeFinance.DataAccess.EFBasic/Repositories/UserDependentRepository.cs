@@ -64,6 +64,13 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
         return ToDomain(entity);
     }
 
+    public async Task<IEnumerable<T>> Update(IEnumerable<T> domain)
+    {
+        var entities=domain.Select(d => this.ToExistingDb(d, this.UserId)).ToList();
+        await this._homeFinanceContext.SaveChangesAsync();
+        return entities.Select(i => ToDomain(i)).ToList();
+    }
+
     public async Task Remove(TKey key)
     {
         var item = await this.DbSet.Where(CheckKey(key)).SingleOrDefaultAsync(i => i.HomeFinanceUserId == this.UserId);

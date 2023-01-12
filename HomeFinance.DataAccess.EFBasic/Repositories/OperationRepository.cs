@@ -63,6 +63,6 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
 
     public async Task<List<Operation>> GetForWallet(Guid walletId)
     {
-        return await GetByPredicate(i=>i.WalletId==walletId);
+        return await GetByPredicate(i=>i.WalletId==walletId || i.WalletToId==walletId);
     }
 }

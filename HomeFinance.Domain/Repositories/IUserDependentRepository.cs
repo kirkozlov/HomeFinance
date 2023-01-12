@@ -6,5 +6,6 @@ public interface IUserDependentRepository<T, in TKey>
     public Task<T?> GetByKey(TKey key);
     public Task<T> Add(T domain);
     public Task<T> Update(T domain);
+    public Task<IEnumerable<T>> Update(IEnumerable<T> domain);
     public Task Remove(TKey key);
 }
