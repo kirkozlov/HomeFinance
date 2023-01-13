@@ -30,11 +30,11 @@ public static class Exctensions
                 case Domain.Enums.OperationType.Transfer:
                     if (operation.WalletId == walletId)
                     {
-                        sum += operation.Amount;
+                        sum -= operation.Amount;
                     }
                     else
                     {
-                        sum -= operation.Amount;
+                        sum += operation.Amount;
                     }
                     break;
                 case Domain.Enums.OperationType.Income:

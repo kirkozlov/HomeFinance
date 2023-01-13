@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HomeFinance.Domain.DomainModels;
+using HomeFinance.Domain.Services;
 
 namespace HomeFinance.Domain.Utils;
 
@@ -14,4 +15,5 @@ public interface IGateway
     IOperationRepository OperationRepository { get; }
     IUserDependentRepository<Wallet, Guid> WalletRepository { get; }
     IUserDependentRepository<RepeatableOperation, Guid> RepeatableOperationRepository { get; }
+    IMergeTagsService MergeTagsService { get; }
 }

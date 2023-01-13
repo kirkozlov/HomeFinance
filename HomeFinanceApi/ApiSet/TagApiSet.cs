@@ -1,6 +1,7 @@
 ﻿using HomeFinanace.DataAccess.Core.DBModels;
 using HomeFinance.Domain.DomainModels;
 using HomeFinance.Domain.Utils;
+using HomeFinanceApi.Dto;
 using HomeFinanceApi.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ public static class TagApiSet
     {
         app.MapGet("api/tag", TagApiSet.Get);
         app.MapPost("api/tag", Post);
+        app.MapPost("api/tag/merge", Merge);
         app.MapPut("api/tag", Put);
         app.MapPut("api/tag/multiple", PutMultiple);
         app.MapDelete("api/tag/{name}", Delete);
@@ -50,6 +52,14 @@ public static class TagApiSet
     {
         await unitOfWork.TagRepository.Update(tags);
     }
+
+    [Authorize]
+    static async Task Merge(MergeTagsDto dto, IGateway unitOfWork)
+    {
+        await unitOfWork.MergeTagsService.MergeTags(dto.NewName, dto.OldNames);
+    }
+
+
     [Authorize]
     static async Task Delete(string name, IGateway unitOfWork)
     {
