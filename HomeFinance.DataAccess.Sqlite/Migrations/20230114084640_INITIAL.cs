@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HomeFinance.DataAccess.Sqlite.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class INITIAL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -159,12 +159,13 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Comment = table.Column<string>(type: "TEXT", nullable: false),
+                    OperationType = table.Column<int>(type: "INTEGER", nullable: false),
+                    SortId = table.Column<int>(type: "INTEGER", nullable: false),
                     HomeFinanceUserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tags", x => x.Name);
+                    table.PrimaryKey("PK_Tags", x => new { x.Name, x.OperationType });
                     table.ForeignKey(
                         name: "FK_Tags_AspNetUsers_HomeFinanceUserId",
                         column: x => x.HomeFinanceUserId,
@@ -270,11 +271,12 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 columns: table => new
                 {
                     OperationsId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    TagsName = table.Column<string>(type: "TEXT", nullable: false)
+                    TagsName = table.Column<string>(type: "TEXT", nullable: false),
+                    TagsOperationType = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OperationTag", x => new { x.OperationsId, x.TagsName });
+                    table.PrimaryKey("PK_OperationTag", x => new { x.OperationsId, x.TagsName, x.TagsOperationType });
                     table.ForeignKey(
                         name: "FK_OperationTag_Operations_OperationsId",
                         column: x => x.OperationsId,
@@ -282,10 +284,10 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OperationTag_Tags_TagsName",
-                        column: x => x.TagsName,
+                        name: "FK_OperationTag_Tags_TagsName_TagsOperationType",
+                        columns: x => new { x.TagsName, x.TagsOperationType },
                         principalTable: "Tags",
-                        principalColumn: "Name",
+                        principalColumns: new[] { "Name", "OperationType" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -294,11 +296,12 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 columns: table => new
                 {
                     RepeatableOperationId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    TagsName = table.Column<string>(type: "TEXT", nullable: false)
+                    TagsName = table.Column<string>(type: "TEXT", nullable: false),
+                    TagsOperationType = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RepeatableOperationTag", x => new { x.RepeatableOperationId, x.TagsName });
+                    table.PrimaryKey("PK_RepeatableOperationTag", x => new { x.RepeatableOperationId, x.TagsName, x.TagsOperationType });
                     table.ForeignKey(
                         name: "FK_RepeatableOperationTag_RepeatableOperations_RepeatableOperationId",
                         column: x => x.RepeatableOperationId,
@@ -306,10 +309,10 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RepeatableOperationTag_Tags_TagsName",
-                        column: x => x.TagsName,
+                        name: "FK_RepeatableOperationTag_Tags_TagsName_TagsOperationType",
+                        columns: x => new { x.TagsName, x.TagsOperationType },
                         principalTable: "Tags",
-                        principalColumn: "Name",
+                        principalColumns: new[] { "Name", "OperationType" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -366,9 +369,9 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 column: "WalletToId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OperationTag_TagsName",
+                name: "IX_OperationTag_TagsName_TagsOperationType",
                 table: "OperationTag",
-                column: "TagsName");
+                columns: new[] { "TagsName", "TagsOperationType" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_RepeatableOperations_HomeFinanceUserId",
@@ -386,9 +389,9 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 column: "WalletToId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RepeatableOperationTag_TagsName",
+                name: "IX_RepeatableOperationTag_TagsName_TagsOperationType",
                 table: "RepeatableOperationTag",
-                column: "TagsName");
+                columns: new[] { "TagsName", "TagsOperationType" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_HomeFinanceUserId",

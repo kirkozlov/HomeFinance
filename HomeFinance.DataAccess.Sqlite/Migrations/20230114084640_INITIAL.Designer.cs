@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeFinance.DataAccess.Sqlite.Migrations
 {
     [DbContext(typeof(HomeFinanceContext))]
-    [Migration("20230106092657_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230114084640_INITIAL")]
+    partial class INITIAL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,15 +107,17 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("OperationType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("HomeFinanceUserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Name");
+                    b.Property<int>("SortId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Name", "OperationType");
 
                     b.HasIndex("HomeFinanceUserId");
 
@@ -351,9 +353,12 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Property<string>("TagsName")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("OperationsId", "TagsName");
+                    b.Property<int>("TagsOperationType")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("TagsName");
+                    b.HasKey("OperationsId", "TagsName", "TagsOperationType");
+
+                    b.HasIndex("TagsName", "TagsOperationType");
 
                     b.ToTable("OperationTag");
                 });
@@ -366,9 +371,12 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Property<string>("TagsName")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("RepeatableOperationId", "TagsName");
+                    b.Property<int>("TagsOperationType")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("TagsName");
+                    b.HasKey("RepeatableOperationId", "TagsName", "TagsOperationType");
+
+                    b.HasIndex("TagsName", "TagsOperationType");
 
                     b.ToTable("RepeatableOperationTag");
                 });
@@ -506,7 +514,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
 
                     b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Tag", null)
                         .WithMany()
-                        .HasForeignKey("TagsName")
+                        .HasForeignKey("TagsName", "TagsOperationType")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -521,7 +529,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
 
                     b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Tag", null)
                         .WithMany()
-                        .HasForeignKey("TagsName")
+                        .HasForeignKey("TagsName", "TagsOperationType")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
