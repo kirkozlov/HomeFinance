@@ -24,14 +24,12 @@ public static class WalletApiSet
     {
         var wallets = await unitOfWork.WalletRepository.GetAll();
         
-        var allOperations = (await unitOfWork.OperationRepository.GetAll()).ToList();
-
         return wallets.Select(i => new {
             id = i.Id ?? throw new ApplicationException(),
             name = i.Name,
             groupName = i.GroupName,
             comment = i.Comment,
-            balance = allOperations.GetSumFor(i.Id.Value)
+            balance = unitOfWork.OperationRepository.GetSumFor(i.Id.Value)
         });
     }
 

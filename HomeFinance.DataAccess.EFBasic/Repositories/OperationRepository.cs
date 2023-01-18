@@ -2,6 +2,7 @@
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 using Tag = HomeFinanace.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
@@ -64,5 +65,20 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
     public async Task<List<Operation>> GetForWallet(Guid walletId)
     {
         return await GetByPredicate(i=>i.WalletId==walletId || i.WalletToId==walletId);
+    }
+
+    public double GetSumFor(Guid walletId)
+    {
+        var e = this.DbSet
+            .Where(o => o.WalletId == walletId)
+            .Where(o=> o.OperationType == Domain.Enums.OperationType.Expense || o.OperationType == Domain.Enums.OperationType.Transfer)
+            .Sum(o=>o.Amount);
+
+        var i= this.DbSet
+            .Where(o => (o.WalletId == walletId && o.OperationType == Domain.Enums.OperationType.Income) || o.WalletToId==walletId)
+            .Sum(o => o.Amount);
+
+
+        return i - e;
     }
 }
