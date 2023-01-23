@@ -79,10 +79,5 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
         this.DbSet.Remove(item);
         await this._homeFinanceContext.SaveChangesAsync();
     }
-
-    protected async Task<List<T>> GetByPredicate(Expression<Func<TDb,bool>> predicate)
-    {
-        var items = (await this.DbSet.Where(i => i.HomeFinanceUserId == this.UserId).Where(predicate).ToListAsync()).Select(this.ToDomain).ToList();
-        return items;
-    }
+    
 }

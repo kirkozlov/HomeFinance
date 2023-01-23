@@ -4,6 +4,7 @@ namespace HomeFinance.Domain.Repositories;
 
 public interface IOperationRepository : IUserDependentRepository<Operation, Guid>
 {
-    public Task<List<Operation>> GetForWallet(Guid walletId);
     public double GetSumFor(Guid walletId);
+    public Task<List<Operation>> GetForWalletAndPeriod(Guid? walletId, DateTime? from, DateTime? to);
+
 }

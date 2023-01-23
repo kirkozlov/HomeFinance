@@ -19,23 +19,25 @@ public static class OperationApiSet
     }
 
     [Authorize]
-    static async Task<IEnumerable<object>> GetAll(IGateway unitOfWork)
+    static async Task<IEnumerable<object>> GetAll([FromQuery] Guid? walletId, [FromQuery] long? from, [FromQuery] long? to, IGateway unitOfWork)
     {
-        var operations = await unitOfWork.OperationRepository.GetAll();
+        var fromDt = from.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(from.Value).LocalDateTime : (DateTime?)null;
+        var toDt = to.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(to.Value).LocalDateTime : (DateTime?)null;
+        var operations = await unitOfWork.OperationRepository.GetForWalletAndPeriod(walletId, fromDt, toDt);
         return operations;
     }
 
     [Authorize]
     static async Task<object?> GetById([FromRoute] Guid id, IGateway unitOfWork)
     {
-        var operations = await unitOfWork.OperationRepository.GetAll();
-        return operations.SingleOrDefault(i=>i.Id==id);
+        var operation = await unitOfWork.OperationRepository.GetByKey(id);
+        return operation;
     }
 
     [Authorize]
     static async Task<IEnumerable<object>> GetForWallet(Guid walletId, IGateway unitOfWork)
     {
-        var operations = await unitOfWork.OperationRepository.GetForWallet(walletId);
+        var operations = await unitOfWork.OperationRepository.GetForWalletAndPeriod(walletId, null, null);
         return operations;
     }
 

@@ -62,9 +62,19 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         return exp;
     }
 
-    public async Task<List<Operation>> GetForWallet(Guid walletId)
+    public async Task<List<Operation>> GetForWalletAndPeriod(Guid? walletId, DateTime? from, DateTime? to)
     {
-        return await GetByPredicate(i=>i.WalletId==walletId || i.WalletToId==walletId);
+        IQueryable<HomeFinanace.DataAccess.Core.DBModels.Operation> result = this.DbSet;
+        if (walletId.HasValue)
+        {
+            result = result.Where(i => i.WalletId == walletId || i.WalletToId == walletId);
+        }
+
+        if (from != null && to != null)
+        {
+            result = result.Where(i => from <= i.DateTime && i.DateTime < to);
+        }
+        return (await result.ToListAsync()).Select(this.ToDomain).ToList();
     }
 
     public double GetSumFor(Guid walletId)
@@ -77,7 +87,6 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         var i= this.DbSet
             .Where(o => (o.WalletId == walletId && o.OperationType == Domain.Enums.OperationType.Income) || o.WalletToId==walletId)
             .Sum(o => o.Amount);
-
 
         return i - e;
     }
