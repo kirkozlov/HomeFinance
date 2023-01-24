@@ -37,9 +37,9 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
         };
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToExistingDb(RepeatableOperation domain, string userId)
+    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToExistingDb(RepeatableOperation domain)
     {
-        var entity = this.DbSet.Where(i => i.Id == domain.Id && i.HomeFinanceUserId == userId).Single();
+        var entity = this.DataSet.Single(i => i.Id == domain.Id);
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
 
         entity.WalletId = domain.WalletId;

@@ -29,9 +29,9 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         };
     }
 
-    protected override TagDB ToExistingDb(Tag domain, string userId)
+    protected override TagDB ToExistingDb(Tag domain)
     {
-        var entity = this.DbSet.Where(i => i.Name == domain.Name && i.HomeFinanceUserId == userId).Single();
+        var entity = this.DataSet.Single(i => i.Name == domain.Name);
         entity.OperationType = domain.OperationType;
         entity.SortId = domain.SortId;
         return entity;

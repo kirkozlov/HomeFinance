@@ -14,7 +14,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HomeFinanc
 {
     public HomeFinanceContext CreateDbContext(string[] args)
     {
-        IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(@Directory.GetCurrentDirectory() + "/../HomeFinance/appsettings.json").Build();
+        IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(@Directory.GetCurrentDirectory() + "/../HomeFinanceApi/appsettings.json").Build();
         var builder = new DbContextOptionsBuilder();
         var connectionString = configuration.GetConnectionString("HomeFinanceContextConnection");
         builder.UseSqlServer(connectionString);
@@ -30,7 +30,7 @@ public static class DBExtension
         self.AddDbContext<HomeFinanceContext>(options =>
         {
             options.UseSqlServer(connectionString);
-            //options.UseLazyLoadingProxies();
+            options.UseLazyLoadingProxies();
         });
         return self;
     }
@@ -53,5 +53,8 @@ public class HomeFinanceContext : HomeFinanceContextBase
         builder.Entity<Operation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<RepeatableOperation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Tag>().HasOne(i=>i.HomeFinanceUser).WithMany().HasForeignKey(x => x.HomeFinanceUserId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<Tag>().HasKey(t => new { t.Name, t.OperationType });
     }
 }

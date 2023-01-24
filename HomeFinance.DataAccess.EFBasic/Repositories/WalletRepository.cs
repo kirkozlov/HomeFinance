@@ -26,9 +26,9 @@ class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess
         };
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToExistingDb(Wallet domain, string userId)
+    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToExistingDb(Wallet domain)
     {
-        var entity = this.DbSet.Where(i => i.Id == domain.Id && i.HomeFinanceUserId == userId).Single();
+        var entity = this.DataSet.Single(i => i.Id == domain.Id);
 
         entity.Name = domain.Name;
         entity.GroupName = domain.GroupName;

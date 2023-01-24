@@ -1,13 +1,14 @@
 ﻿using HomeFinance.DataAccess;
-using HomeFinance.DataAccess.Sqlite;
+//using HomeFinance.DataAccess.Sqlite;
+using HomeFinance.DataAccess.MsSql;
 using HomeFinance.Domain.DomainModels;
 using HomeFinance.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
-var context = new HomeFinanceContext(new DbContextOptionsBuilder().UseSqlite($@"Data Source = D:\srcPrivate\HomeFinance\dbtest.db").UseLazyLoadingProxies().Options);
-
+//var context = new HomeFinanceContext(new DbContextOptionsBuilder().UseSqlite($@"Data Source = D:\srcPrivate\HomeFinance\dbtest.db").UseLazyLoadingProxies().Options);
+var context = new HomeFinanceContext(new DbContextOptionsBuilder().UseSqlServer("Server=.;Database=HomeFinance;Trusted_Connection=True;MultipleActiveResultSets=true").UseLazyLoadingProxies().Options);
 var inputFile = "C:\\Users\\KirillKozlov\\Downloads\\2023-01-13.csv";
-var userId= "ad0f6e92-9678-4b0c-982e-71aea45c0dd1";
+var userId= "acf45568-a967-4b9a-98a5-3186d5917693";
 var gateway = new Gateway(context, new UserService(userId));
 
 var models=File.ReadAllLines(inputFile).Skip(1).Select(i=>new Model(i)).Where(i=>i.Valid).ToList();
@@ -38,20 +39,20 @@ var tagsIncome = models
 
 var tags=tagsExpense.Concat(tagsIncome).ToList();
 
-wallets.ForEach(async w =>
+wallets.ForEach( w =>
 {
-    await gateway.WalletRepository.Add(w);
+    var a= gateway.WalletRepository.Add(w).Result;
 });
 tags.ForEach(t =>
 {
-    gateway.TagRepository.Add(t);
+    var g=gateway.TagRepository.Add(t).Result;
 });
 
 var counter = 0;
 models.ForEach(m =>
 {
     Console.WriteLine(counter++);
-    gateway.OperationRepository.Add(
+    var a=gateway.OperationRepository.Add(
         new Operation(
             Guid.NewGuid(),
             wallets.Single(i => i.Name == m.Wallet).Id! ?? throw new Exception(),
@@ -60,7 +61,7 @@ models.ForEach(m =>
             m.Amount,
             "",
             m.WalletTo != null ? wallets.Single(i => i.Name == m.WalletTo).Id : null,
-            m.Date));
+            m.Date)).Result;
 });
 
 class Model
@@ -121,7 +122,7 @@ class Model
         else
         {
             var tags = new List<string> { lineSplit[2], lineSplit[3] };//, lineSplit[4] };
-            Tags = tags.Distinct().Where(i => !string.IsNullOrWhiteSpace(i));
+            Tags = tags.Select(i=>i.ToLower().Trim()).Distinct().Where(i => !string.IsNullOrWhiteSpace(i));
         }
         
     }

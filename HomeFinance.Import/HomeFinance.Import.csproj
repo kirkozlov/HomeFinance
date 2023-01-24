@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HomeFinance.DataAccess.MsSql\HomeFinance.DataAccess.MsSql.csproj" />
     <ProjectReference Include="..\HomeFinance.DataAccess.Sqlite\HomeFinance.DataAccess.Sqlite.csproj" />
     <ProjectReference Include="..\HomeFinance.Domain\HomeFinance.Domain.csproj" />
   </ItemGroup>

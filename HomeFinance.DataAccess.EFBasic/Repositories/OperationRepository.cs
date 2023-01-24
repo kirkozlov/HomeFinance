@@ -38,9 +38,9 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         };
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToExistingDb(Operation domain, string userId)
+    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToExistingDb(Operation domain)
     {
-        var entity = this.DbSet.Where(i=>i.Id==domain.Id && i.HomeFinanceUserId==userId).Single();
+        var entity = this.DataSet.Single(i => i.Id == domain.Id);
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
 
         entity.WalletId = domain.WalletId;
@@ -64,7 +64,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
 
     public async Task<List<Operation>> GetForWalletAndPeriod(Guid? walletId, DateTime? from, DateTime? to)
     {
-        IQueryable<HomeFinanace.DataAccess.Core.DBModels.Operation> result = this.DbSet;
+        var result = this.DataSet;
         if (walletId.HasValue)
         {
             result = result.Where(i => i.WalletId == walletId || i.WalletToId == walletId);
@@ -74,17 +74,19 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         {
             result = result.Where(i => from <= i.DateTime && i.DateTime < to);
         }
-        return (await result.ToListAsync()).Select(this.ToDomain).ToList();
+
+        var tmp = await result.Include(x=>x.Tags).ToListAsync();
+        return tmp.Select(this.ToDomain).ToList();
     }
 
     public double GetSumFor(Guid walletId)
     {
-        var e = this.DbSet
+        var e = this.DataSet
             .Where(o => o.WalletId == walletId)
             .Where(o=> o.OperationType == Domain.Enums.OperationType.Expense || o.OperationType == Domain.Enums.OperationType.Transfer)
             .Sum(o=>o.Amount);
 
-        var i= this.DbSet
+        var i= this.DataSet
             .Where(o => (o.WalletId == walletId && o.OperationType == Domain.Enums.OperationType.Income) || o.WalletToId==walletId)
             .Sum(o => o.Amount);
 
