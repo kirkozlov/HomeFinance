@@ -54,8 +54,6 @@ public class HomeFinanceContext : HomeFinanceContextBase
         // Add your customizations after calling base.OnModelCreating(builder);
 
         builder.Entity<Tag>().HasKey(t => new { t.Name, t.OperationType });
-        //builder.Entity<Operation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Cascade);
-        //builder.Entity<RepeatableOperation>().HasOne(x => x.Wallet).WithMany().HasForeignKey(x => x.WalletId).OnDelete(DeleteBehavior.Cascade);
     }
 
 }
