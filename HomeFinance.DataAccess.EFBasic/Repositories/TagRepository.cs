@@ -31,7 +31,7 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
 
     protected override TagDB ToExistingDb(Tag domain)
     {
-        var entity = this.DataSet.Single(i => i.Name == domain.Name);
+        var entity = this.DataSet.Single(i => i.Name == domain.Name && i.OperationType==domain.OperationType );
         entity.OperationType = domain.OperationType;
         entity.SortId = domain.SortId;
         return entity;
