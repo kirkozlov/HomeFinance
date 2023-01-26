@@ -13,6 +13,7 @@ using System.Text;
 using HomeFinance.DataAccess.EFBasic;
 using HomeFinanceApi;
 using HomeFinanceApi.Controllers;
+using HomeFinanceApi.BackgroundWorker;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +69,10 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddScoped<IUserService,UserService>();
+
+builder.Services.AddSingleton<RepeatableExecution>();
+builder.Services.AddHostedService(p=>p.GetRequiredService<RepeatableExecution>());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -88,6 +93,7 @@ app.MapControllers();
 TagApiSet.Map(app);
 WalletApiSet.Map(app); 
 OperationApiSet.Map(app);
+RepeatableOperationApiSet.Map(app);
 app.MapGet("api/test", () =>
 {
     return Results.Ok("HAHA");
