@@ -1,12 +1,5 @@
-﻿using HomeFinance.Domain.DomainModels;
-using HomeFinance.Domain.Services;
+﻿using HomeFinance.Domain.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Tag = HomeFinance.Domain.DomainModels.Tag;
 using TagDB = HomeFinanace.DataAccess.Core.DBModels.Tag;
 using OperationBaseDB = HomeFinanace.DataAccess.Core.DBModels.OperationBase;

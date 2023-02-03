@@ -1,13 +1,10 @@
-using System.Reflection.Metadata.Ecma335;
 using HomeFinance.DataAccess;
 //using HomeFinance.DataAccess.Sqlite;
 using HomeFinance.DataAccess.MsSql;
-using HomeFinance.Domain;
 using HomeFinance.Domain.Models;
 using HomeFinance.Domain.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using HomeFinance.DataAccess.EFBasic;

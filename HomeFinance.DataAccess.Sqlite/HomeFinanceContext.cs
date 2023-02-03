@@ -1,12 +1,9 @@
 ﻿using HomeFinanace.DataAccess.Core.DBModels;
 using HomeFinance.DataAccess.EFBasic;
-using HomeFinance.Domain.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection.Emit;
 
 namespace HomeFinance.DataAccess.Sqlite;
 

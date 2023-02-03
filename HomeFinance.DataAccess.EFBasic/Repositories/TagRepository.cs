@@ -1,7 +1,4 @@
-﻿using HomeFinance.Domain.DomainModels;
-using HomeFinance.Domain.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Tag = HomeFinance.Domain.DomainModels.Tag;
 using TagDB = HomeFinanace.DataAccess.Core.DBModels.Tag;
 

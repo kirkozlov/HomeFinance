@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HomeFinance.Domain.Enums;
-using HomeFinance.Domain.Models;
 
 namespace HomeFinanace.DataAccess.Core.DBModels;
 

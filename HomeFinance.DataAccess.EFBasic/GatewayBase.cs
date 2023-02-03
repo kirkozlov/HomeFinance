@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using HomeFinance.Domain.Repositories;
+﻿using HomeFinance.Domain.Repositories;
 using HomeFinance.Domain.Utils;
 using HomeFinance.DataAccess.EFBasic;
 using HomeFinance.DataAccess.EFBasic.Repositories;

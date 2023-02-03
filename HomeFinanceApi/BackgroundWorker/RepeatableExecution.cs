@@ -1,9 +1,4 @@
-﻿using HomeFinanace.DataAccess.Core.DBModels;
-using HomeFinance.DataAccess.EFBasic;
-using HomeFinance.Domain.Enums;
-using HomeFinance.Domain.Services;
-using HomeFinance.Domain.Utils;
-using Microsoft.EntityFrameworkCore;
+﻿using HomeFinance.Domain.Services;
 
 namespace HomeFinanceApi.BackgroundWorker
 {
