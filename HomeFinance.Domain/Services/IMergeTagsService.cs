@@ -10,4 +10,3 @@ public interface IMergeTagsService
 {
     Task<Tag> MergeTags(string newName, IEnumerable<string> oldNames);
 }
-

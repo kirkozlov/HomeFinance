@@ -1,57 +1,51 @@
 ﻿using HomeFinanace.DataAccess.Core.DBModels;
 using HomeFinance.DataAccess.EFBasic;
 using HomeFinance.Domain.Enums;
+using HomeFinance.Domain.Services;
 using HomeFinance.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeFinanceApi.BackgroundWorker
 {
-    public class RepeatableExecution : BackgroundService
+    public class RepeatableExecution : IHostedService, IDisposable
     {
-        private readonly HomeFinanceContextBase _dbContext;
+        private readonly IServiceProvider _serviceProvider;
+        private Timer? _timer = null;
 
-        public RepeatableExecution(HomeFinanceContextBase dbContext)
+        public RepeatableExecution(IServiceProvider serviceProvider)
         {
-            _dbContext = dbContext;
+            _serviceProvider = serviceProvider;
         }
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        
+        public Task StartAsync(CancellationToken stoppingToken)
         {
-            while (true)
+            _timer = new Timer(DoWork, null, TimeSpan.Zero,
+                TimeSpan.FromSeconds(5));
+
+            return Task.CompletedTask;
+        }
+
+        private void DoWork(object? state)
+        {
+            lock (_timer!)
             {
-                var workItems = _dbContext.RepeatableOperations.Where(i => i.NextExecution < DateTime.Now).ToList();
-                foreach (var workItem in workItems)
-                {
-                    this._dbContext.Operations.Add(new Operation()
-                    {
-                        Id = new Guid(),
-                        WalletId = workItem.WalletId,
-                        OperationType = workItem.OperationType,
-                        Tags = workItem.Tags,
-                        WalletToId = workItem.WalletToId,
-                        Amount = workItem.Amount,
-                        Comment = workItem.Comment,
-                        DateTime = workItem.NextExecution
-                    });
-
-                    switch (workItem.RepeatableType)
-                    {
-                        case RepeatableType.Month:
-                            workItem.NextExecution = workItem.NextExecution.AddMonths(1);
-                            break;
-                        case RepeatableType.Quarter:
-                            workItem.NextExecution = workItem.NextExecution.AddMonths(3);
-                            break;
-                        case RepeatableType.Year:
-                            workItem.NextExecution = workItem.NextExecution.AddYears(1);
-                            break;
-                        default: throw new InvalidOperationException("Unknown RepeatableType");
-                    }
-                }
-
-                this._dbContext.SaveChanges();
-
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                using var scope = _serviceProvider.CreateScope();
+                var service = scope.ServiceProvider.GetRequiredService<IRepetableService>();
+                service.FindAndExcecuteRepeatableOperation();
             }
+           
+        }
+
+        public Task StopAsync(CancellationToken stoppingToken)
+        {
+            _timer?.Change(Timeout.Infinite, 0);
+
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _timer?.Dispose();
         }
     }
 }
