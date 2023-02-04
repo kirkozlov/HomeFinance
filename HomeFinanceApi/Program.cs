@@ -13,6 +13,7 @@ using HomeFinanceApi;
 using HomeFinanceApi.Controllers;
 using HomeFinanceApi.BackgroundWorker;
 using HomeFinance.Domain.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,7 +64,7 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer=false,
         ValidateAudience=false,
-        ClockSkew=TimeSpan.Zero
+        ClockSkew=TimeSpan.Zero,
     };
 });
 
@@ -72,6 +73,23 @@ builder.Services.AddScoped<IRepetableService, RepetableService>();
 builder.Services.AddHostedService<RepeatableExecution>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    // Note: see documentation for Migrate(). They say it is mutual exclusive to EnsureCreated().
+
+    HomeFinanceContextBase dc = scope.ServiceProvider.GetRequiredService<HomeFinanceContextBase>();
+    dc.Database.EnsureCreated();// This may create all tables, except the migration history.
+    try
+    {
+        dc.Database.Migrate(); // This may create the migration history table, but no further ones.
+    }
+    catch
+    {
+
+    }
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

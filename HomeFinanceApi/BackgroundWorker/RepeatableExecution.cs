@@ -15,7 +15,7 @@ namespace HomeFinanceApi.BackgroundWorker
         public Task StartAsync(CancellationToken stoppingToken)
         {
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(5));
+                TimeSpan.FromMinutes(1));
 
             return Task.CompletedTask;
         }

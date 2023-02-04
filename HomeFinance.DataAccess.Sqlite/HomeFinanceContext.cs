@@ -27,7 +27,7 @@ public static class DBExtension
         self.AddDbContext<HomeFinanceContext>(options =>
         {
             
-            options.UseSqlite($@"Data Source = D:\srcPrivate\HomeFinance\dbtest.db").UseLazyLoadingProxies();
+            options.UseSqlite($@"Data Source = dbtest.db").UseLazyLoadingProxies();
         });
         return self;
     }

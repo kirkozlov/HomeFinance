@@ -45,7 +45,25 @@ public class UserController : ControllerBase
         }
 
     }
-
+    
+    private string GetTokenForUser(HomeFinanceUser user)
+    {
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new Claim[]
+            {
+                new Claim("UserId", user.Id, ToString())
+            }),
+            Expires = DateTime.UtcNow.AddDays(5),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ApplicationSettings:JWT_Secret"])),
+                SecurityAlgorithms.HmacSha256Signature
+            )
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(securityToken);
+    }
 
     [HttpPost]
     [Route("Login")]
@@ -56,27 +74,35 @@ public class UserController : ControllerBase
 
         if (user != null && await _userManager.CheckPasswordAsync(user, userVM.Password))
         {
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("UserId", user.Id, ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(5),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ApplicationSettings:JWT_Secret"])),
-                    SecurityAlgorithms.HmacSha256Signature
-                )
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(securityToken);
+            var token = GetTokenForUser(user);
             return Ok(new { token });
         }
-        else
-        {
-            return BadRequest(new { message = "Username or password is incorrect." });
-        }
+
+        return BadRequest(new { message = "Username or password is incorrect." });
     }
 
+    [HttpPost]
+    [Route("passwordchange")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest changePasswordVM)
+    {
+        var user = await _userManager.FindByEmailAsync(changePasswordVM.UserNameOrEmail) ??
+                   await _userManager.FindByNameAsync(changePasswordVM.UserNameOrEmail);
+
+        if (user != null)
+        {
+            var result =
+                await _userManager.ChangePasswordAsync(user, changePasswordVM.OldPassword,
+                    changePasswordVM.NewPassword);
+
+            if (result.Succeeded)
+            {
+                var token = GetTokenForUser(user);
+                return Ok(new { token });
+            }
+        }
+        
+        return BadRequest(new { message = "Username or password is incorrect." });
+    }
+
+    
 }
