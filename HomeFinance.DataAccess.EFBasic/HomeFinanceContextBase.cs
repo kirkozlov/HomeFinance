@@ -11,6 +11,7 @@ public abstract class HomeFinanceContextBase : IdentityDbContext<HomeFinanceUser
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Operation> Operations { get; set; }
     public DbSet<RepeatableOperation> RepeatableOperations { get; set; }
+    public DbSet<TransientOperation> TransientOperations { get; set; }
 
 
     public HomeFinanceContextBase(DbContextOptions options)

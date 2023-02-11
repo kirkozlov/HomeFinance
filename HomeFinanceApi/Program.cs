@@ -109,9 +109,10 @@ app.MapControllers();
 TagApiSet.Map(app);
 WalletApiSet.Map(app); 
 OperationApiSet.Map(app);
+TransientOperationApiSet.Map(app);
 RepeatableOperationApiSet.Map(app);
 app.MapGet("api/test", () =>
 {
-    return Results.Ok("HAHA");
+    return Results.Ok(DateTime.Now);
 });
 app.Run();

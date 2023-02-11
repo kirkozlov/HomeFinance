@@ -13,7 +13,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HomeFinanc
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        var dbPath = System.IO.Path.Join(path, "dbtest.db");
+        var dbPath = System.IO.Path.Join(path, "main.db");
         var builder = new DbContextOptionsBuilder();
         builder.UseSqlite($"Data Source={dbPath}");
         return new HomeFinanceContext(builder.Options);
@@ -24,10 +24,15 @@ public static class DBExtension
 {
     public static IServiceCollection AddDataAccess(this IServiceCollection self, ConfigurationManager configuration)
     {
+        var directory = @"C:\home\site\HomeFinanceDB";
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
         self.AddDbContext<HomeFinanceContext>(options =>
         {
             
-            options.UseSqlite($@"Data Source = dbtest.db").UseLazyLoadingProxies();
+            options.UseSqlite($@"Data Source = {directory}\main.db").UseLazyLoadingProxies();
         });
         return self;
     }

@@ -10,5 +10,6 @@ public interface IGateway
     IOperationRepository OperationRepository { get; }
     IUserDependentRepository<Wallet, Guid> WalletRepository { get; }
     IUserDependentRepository<RepeatableOperation, Guid> RepeatableOperationRepository { get; }
+    IUserDependentRepository<TransientOperation, Guid> TransientOperationRepository { get; }
     IMergeTagsService MergeTagsService { get; }
 }
