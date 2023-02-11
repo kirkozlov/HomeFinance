@@ -1,8 +1,8 @@
 ﻿using HomeFinance.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Tag = HomeFinance.Domain.DomainModels.Tag;
-using TagDB = HomeFinanace.DataAccess.Core.DBModels.Tag;
-using OperationBaseDB = HomeFinanace.DataAccess.Core.DBModels.OperationBase;
+using TagDB = HomeFinance.DataAccess.Core.DBModels.Tag;
+using OperationBaseDB = HomeFinance.DataAccess.Core.DBModels.OperationBase;
 
 namespace HomeFinance.DataAccess.EFBasic.Services;
 

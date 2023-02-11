@@ -1,6 +1,6 @@
 ﻿using HomeFinance.Domain.Enums;
 
-namespace HomeFinanace.DataAccess.Core.DBModels;
+namespace HomeFinance.DataAccess.Core.DBModels;
 
 public class Tag: UserDependentBase
 {

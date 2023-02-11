@@ -1,4 +1,4 @@
-﻿using HomeFinanace.DataAccess.Core.DBModels;
+﻿using HomeFinance.DataAccess.Core.DBModels;
 using HomeFinance.DataAccess.EFBasic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

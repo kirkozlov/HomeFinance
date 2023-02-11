@@ -1,11 +1,11 @@
 ﻿using HomeFinance.Domain.DomainModels;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Tag = HomeFinanace.DataAccess.Core.DBModels.Tag;
+using Tag = HomeFinance.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class RepeatableOperationRepository : UserDependentRepository<RepeatableOperation, HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, Guid>
+class RepeatableOperationRepository : UserDependentRepository<RepeatableOperation, HomeFinance.DataAccess.Core.DBModels.RepeatableOperation, Guid>
 {
     readonly DbSet<Tag> _tags;
     public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.RepeatableOperations, userId)
@@ -13,16 +13,16 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
         this._tags = homeFinanceContext.Tags;
     }
 
-    protected override RepeatableOperation ToDomain(HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation db)
+    protected override RepeatableOperation ToDomain(HomeFinance.DataAccess.Core.DBModels.RepeatableOperation db)
     {
 
         return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution, db.RepeatableType);
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToNewDb(RepeatableOperation domain, string userId)
+    protected override HomeFinance.DataAccess.Core.DBModels.RepeatableOperation ToNewDb(RepeatableOperation domain, string userId)
     {
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
-        return new HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation()
+        return new HomeFinance.DataAccess.Core.DBModels.RepeatableOperation()
         {
             Id = domain.Id ?? Guid.NewGuid(),
             WalletId = domain.WalletId,
@@ -37,7 +37,7 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
         };
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation ToExistingDb(RepeatableOperation domain)
+    protected override HomeFinance.DataAccess.Core.DBModels.RepeatableOperation ToExistingDb(RepeatableOperation domain)
     {
         var entity = this.DataSet.Single(i => i.Id == domain.Id);
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
@@ -55,9 +55,9 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
         return entity;
     }
 
-    protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, bool>> CheckKey(Guid key)
+    protected override Expression<Func<HomeFinance.DataAccess.Core.DBModels.RepeatableOperation, bool>> CheckKey(Guid key)
     {
-        Expression<Func<HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation, bool>> exp = db => db.Id == key;
+        Expression<Func<HomeFinance.DataAccess.Core.DBModels.RepeatableOperation, bool>> exp = db => db.Id == key;
         return exp;
     }
 }

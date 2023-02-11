@@ -69,7 +69,7 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddScoped<IUserService,UserService>();
-builder.Services.AddScoped<IRepetableService, RepetableService>();
+builder.Services.AddScoped<IRepeatableService, RepeatableService>();
 builder.Services.AddHostedService<RepeatableExecution>();
 
 var app = builder.Build();

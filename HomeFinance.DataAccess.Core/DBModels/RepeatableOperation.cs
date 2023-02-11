@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HomeFinance.Domain.Enums;
 
-namespace HomeFinanace.DataAccess.Core.DBModels;
+namespace HomeFinance.DataAccess.Core.DBModels;
 
 public class RepeatableOperation : OperationBase
 {

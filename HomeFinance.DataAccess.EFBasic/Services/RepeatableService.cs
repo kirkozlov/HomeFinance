@@ -1,21 +1,21 @@
-﻿using HomeFinanace.DataAccess.Core.DBModels;
+﻿using HomeFinance.DataAccess.Core.DBModels;
 using HomeFinance.Domain.Enums;
 using HomeFinance.Domain.Services;
 
 namespace HomeFinance.DataAccess.EFBasic.Services;
 
-public class RepetableService : IRepetableService
+public class RepeatableService : IRepeatableService
 {
     readonly HomeFinanceContextBase _homeFinanceContext;
 
 
-    public RepetableService(HomeFinanceContextBase homeFinanceContext)
+    public RepeatableService(HomeFinanceContextBase homeFinanceContext)
     {
         this._homeFinanceContext = homeFinanceContext;
     }
 
 
-    public async Task FindAndExcecuteRepeatableOperation()
+    public async Task FindAndExecuteRepeatableOperation()
     {
         var workItems = this._homeFinanceContext.RepeatableOperations.Where(i => i.NextExecution < DateTime.Now).ToList();
 

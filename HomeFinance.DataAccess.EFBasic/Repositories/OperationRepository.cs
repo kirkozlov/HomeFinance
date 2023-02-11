@@ -2,11 +2,11 @@
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Tag = HomeFinanace.DataAccess.Core.DBModels.Tag;
+using Tag = HomeFinance.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class OperationRepository : UserDependentRepository<Operation, HomeFinanace.DataAccess.Core.DBModels.Operation, Guid>, IOperationRepository
+class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataAccess.Core.DBModels.Operation, Guid>, IOperationRepository
 {
     readonly DbSet<Tag> _tags;
     public OperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Operations, userId)
@@ -14,16 +14,16 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         this._tags = homeFinanceContext.Tags;
     }
 
-    protected override Operation ToDomain(HomeFinanace.DataAccess.Core.DBModels.Operation db)
+    protected override Operation ToDomain(HomeFinance.DataAccess.Core.DBModels.Operation db)
     {
 
         return new Operation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, db.DateTime);
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToNewDb(Operation domain, string userId)
+    protected override HomeFinance.DataAccess.Core.DBModels.Operation ToNewDb(Operation domain, string userId)
     {
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
-        return new HomeFinanace.DataAccess.Core.DBModels.Operation()
+        return new HomeFinance.DataAccess.Core.DBModels.Operation()
         {
             Id = domain.Id ?? Guid.NewGuid(),
             WalletId = domain.WalletId,
@@ -37,7 +37,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
         };
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Operation ToExistingDb(Operation domain)
+    protected override HomeFinance.DataAccess.Core.DBModels.Operation ToExistingDb(Operation domain)
     {
         var entity = this.DataSet.Single(i => i.Id == domain.Id);
         var tags = this._tags.Where(i => domain.Tags.Contains(i.Name)).ToList();
@@ -55,9 +55,9 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinanace.Data
     }
 
 
-    protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Operation, bool>> CheckKey( Guid key)
+    protected override Expression<Func<HomeFinance.DataAccess.Core.DBModels.Operation, bool>> CheckKey( Guid key)
     {
-        Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Operation, bool>> exp = db => db.Id == key;
+        Expression<Func<HomeFinance.DataAccess.Core.DBModels.Operation, bool>> exp = db => db.Id == key;
         return exp;
     }
 

@@ -1,7 +1,7 @@
 ﻿using HomeFinance.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using HomeFinanace.DataAccess.Core.DBModels;
+using HomeFinance.DataAccess.Core.DBModels;
 
 namespace HomeFinance.DataAccess.EFBasic;
 

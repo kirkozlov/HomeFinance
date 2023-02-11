@@ -25,8 +25,8 @@ namespace HomeFinanceApi.BackgroundWorker
             lock (_timer!)
             {
                 using var scope = _serviceProvider.CreateScope();
-                var service = scope.ServiceProvider.GetRequiredService<IRepetableService>();
-                service.FindAndExcecuteRepeatableOperation();
+                var service = scope.ServiceProvider.GetRequiredService<IRepeatableService>();
+                service.FindAndExecuteRepeatableOperation();
             }
            
         }

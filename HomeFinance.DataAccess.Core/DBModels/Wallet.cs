@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HomeFinanace.DataAccess.Core.DBModels;
+namespace HomeFinance.DataAccess.Core.DBModels;
 
 public class Wallet : UserDependentBase
 {

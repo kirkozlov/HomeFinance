@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using HomeFinanace.DataAccess.Core.DBModels;
+using HomeFinance.DataAccess.Core.DBModels;
 using HomeFinance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,6 +56,16 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
         return ToDomain(entity);
     }
 
+    public async Task<IEnumerable<T>> AddRange(IEnumerable<T> domain)
+    {
+        var entities = domain.Select(i=>this.ToNewDb(i,this.UserId)).ToList();
+        await this.DbSet.AddRangeAsync(entities);
+        await this._homeFinanceContext.SaveChangesAsync();
+        return entities.Select(this.ToDomain).ToList();
+    }
+
+
+
     public async Task<T> Update(T domain)
     {
         var entity = this.ToExistingDb(domain);
@@ -65,9 +75,9 @@ abstract class UserDependentRepository<T, TDb, TKey> : IUserDependentRepository<
 
     public async Task<IEnumerable<T>> Update(IEnumerable<T> domain)
     {
-        var entities=domain.Select(d => this.ToExistingDb(d)).ToList();
+        var entities=domain.Select(this.ToExistingDb).ToList();
         await this._homeFinanceContext.SaveChangesAsync();
-        return entities.Select(i => ToDomain(i)).ToList();
+        return entities.Select(this.ToDomain).ToList();
     }
 
     public async Task Remove(TKey key)

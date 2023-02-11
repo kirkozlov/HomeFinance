@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Tag = HomeFinance.Domain.DomainModels.Tag;
-using TagDB = HomeFinanace.DataAccess.Core.DBModels.Tag;
+using TagDB = HomeFinance.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
@@ -34,9 +34,9 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         return entity;
     }
 
-    protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Tag, bool>> CheckKey(string key)
+    protected override Expression<Func<HomeFinance.DataAccess.Core.DBModels.Tag, bool>> CheckKey(string key)
     {
-        Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Tag, bool>> exp = db => db.Name == key;
+        Expression<Func<HomeFinance.DataAccess.Core.DBModels.Tag, bool>> exp = db => db.Name == key;
         return exp;
     }
 

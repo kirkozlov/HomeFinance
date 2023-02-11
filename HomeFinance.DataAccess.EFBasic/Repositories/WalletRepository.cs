@@ -3,20 +3,20 @@ using System.Linq.Expressions;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess.Core.DBModels.Wallet, Guid>
+class WalletRepository : UserDependentRepository<Wallet, HomeFinance.DataAccess.Core.DBModels.Wallet, Guid>
 {
     public WalletRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Wallets, userId)
     {
     }
 
-    protected override Wallet ToDomain(HomeFinanace.DataAccess.Core.DBModels.Wallet db)
+    protected override Wallet ToDomain(HomeFinance.DataAccess.Core.DBModels.Wallet db)
     {
         return new Wallet(db.Id, db.Name, db.GroupName, db.Comment);
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToNewDb(Wallet domain, string userId)
+    protected override HomeFinance.DataAccess.Core.DBModels.Wallet ToNewDb(Wallet domain, string userId)
     {
-        return new HomeFinanace.DataAccess.Core.DBModels.Wallet()
+        return new HomeFinance.DataAccess.Core.DBModels.Wallet()
         {
             Id = domain.Id ?? Guid.NewGuid(),
             Name = domain.Name,
@@ -26,7 +26,7 @@ class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess
         };
     }
 
-    protected override HomeFinanace.DataAccess.Core.DBModels.Wallet ToExistingDb(Wallet domain)
+    protected override HomeFinance.DataAccess.Core.DBModels.Wallet ToExistingDb(Wallet domain)
     {
         var entity = this.DataSet.Single(i => i.Id == domain.Id);
 
@@ -37,9 +37,9 @@ class WalletRepository : UserDependentRepository<Wallet, HomeFinanace.DataAccess
         return entity;
     }
 
-    protected override Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Wallet, bool>> CheckKey(Guid key)
+    protected override Expression<Func<HomeFinance.DataAccess.Core.DBModels.Wallet, bool>> CheckKey(Guid key)
     {
-        Expression<Func<HomeFinanace.DataAccess.Core.DBModels.Wallet, bool>> exp = db => db.Id == key;
+        Expression<Func<HomeFinance.DataAccess.Core.DBModels.Wallet, bool>> exp = db => db.Id == key;
         return exp;
     }
 }

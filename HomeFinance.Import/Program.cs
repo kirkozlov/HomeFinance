@@ -39,30 +39,22 @@ var tagsIncome = models
 
 var tags=tagsExpense.Concat(tagsIncome).ToList();
 
-wallets.ForEach( w =>
-{
-    var a= gateway.WalletRepository.Add(w).Result;
-});
-tags.ForEach(t =>
-{
-    var g=gateway.TagRepository.Add(t).Result;
-});
 
-var counter = 0;
-models.ForEach(m =>
-{
-    Console.WriteLine(counter++);
-    var a=gateway.OperationRepository.Add(
-        new Operation(
-            Guid.NewGuid(),
-            wallets.Single(i => i.Name == m.Wallet).Id! ?? throw new Exception(),
-            m.OperationType,
-            m.Tags,
-            m.Amount,
-            "",
-            m.WalletTo != null ? wallets.Single(i => i.Name == m.WalletTo).Id : null,
-            m.Date)).Result;
-});
+await gateway.WalletRepository.AddRange(wallets);
+await gateway.TagRepository.AddRange(tags);
+
+var operations=models.Select(m => new Operation(
+    Guid.NewGuid(),
+    wallets.Single(i => i.Name == m.Wallet).Id! ?? throw new Exception(),
+    m.OperationType,
+    m.Tags,
+    m.Amount,
+    "",
+    m.WalletTo != null ? wallets.Single(i => i.Name == m.WalletTo).Id : null,
+    m.Date));
+
+await gateway.OperationRepository.AddRange(operations);
+
 
 class Model
 {
