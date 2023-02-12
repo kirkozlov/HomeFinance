@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.DataAccess.MsSq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.DataAccess.Core", "HomeFinance.DataAccess.Core\HomeFinance.DataAccess.Core.csproj", "{7B6F437E-FCF1-4505-9985-7E9E4B168FEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeFinance.Import", "HomeFinance.Import\HomeFinance.Import.csproj", "{329DF50D-F7FE-423C-B4F2-9E04DF374A76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeFinance.Import", "HomeFinance.Import\HomeFinance.Import.csproj", "{329DF50D-F7FE-423C-B4F2-9E04DF374A76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeFinance.DataAccess.Proxy", "HomeFinance.DataAccess.Proxy\HomeFinance.DataAccess.Proxy.csproj", "{2EC94051-2CCA-49A2-A513-2392D8701B38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{329DF50D-F7FE-423C-B4F2-9E04DF374A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{329DF50D-F7FE-423C-B4F2-9E04DF374A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{329DF50D-F7FE-423C-B4F2-9E04DF374A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EC94051-2CCA-49A2-A513-2392D8701B38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EC94051-2CCA-49A2-A513-2392D8701B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EC94051-2CCA-49A2-A513-2392D8701B38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EC94051-2CCA-49A2-A513-2392D8701B38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

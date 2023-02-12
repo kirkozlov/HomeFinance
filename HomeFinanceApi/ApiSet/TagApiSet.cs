@@ -15,9 +15,10 @@ public static class TagApiSet
     {
         app.MapGet("api/tag", TagApiSet.Get);
         app.MapPost("api/tag", Post);
+        app.MapPost("api/tag/range", PostRange);
         app.MapPost("api/tag/merge", Merge);
         app.MapPut("api/tag", Put);
-        app.MapPut("api/tag/multiple", PutMultiple);
+        app.MapPut("api/tag/range", PutRange);
         app.MapDelete("api/tag/{name}", Delete);
     }
 
@@ -36,6 +37,12 @@ public static class TagApiSet
         await unitOfWork.TagRepository.Add(tag);
     }
 
+    [Authorize]
+    static async Task PostRange(Tag[] tags, IGateway unitOfWork)
+    {
+        await unitOfWork.TagRepository.AddRange(tags);
+    }
+
 
     [Authorize]
     static async Task Put(Tag tag, IGateway unitOfWork)
@@ -44,7 +51,7 @@ public static class TagApiSet
     }
 
     [Authorize]
-    static async Task PutMultiple(Tag[] tags, IGateway unitOfWork)
+    static async Task PutRange(Tag[] tags, IGateway unitOfWork)
     {
         await unitOfWork.TagRepository.Update(tags);
     }

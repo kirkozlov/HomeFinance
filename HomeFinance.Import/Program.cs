@@ -1,15 +1,13 @@
-﻿using HomeFinance.DataAccess;
-//using HomeFinance.DataAccess.Sqlite;
-using HomeFinance.DataAccess.MsSql;
+﻿
+using HomeFinance.DataAccess.Proxy;
 using HomeFinance.Domain.DomainModels;
 using HomeFinance.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 
 //var context = new HomeFinanceContext(new DbContextOptionsBuilder().UseSqlite($@"Data Source = D:\srcPrivate\HomeFinance\dbtest.db").UseLazyLoadingProxies().Options);
-var context = new HomeFinanceContext(new DbContextOptionsBuilder().UseSqlServer("Server=.;Database=HomeFinance;Trusted_Connection=True;MultipleActiveResultSets=true").UseLazyLoadingProxies().Options);
 var inputFile = "C:\\Users\\KirillKozlov\\Downloads\\2023-01-13.csv";
-var userId= "acf45568-a967-4b9a-98a5-3186d5917693";
-var gateway = new Gateway(context, new UserService(userId));
+//var baseUrl = "https://homefinanceapi.azurewebsites.net/api/";
+var baseUrl = "https://localhost:7080/api/";
+var gateway = new Gateway(baseUrl,"test", "test");
 
 var models=File.ReadAllLines(inputFile).Skip(1).Select(i=>new Model(i)).Where(i=>i.Valid).ToList();
 

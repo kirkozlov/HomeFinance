@@ -12,7 +12,7 @@ public static class TransientOperationApiSet
         app.MapGet("api/transient", TransientOperationApiSet.GetAll);
         app.MapGet("api/transient/{id:guid}", TransientOperationApiSet.GetById);
         app.MapPost("api/transient", Post);
-        app.MapPost("api/transient/many", PostMany);
+        app.MapPost("api/transient/range", PostRange);
         app.MapPut("api/transient", Put);
         app.MapDelete("api/transient/{id:guid}", Delete);
     }
@@ -39,7 +39,7 @@ public static class TransientOperationApiSet
     }
 
     [Authorize]
-    static async Task PostMany(TransientOperation[] operations, IGateway unitOfWork)
+    static async Task PostRange(TransientOperation[] operations, IGateway unitOfWork)
     {
         await unitOfWork.TransientOperationRepository.AddRange(operations);
     }

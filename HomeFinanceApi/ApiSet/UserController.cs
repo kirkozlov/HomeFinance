@@ -1,11 +1,11 @@
 ﻿using HomeFinance.Domain.Models;
-using HomeFinanceApi.Requests;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using HomeFinance.Domain.Requests;
 
 namespace HomeFinanceApi.Controllers;
 
@@ -75,7 +75,7 @@ public class UserController : ControllerBase
         if (user != null && await _userManager.CheckPasswordAsync(user, userVM.Password))
         {
             var token = GetTokenForUser(user);
-            return Ok(new { token });
+            return Ok(new UserLoginResponse(){ Token=token });
         }
 
         return BadRequest(new { message = "Username or password is incorrect." });
@@ -97,7 +97,7 @@ public class UserController : ControllerBase
             if (result.Succeeded)
             {
                 var token = GetTokenForUser(user);
-                return Ok(new { token });
+                return Ok(new UserLoginResponse() { Token = token });
             }
         }
         

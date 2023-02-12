@@ -13,6 +13,7 @@ public static class WalletApiSet
     {
         app.MapGet("api/wallet", Get);
         app.MapPost("api/wallet", Post);
+        app.MapPost("api/wallet/range", PostRange);
         app.MapPut("api/wallet", Put);
         app.MapDelete("api/wallet/{id:guid}", Delete);
     }
@@ -36,6 +37,12 @@ public static class WalletApiSet
     static async Task<Wallet> Post(Wallet wallet, IGateway unitOfWork)
     {
         return await unitOfWork.WalletRepository.Add(wallet);
+    }
+
+    [Authorize]
+    static async Task<IEnumerable<Wallet>> PostRange(Wallet[] wallets, IGateway unitOfWork)
+    {
+        return await unitOfWork.WalletRepository.AddRange(wallets);
     }
 
 

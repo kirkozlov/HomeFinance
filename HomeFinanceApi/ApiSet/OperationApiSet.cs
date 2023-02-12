@@ -14,6 +14,7 @@ public static class OperationApiSet
         app.MapGet("api/operation/{id:guid}", OperationApiSet.GetById);
         app.MapGet("api/operation/wallet/{walletId:guid}", OperationApiSet.GetForWallet);
         app.MapPost("api/operation", Post);
+        app.MapPost("api/operation/range", PostRange);
         app.MapPut("api/operation", Put);
         app.MapDelete("api/operation/{id:guid}", Delete);
     }
@@ -46,6 +47,12 @@ public static class OperationApiSet
     static async Task Post(Operation operation, IGateway unitOfWork)
     {
         await unitOfWork.OperationRepository.Add(operation);
+    }
+
+    [Authorize]
+    static async Task PostRange(Operation[] operations, IGateway unitOfWork)
+    {
+        await unitOfWork.OperationRepository.AddRange(operations);
     }
 
 

@@ -1,4 +1,4 @@
-﻿namespace HomeFinanceApi.Requests;
+﻿namespace HomeFinance.Domain.Requests;
 
 public class UserRegistrationRequest
 {
