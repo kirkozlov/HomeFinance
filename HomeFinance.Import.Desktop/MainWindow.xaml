@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeFinance.Import.Desktop"
-        mc:Ignorable="d"
+        mc:Ignorable="d" 
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid IsSharedSizeScope="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -23,7 +24,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="labels"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
@@ -34,6 +35,23 @@
             <TextBox  Grid.Column="1" Grid.Row="1" Margin="3" Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button Grid.Column="1" Grid.Row="2" Content="{Binding ButtonText}" Command="{Binding ButtonClickCommand}" Margin="3"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="0"  IsEnabled="{Binding LoginViewModel.IsLoggedIn}"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="labels"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="Wallet:"/>
+            <ComboBox Grid.Column="1" Grid.Row="0" Margin="3" DataContext="{Binding SelectWalletViewModel}" ItemsSource="{Binding Wallets}" SelectedValue="{Binding SelectedWallet}"  DisplayMemberPath="DisplayName" SelectedValuePath="Wallet"/>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="labels"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Grid.Row="0" Content="Open CSV" Margin="3" Command="{Binding CSVViewModel.OpenCSVCommand}" />
         </Grid>
     </Grid>
 </Window>
