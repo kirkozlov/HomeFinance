@@ -8,13 +8,15 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid IsSharedSizeScope="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="85"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0" DataContext="{Binding LoginViewModel}">
@@ -52,6 +54,46 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="1" Grid.Row="0" Content="Open CSV" Margin="3" Command="{Binding CSVViewModel.OpenCSVCommand}" />
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="3" DataContext="{Binding CSVViewModel}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="labels"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" Content="Skip lines: "/>
+            <Label Grid.Column="0" Grid.Row="1" Content="DateTime Column: "/>
+            <Label Grid.Column="0" Grid.Row="2" Content="Income Column: "/>
+            <Label Grid.Column="0" Grid.Row="3" Content="Expense Column: "/>
+            <Label Grid.Column="0" Grid.Row="4" Content="Description Columns: " 
+                   ToolTip="Format: Sometext{columnnummer1} \n {columnnummer2}"/>
+
+
+            <TextBox Grid.Column="1" Grid.Row="0" Margin="3" Text="{Binding SkipLines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="1" Grid.Row="1" Margin="3" Text="{Binding DateTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="1" Grid.Row="2" Margin="3" Text="{Binding Income, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="1" Grid.Row="3" Margin="3" Text="{Binding Expense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="1" Grid.Row="4" Margin="3" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Column="1" Grid.Row="5" Content="Refresh" Margin="3" Command="{Binding RefreshCommand}" />
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="4">
+            <DataGrid Margin="3" ItemsSource="{Binding CSVViewModel.Data}"/>
+        </Grid>
+
+
+
+        <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="4">
+            <DataGrid Margin="3" ItemsSource="{Binding CSVViewModel.ResultData}"/>
         </Grid>
     </Grid>
 </Window>
