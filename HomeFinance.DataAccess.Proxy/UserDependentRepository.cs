@@ -15,9 +15,15 @@ class UserDependentRepository<T, TKey>: IUserDependentRepository<T, TKey>
     }
 
 
-    public Task<List<T>> GetAll()
+    public async Task<List<T>> GetAll()
     {
-        throw new NotImplementedException();
+        var response = await this._client.GetAsync(this._path );
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        JsonSerializerOptions options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        return (JsonSerializer.Deserialize<IEnumerable<T>>(jsonResponse, options)!).ToList();
     }
 
     public Task<T?> GetByKey(TKey key)
