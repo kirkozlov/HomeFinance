@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Accessibility;
@@ -77,7 +78,8 @@ namespace HomeFinance.Import.Desktop
             if (!IsLoggedIn)
             {
                 this.Login();
-                this._onSuccessfullyLogin();
+                if(this.IsLoggedIn)
+                    this._onSuccessfullyLogin();
             }
             else
             {
@@ -88,8 +90,16 @@ namespace HomeFinance.Import.Desktop
 
         public void Login()
         {
-            Client.Instance.Login(Username, Password);
-            this.IsLoggedIn = true;
+            try
+            {
+                Client.Instance.Login(Username, Password);
+                this.IsLoggedIn = true;
+            }
+            catch
+            {
+                MessageBox.Show("Can not login", "Can not login");
+            }
+           
         }
 
         public bool CanClick()
@@ -295,44 +305,51 @@ namespace HomeFinance.Import.Desktop
             var incomeColumn=int.Parse(this.Income);
             var expenseColumn=int.Parse(this.Expense);
 
-
-            ResultData=this._listData.Skip(skipLines).Select(v =>
+            try
             {
-                OperationType operationType = OperationType.Income;
-                double amount;
-                if (incomeColumn == expenseColumn)
+                ResultData = this._listData.Skip(skipLines).Select(v =>
                 {
-                    amount = double.Parse(v[incomeColumn].Replace(',', '.'), CultureInfo.InvariantCulture);
-                    if (amount < 0)
-                    {
-                        operationType = OperationType.Expense;
-                        amount = Math.Abs(amount);
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(v[incomeColumn]))
+                    OperationType operationType = OperationType.Income;
+                    double amount;
+                    if (incomeColumn == expenseColumn)
                     {
                         amount = double.Parse(v[incomeColumn].Replace(',', '.'), CultureInfo.InvariantCulture);
+                        if (amount < 0)
+                        {
+                            operationType = OperationType.Expense;
+                            amount = Math.Abs(amount);
+                        }
                     }
                     else
                     {
-                        operationType = OperationType.Expense;
-                        amount = double.Parse(v[expenseColumn].Replace(',', '.'), CultureInfo.InvariantCulture);
+                        if (!string.IsNullOrEmpty(v[incomeColumn]))
+                        {
+                            amount = double.Parse(v[incomeColumn].Replace(',', '.'), CultureInfo.InvariantCulture);
+                        }
+                        else
+                        {
+                            operationType = OperationType.Expense;
+                            amount = double.Parse(v[expenseColumn].Replace(',', '.'), CultureInfo.InvariantCulture);
+                        }
                     }
-                }
 
-                var description = this.Description;
-                for (int i = 0; i < v.Count; i++)
-                {
-                    description=description.Replace("{" + i + "}", v[i]);
-                }
+                    var description = this.Description;
+                    for (int i = 0; i < v.Count; i++)
+                    {
+                        description = description.Replace("{" + i + "}", v[i]);
+                    }
 
-                description=description.Replace("\\n", "\n");
+                    description = description.Replace("\\n", "\n");
 
-                return new TransientOperation(Guid.NewGuid(), this._getSelectedWalletId(), operationType, amount,description,
-                    System.DateTime.Parse(v[dateTimeColumn]));
-            });
+                    return new TransientOperation(Guid.NewGuid(), this._getSelectedWalletId(), operationType, amount,
+                        description,
+                        System.DateTime.Parse(v[dateTimeColumn]));
+                });
+            }
+            catch
+            {
+                MessageBox.Show("Something wrong", "Something wrong");
+            }
         }
 
         bool CanRefresh()
@@ -352,10 +369,26 @@ namespace HomeFinance.Import.Desktop
         public SelectWalletViewModel SelectWalletViewModel { get; set; } = new SelectWalletViewModel();
         public CSVViewModel CSVViewModel { get; set; }
 
+        public RelayCommand SendCommand { get;  }
+
         public MainViewModel()
         {
             LoginViewModel = new LoginViewModel(SelectWalletViewModel.UpdateWallets);
             this.CSVViewModel = new CSVViewModel(() => SelectWalletViewModel.SelectedWallet.Id!.Value);
+            SendCommand = new RelayCommand(_ => this.Send());
+        }
+
+        async void Send()
+        {
+            if (!this.LoginViewModel.IsLoggedIn ||  !this.CSVViewModel.ResultData.Any())
+            {
+                MessageBox.Show("Can not send", "Can not send");
+            }
+            else
+            {
+                await Client.Instance.Gateway.TransientOperationRepository.AddRange(this.CSVViewModel.ResultData);
+                MessageBox.Show("Data sent", "Data sent");
+            }
         }
     }
 

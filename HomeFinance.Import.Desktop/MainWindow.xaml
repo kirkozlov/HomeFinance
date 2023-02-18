@@ -95,5 +95,7 @@
         <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="4">
             <DataGrid Margin="3" ItemsSource="{Binding CSVViewModel.ResultData}"/>
         </Grid>
+
+        <Button Grid.Column="2" Grid.Row="4" Content="Send" Margin="3" Command="{Binding SendCommand}" />
     </Grid>
 </Window>
