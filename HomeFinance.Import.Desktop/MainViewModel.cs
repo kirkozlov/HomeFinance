@@ -406,7 +406,10 @@ namespace HomeFinance.Import.Desktop
 
         public void Login(string username, string password)
         {
-            this._gateway=new Gateway("https://localhost:7080/api/", username, password);
+            
+            var baseUrl="https://homefinanceapi.azurewebsites.net/api/";
+            //var baseUrl= "https://localhost:7080/api";
+            this._gateway=new Gateway(baseUrl, username, password);
         }
 
         public void Logout()
