@@ -15,8 +15,15 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
 
     protected override RepeatableOperation ToDomain(HomeFinance.DataAccess.Core.DBModels.RepeatableOperation db)
     {
-
-        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution, db.RepeatableType);
+        var allTags = new List<Tag>();
+        var nextTags = db.Tags.ToList();
+        while (nextTags.Any())
+        {
+            var uniqueTags = nextTags.Where(i => !allTags.Contains(i));
+            allTags.AddRange(uniqueTags);
+            nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().ToList();
+        }
+        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, allTags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution, db.RepeatableType);
     }
 
     protected override HomeFinance.DataAccess.Core.DBModels.RepeatableOperation ToNewDb(RepeatableOperation domain, string userId)

@@ -59,7 +59,7 @@ public static class TagApiSet
     [Authorize]
     static async Task Merge(MergeTagsDto dto, IGateway unitOfWork)
     {
-        await unitOfWork.MergeTagsService.MergeTags(dto.NewName, dto.OldNames);
+        await unitOfWork.MergeTagsService.MergeTags(dto.NewName, dto.OldNames, dto.ParentTagName);
     }
 
 
