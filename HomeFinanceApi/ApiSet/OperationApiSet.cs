@@ -22,8 +22,8 @@ public static class OperationApiSet
     [Authorize]
     static async Task<IEnumerable<object>> GetAll([FromQuery] Guid? walletId, [FromQuery] long? from, [FromQuery] long? to, IGateway unitOfWork)
     {
-        var fromDt = from.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(from.Value).LocalDateTime : (DateTime?)null;
-        var toDt = to.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(to.Value).LocalDateTime : (DateTime?)null;
+        var fromDt = from.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(from.Value).DateTime : (DateTime?)null;
+        var toDt = to.HasValue ? DateTimeOffset.FromUnixTimeMilliseconds(to.Value).DateTime : (DateTime?)null;
         var operations = await unitOfWork.OperationRepository.GetForWalletAndPeriod(walletId, fromDt, toDt);
         return operations;
     }
