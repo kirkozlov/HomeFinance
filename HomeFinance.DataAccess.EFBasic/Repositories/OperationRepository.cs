@@ -17,7 +17,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataA
     protected override Operation ToDomain(HomeFinance.DataAccess.Core.DBModels.Operation db)
     {
 
-        return new Operation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, db.DateTime);
+        return new Operation(db.Id, db.WalletId, db.OperationType, db.Tags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, db.DateTime.ToUniversalTime());
     }
 
     protected override HomeFinance.DataAccess.Core.DBModels.Operation ToNewDb(Operation domain, string userId)
