@@ -76,18 +76,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    // Note: see documentation for Migrate(). They say it is mutual exclusive to EnsureCreated().
-
     HomeFinanceContextBase dc = scope.ServiceProvider.GetRequiredService<HomeFinanceContextBase>();
-    dc.Database.EnsureCreated();// This may create all tables, except the migration history.
-    try
-    {
-        dc.Database.Migrate(); // This may create the migration history table, but no further ones.
-    }
-    catch
-    {
-
-    }
+    dc.Database.Migrate(); // This may create the migration history table, but no further ones.
 }
 
 

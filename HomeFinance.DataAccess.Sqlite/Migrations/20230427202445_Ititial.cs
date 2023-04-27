@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HomeFinance.DataAccess.Sqlite.Migrations
 {
-    public partial class INITIAL : Migration
+    /// <inheritdoc />
+    public partial class Ititial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -267,6 +269,35 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TransientOperations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    WalletId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OperationType = table.Column<int>(type: "INTEGER", nullable: false),
+                    Amount = table.Column<double>(type: "REAL", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    HomeFinanceUserId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransientOperations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TransientOperations_AspNetUsers_HomeFinanceUserId",
+                        column: x => x.HomeFinanceUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TransientOperations_Wallets_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OperationTag",
                 columns: table => new
                 {
@@ -399,11 +430,22 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                 column: "HomeFinanceUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TransientOperations_HomeFinanceUserId",
+                table: "TransientOperations",
+                column: "HomeFinanceUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransientOperations_WalletId",
+                table: "TransientOperations",
+                column: "WalletId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Wallets_HomeFinanceUserId",
                 table: "Wallets",
                 column: "HomeFinanceUserId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -426,6 +468,9 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
 
             migrationBuilder.DropTable(
                 name: "RepeatableOperationTag");
+
+            migrationBuilder.DropTable(
+                name: "TransientOperations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

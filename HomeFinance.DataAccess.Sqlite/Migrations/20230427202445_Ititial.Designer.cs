@@ -11,15 +11,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeFinance.DataAccess.Sqlite.Migrations
 {
     [DbContext(typeof(HomeFinanceContext))]
-    [Migration("20230114084640_INITIAL")]
-    partial class INITIAL
+    [Migration("20230427202445_Ititial")]
+    partial class Ititial
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Operation", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.Operation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +60,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.ToTable("Operations");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.RepeatableOperation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +103,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.ToTable("RepeatableOperations");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Tag", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.Tag", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -124,7 +125,42 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Wallet", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.TransientOperation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HomeFinanceUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OperationType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HomeFinanceUserId");
+
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("TransientOperations");
+                });
+
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.Wallet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -381,7 +417,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.ToTable("RepeatableOperationTag");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Operation", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.Operation", b =>
                 {
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
@@ -389,13 +425,13 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "Wallet")
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "WalletTo")
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Wallet", "WalletTo")
                         .WithMany()
                         .HasForeignKey("WalletToId");
 
@@ -406,7 +442,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Navigation("WalletTo");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.RepeatableOperation", b =>
                 {
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
@@ -414,13 +450,13 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "Wallet")
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Wallet", "WalletTo")
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Wallet", "WalletTo")
                         .WithMany()
                         .HasForeignKey("WalletToId");
 
@@ -431,7 +467,7 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Navigation("WalletTo");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Tag", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.Tag", b =>
                 {
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
@@ -442,7 +478,26 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
                     b.Navigation("HomeFinanceUser");
                 });
 
-            modelBuilder.Entity("HomeFinanace.DataAccess.Core.DBModels.Wallet", b =>
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.TransientOperation", b =>
+                {
+                    b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
+                        .WithMany()
+                        .HasForeignKey("HomeFinanceUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Wallet", "Wallet")
+                        .WithMany()
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HomeFinanceUser");
+
+                    b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("HomeFinance.DataAccess.Core.DBModels.Wallet", b =>
                 {
                     b.HasOne("HomeFinance.Domain.Models.HomeFinanceUser", "HomeFinanceUser")
                         .WithMany()
@@ -506,13 +561,13 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
 
             modelBuilder.Entity("OperationTag", b =>
                 {
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Operation", null)
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Operation", null)
                         .WithMany()
                         .HasForeignKey("OperationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Tag", null)
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsName", "TagsOperationType")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -521,13 +576,13 @@ namespace HomeFinance.DataAccess.Sqlite.Migrations
 
             modelBuilder.Entity("RepeatableOperationTag", b =>
                 {
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.RepeatableOperation", null)
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.RepeatableOperation", null)
                         .WithMany()
                         .HasForeignKey("RepeatableOperationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HomeFinanace.DataAccess.Core.DBModels.Tag", null)
+                    b.HasOne("HomeFinance.DataAccess.Core.DBModels.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsName", "TagsOperationType")
                         .OnDelete(DeleteBehavior.Cascade)
