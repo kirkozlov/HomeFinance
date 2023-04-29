@@ -19,13 +19,14 @@ class MergeTagsService : IMergeTagsService
     }
 
 
-    public async Task<Tag> MergeTags(string newName, IEnumerable<string> oldNames)
+    public async Task<Tag> MergeTags(string newName, IEnumerable<string> oldNames, string ParentTagName)
     {
         var tags = await _homeFinanceContext.Tags.Where(i => oldNames.Contains(i.Name)).ToListAsync();
         var newTag = tags.SingleOrDefault(i => i.Name == newName);
 
 
         var oldTags = tags.Where(i => i.Name != newName);
+
 
         var operations = oldTags
             .SelectMany(i => i.Operations)
@@ -37,18 +38,24 @@ class MergeTagsService : IMergeTagsService
 
         _homeFinanceContext.Tags.RemoveRange(oldTags);
 
-
+        var operationType = tags.Select(i => i.OperationType).Distinct().Single();
         if (newTag == null)
         {
-            var operationType = tags.Select(i => i.OperationType).Distinct().Single();
             newTag = new TagDB()
             {
                 Name = newName,
                 OperationType = operationType,
+                ParentTagName=ParentTagName,
+                ParentTagOperationType=operationType,
                 SortId = tags.Min(i => i.SortId),
                 HomeFinanceUserId = _userId
             };
             newTag = (await _homeFinanceContext.Tags.AddAsync(newTag)).Entity;
+        }
+        else
+        {
+            newTag.ParentTagName = ParentTagName;
+            newTag.ParentTagOperationType = operationType;
         }
 
 
@@ -59,7 +66,7 @@ class MergeTagsService : IMergeTagsService
 
         _homeFinanceContext.SaveChanges();
 
-        return new Tag(newTag.Name, newTag.OperationType, newTag.SortId);
+        return new Tag(newTag.Name, newTag.OperationType, newTag.ParentTagName??string.Empty, newTag.SortId);
 
     }
 }

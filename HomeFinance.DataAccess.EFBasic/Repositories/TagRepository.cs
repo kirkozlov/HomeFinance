@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Tag = HomeFinance.Domain.DomainModels.Tag;
 using TagDB = HomeFinance.DataAccess.Core.DBModels.Tag;
 
@@ -12,7 +13,7 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
 
     protected override Tag ToDomain(TagDB db)
     {
-        return new Tag(db.Name, db.OperationType, db.SortId);
+        return new Tag(db.Name, db.OperationType, db.ParentTagName ?? string.Empty, db.SortId);
     }
 
     protected override TagDB ToNewDb(Tag domain, string userId)
@@ -21,6 +22,8 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         {
             Name = domain.Name,
             OperationType = domain.OperationType,
+            ParentTagName = string.IsNullOrEmpty(domain.ParentTagName)?null:domain.ParentTagName,
+            ParentTagOperationType= string.IsNullOrEmpty(domain.ParentTagName) ? null:domain.OperationType,
             SortId = domain.SortId,
             HomeFinanceUserId = userId
         };
@@ -30,6 +33,8 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
     {
         var entity = this.DataSet.Single(i => i.Name == domain.Name && i.OperationType==domain.OperationType );
         entity.OperationType = domain.OperationType;
+        entity.ParentTagName = string.IsNullOrEmpty(domain.ParentTagName) ? null : domain.ParentTagName;
+        entity.ParentTagOperationType = string.IsNullOrEmpty(domain.ParentTagName)?null:domain.OperationType;
         entity.SortId = domain.SortId;
         return entity;
     }

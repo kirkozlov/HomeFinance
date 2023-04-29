@@ -2,6 +2,6 @@
 
 namespace HomeFinance.Domain.DomainModels;
 
-public record Tag(string Name, OperationType OperationType, int SortId)
+public record Tag(string Name, OperationType OperationType, string ParentTagName, int SortId)
 {
 }

@@ -25,14 +25,14 @@ var tagsExpense = models
     .SelectMany(i => i.Tags)
     .Where(i => !string.IsNullOrWhiteSpace(i))
     .Distinct()
-    .Select(t=> new Tag(t, OperationType.Expense, 0))
+    .Select(t=> new Tag(t, OperationType.Expense,"", 0))
     .ToList();
 var tagsIncome = models
     .Where(t => t.OperationType == OperationType.Income)
     .SelectMany(i => i.Tags)
     .Where(i => !string.IsNullOrWhiteSpace(i))
     .Distinct()
-    .Select(t => new Tag(t, OperationType.Income, 0))
+    .Select(t => new Tag(t, OperationType.Income,"", 0))
     .ToList();
 
 var tags=tagsExpense.Concat(tagsIncome).ToList();
