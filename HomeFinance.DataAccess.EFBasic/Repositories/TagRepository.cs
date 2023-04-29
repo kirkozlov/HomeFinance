@@ -23,6 +23,7 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
             Name = domain.Name,
             OperationType = domain.OperationType,
             ParentTagName = string.IsNullOrEmpty(domain.ParentTagName)?null:domain.ParentTagName,
+            ParentTagOperationType= string.IsNullOrEmpty(domain.ParentTagName) ? null:domain.OperationType,
             SortId = domain.SortId,
             HomeFinanceUserId = userId
         };
@@ -33,6 +34,7 @@ class TagRepository : UserDependentRepository<Tag, TagDB, string>
         var entity = this.DataSet.Single(i => i.Name == domain.Name && i.OperationType==domain.OperationType );
         entity.OperationType = domain.OperationType;
         entity.ParentTagName = string.IsNullOrEmpty(domain.ParentTagName) ? null : domain.ParentTagName;
+        entity.ParentTagOperationType = string.IsNullOrEmpty(domain.ParentTagName)?null:domain.OperationType;
         entity.SortId = domain.SortId;
         return entity;
     }

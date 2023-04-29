@@ -38,15 +38,15 @@ class MergeTagsService : IMergeTagsService
 
         _homeFinanceContext.Tags.RemoveRange(oldTags);
 
-
+        var operationType = tags.Select(i => i.OperationType).Distinct().Single();
         if (newTag == null)
         {
-            var operationType = tags.Select(i => i.OperationType).Distinct().Single();
             newTag = new TagDB()
             {
                 Name = newName,
                 OperationType = operationType,
                 ParentTagName=ParentTagName,
+                ParentTagOperationType=operationType,
                 SortId = tags.Min(i => i.SortId),
                 HomeFinanceUserId = _userId
             };
@@ -55,6 +55,7 @@ class MergeTagsService : IMergeTagsService
         else
         {
             newTag.ParentTagName = ParentTagName;
+            newTag.ParentTagOperationType = operationType;
         }
 
 

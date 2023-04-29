@@ -20,9 +20,9 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataA
         var nextTags = db.Tags.ToList();
         while (nextTags.Any())
         {
-            var uniqueTags = nextTags.Where(i => !allTags.Contains(i));
+            var uniqueTags = nextTags.Where(i => !allTags.Contains(i)).Distinct().ToList();
             allTags.AddRange(uniqueTags);
-            nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().ToList();
+            nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().Distinct().ToList();
         }
         return new Operation(db.Id, db.WalletId, db.OperationType, allTags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, db.DateTime.ToUniversalTime());
     }

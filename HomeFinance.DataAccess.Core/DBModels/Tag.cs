@@ -10,6 +10,7 @@ public class Tag : UserDependentBase
     public virtual ICollection<Operation> Operations { get; set; }
     public virtual ICollection<RepeatableOperation> RepeatableOperation { get; set; }
     public string? ParentTagName { get; set; }
+    public OperationType? ParentTagOperationType { get; set; }
     public virtual Tag? ParentTag { get; set; }
     
     public OperationType OperationType { get; set; }
