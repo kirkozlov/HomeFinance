@@ -19,9 +19,10 @@ abstract class UserDependentCollectionRepository<T, TDb, TKey> : UserDependentRe
     DbSet<TDb> DbSet { get; }
 
     readonly Lazy<TimeZoneInfo> _timeZone;
-    protected DateTime ToLocalDateTime(DateTime utcDateTime)
+    protected DateTime ToLocalDateTime(DateTime dateTime)
     {
-        return TimeZoneInfo.ConvertTime(utcDateTime, _timeZone.Value);
+        var dateTimeUtc = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        return TimeZoneInfo.ConvertTime(dateTimeUtc, _timeZone.Value);
     }
     protected DateTime ToUtcDateTime(DateTime localDateTime)
     {
