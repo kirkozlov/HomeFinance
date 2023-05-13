@@ -1,7 +1,7 @@
 ﻿using HomeFinance.Domain.Utils;
 using HomeFinanceApi.Dto;
 using Microsoft.AspNetCore.Authorization;
-using Tag = HomeFinance.Domain.DomainModels.Tag;
+using HomeFinance.Domain.DomainModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,7 +13,7 @@ public static class TagApiSet
 
     public static void Map(WebApplication app)
     {
-        app.MapGet("api/tag", TagApiSet.Get);
+        app.MapGet("api/tag", Get);
         app.MapPost("api/tag", Post);
         app.MapPost("api/tag/range", PostRange);
         app.MapPost("api/tag/merge", Merge);

@@ -56,6 +56,7 @@ public class HomeFinanceContext : HomeFinanceContextBase
         // Add your customizations after calling base.OnModelCreating(builder);
 
         builder.Entity<Tag>().HasKey(t => new { t.Name, t.OperationType });
+        builder.Entity<UserPreferences>().HasIndex(e => e.HomeFinanceUserId).IsUnique();
     }
 
 }

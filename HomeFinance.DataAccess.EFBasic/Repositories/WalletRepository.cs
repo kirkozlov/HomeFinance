@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class WalletRepository : UserDependentRepository<Wallet, HomeFinance.DataAccess.Core.DBModels.Wallet, Guid>
+class WalletRepository : UserDependentCollectionRepository<Wallet, HomeFinance.DataAccess.Core.DBModels.Wallet, Guid>
 {
     public WalletRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Wallets, userId)
     {

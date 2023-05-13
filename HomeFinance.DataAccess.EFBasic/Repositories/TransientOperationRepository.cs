@@ -3,7 +3,7 @@ using HomeFinance.Domain.DomainModels;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class TransientOperationRepository : UserDependentRepository<TransientOperation, HomeFinance.DataAccess.Core.DBModels.TransientOperation, Guid>
+class TransientOperationRepository : UserDependentCollectionRepository<TransientOperation, HomeFinance.DataAccess.Core.DBModels.TransientOperation, Guid>
 {
     public TransientOperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.TransientOperations, userId)
     {

@@ -4,7 +4,7 @@ using HomeFinance.Domain.Repositories;
 
 namespace HomeFinance.DataAccess.Proxy;
 
-class UserDependentRepository<T, TKey>: IUserDependentRepository<T, TKey>
+class UserDependentRepository<T, TKey>: IUserDependentCollectionRepository<T, TKey>
 {
     private readonly HttpClient _client;
     private readonly string _path;

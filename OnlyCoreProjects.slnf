@@ -1,0 +1,12 @@
+{
+  "solution": {
+    "path": "HomeFinance.sln",
+    "projects": [
+      "HomeFinance.DataAccess.Core\\HomeFinance.DataAccess.Core.csproj",
+      "HomeFinance.DataAccess.EFBasic\\HomeFinance.DataAccess.EFBasic.csproj",
+      "HomeFinance.DataAccess.Sqlite\\HomeFinance.DataAccess.Sqlite.csproj",
+      "HomeFinance.Domain\\HomeFinance.Domain.csproj",
+      "HomeFinanceApi\\HomeFinanceApi.csproj"
+    ]
+  }
+}
