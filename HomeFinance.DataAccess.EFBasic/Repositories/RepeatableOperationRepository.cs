@@ -23,7 +23,7 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
             allTags.AddRange(uniqueTags);
             nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().Distinct().ToList();
         }
-        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, allTags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution, db.RepeatableType);
+        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, allTags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution.ToUniversalTime(), db.RepeatableType);
     }
 
     protected override HomeFinance.DataAccess.Core.DBModels.RepeatableOperation ToNewDb(RepeatableOperation domain, string userId)
