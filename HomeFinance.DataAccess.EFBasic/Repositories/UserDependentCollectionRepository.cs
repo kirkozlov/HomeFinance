@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using HomeFinance.DataAccess.Core.DBModels;
+using HomeFinance.DataAccess.EFBasic.Util;
 using HomeFinance.Domain.Repositories;
 using HomeFinance.Domain.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -18,22 +19,20 @@ abstract class UserDependentCollectionRepository<T, TDb, TKey> : UserDependentRe
     readonly HomeFinanceContextBase _homeFinanceContext;
     DbSet<TDb> DbSet { get; }
 
-    readonly Lazy<TimeZoneInfo> _timeZone;
-    protected DateTime ToLocalDateTime(DateTime dateTime)
-    {
-        var dateTimeUtc = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
-        return TimeZoneInfo.ConvertTime(dateTimeUtc, _timeZone.Value);
-    }
-    protected DateTime ToUtcDateTime(DateTime localDateTime)
-    {
-        var dateTimeUnspec = DateTime.SpecifyKind(localDateTime, DateTimeKind.Unspecified);
-        return TimeZoneInfo.ConvertTimeToUtc(dateTimeUnspec, _timeZone.Value);
-    }
+    protected readonly DateConverter _dateConverter;
+
+    protected DateConverter DateConverter=>_dateConverter;
+
     protected UserDependentCollectionRepository(HomeFinanceContextBase homeFinanceContext, DbSet<TDb> dbSet, string userId)
         :base(homeFinanceContext, dbSet, userId)
     {
         _homeFinanceContext = homeFinanceContext;
-        _timeZone= new Lazy<TimeZoneInfo>(()=>TimeZoneInfo.FindSystemTimeZoneById( _homeFinanceContext.UserPreferences.Single(i => i.HomeFinanceUserId==userId).TimeZoneId));
+        _dateConverter = new DateConverter(TimeZoneInfo
+                              .FindSystemTimeZoneById(_homeFinanceContext
+                                                .UserPreferences
+                                                .Single(i => i.HomeFinanceUserId == userId)
+                                                .TimeZoneId)
+                    );
         DbSet = dbSet;
     }
 

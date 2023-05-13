@@ -24,7 +24,7 @@ class OperationRepository : UserDependentCollectionRepository<Operation, HomeFin
             allTags.AddRange(uniqueTags);
             nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().Distinct().ToList();
         }
-        return new Operation(db.Id, db.WalletId, db.OperationType, allTags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, ToLocalDateTime(db.DateTime));
+        return new Operation(db.Id, db.WalletId, db.OperationType, allTags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, DateConverter.ToLocalDateTime(db.DateTime));
     }
 
     protected override HomeFinance.DataAccess.Core.DBModels.Operation ToNewDb(Operation domain, string userId)
@@ -39,7 +39,7 @@ class OperationRepository : UserDependentCollectionRepository<Operation, HomeFin
             WalletToId = domain.WalletToId,
             Amount = domain.Amount,
             Comment = domain.Comment,
-            DateTime = ToUtcDateTime( domain.DateTime),
+            DateTime = DateConverter.ToUtcDateTime( domain.DateTime),
             HomeFinanceUserId = userId
         };
     }
@@ -56,7 +56,7 @@ class OperationRepository : UserDependentCollectionRepository<Operation, HomeFin
         entity.WalletToId = domain.WalletToId;
         entity.Amount = domain.Amount;
         entity.Comment = domain.Comment;
-        entity.DateTime = ToUtcDateTime(domain.DateTime);
+        entity.DateTime = DateConverter.ToUtcDateTime(domain.DateTime);
 
         return entity;
     }
