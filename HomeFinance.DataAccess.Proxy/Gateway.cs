@@ -11,11 +11,11 @@ namespace HomeFinance.DataAccess.Proxy;
 
 public class Gateway : IGateway
 {
-    public IUserDependentRepository<Tag, string> TagRepository { get; }
+    public IUserDependentCollectionRepository<Tag, string> TagRepository { get; }
     public IOperationRepository OperationRepository { get; }
-    public IUserDependentRepository<Wallet, Guid> WalletRepository { get; }
-    public IUserDependentRepository<RepeatableOperation, Guid> RepeatableOperationRepository { get; }
-    public IUserDependentRepository<TransientOperation, Guid> TransientOperationRepository { get; }
+    public IUserDependentCollectionRepository<Wallet, Guid> WalletRepository { get; }
+    public IUserDependentCollectionRepository<RepeatableOperation, Guid> RepeatableOperationRepository { get; }
+    public IUserDependentCollectionRepository<TransientOperation, Guid> TransientOperationRepository { get; }
     public IMergeTagsService MergeTagsService => throw new NotImplementedException();
 
     private readonly HttpClient _client = new HttpClient();

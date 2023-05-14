@@ -5,7 +5,7 @@ using Tag = HomeFinance.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class RepeatableOperationRepository : UserDependentRepository<RepeatableOperation, HomeFinance.DataAccess.Core.DBModels.RepeatableOperation, Guid>
+class RepeatableOperationRepository : UserDependentCollectionRepository<RepeatableOperation, HomeFinance.DataAccess.Core.DBModels.RepeatableOperation, Guid>
 {
     readonly DbSet<Tag> _tags;
     public RepeatableOperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.RepeatableOperations, userId)
@@ -23,7 +23,7 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
             allTags.AddRange(uniqueTags);
             nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().Distinct().ToList();
         }
-        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, allTags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, db.NextExecution.ToUniversalTime(), db.RepeatableType);
+        return new RepeatableOperation(db.Id, db.WalletId, db.OperationType, allTags.Select(i => i.Name).ToList(), db.Amount, db.Comment, db.WalletToId, DateConverter.ToLocalDateTime( db.NextExecution), db.RepeatableType);
     }
 
     protected override HomeFinance.DataAccess.Core.DBModels.RepeatableOperation ToNewDb(RepeatableOperation domain, string userId)
@@ -38,7 +38,7 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
             WalletToId = domain.WalletToId,
             Amount = domain.Amount,
             Comment = domain.Comment,
-            NextExecution = domain.NextExecution,
+            NextExecution = DateConverter.ToUtcDateTime( domain.NextExecution),
             RepeatableType = domain.RepeatableType,
             HomeFinanceUserId = userId
         };
@@ -56,7 +56,7 @@ class RepeatableOperationRepository : UserDependentRepository<RepeatableOperatio
         entity.WalletToId = domain.WalletToId;
         entity.Amount = domain.Amount;
         entity.Comment = domain.Comment;
-        entity.NextExecution = domain.NextExecution;
+        entity.NextExecution = DateConverter.ToUtcDateTime(domain.NextExecution);
         entity.RepeatableType = domain.RepeatableType;
 
         return entity;

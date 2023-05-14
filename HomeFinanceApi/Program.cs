@@ -101,6 +101,7 @@ WalletApiSet.Map(app);
 OperationApiSet.Map(app);
 TransientOperationApiSet.Map(app);
 RepeatableOperationApiSet.Map(app);
+UserPreferencesApiSet.Map(app);
 app.MapGet("", () =>
 {
     return Results.Redirect("http://lemon-dune-01d325903.2.azurestaticapps.net");

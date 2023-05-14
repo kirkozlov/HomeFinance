@@ -6,7 +6,7 @@ using Tag = HomeFinance.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataAccess.Core.DBModels.Operation, Guid>, IOperationRepository
+class OperationRepository : UserDependentCollectionRepository<Operation, HomeFinance.DataAccess.Core.DBModels.Operation, Guid>, IOperationRepository
 {
     readonly DbSet<Tag> _tags;
     public OperationRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Operations, userId)
@@ -24,7 +24,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataA
             allTags.AddRange(uniqueTags);
             nextTags = uniqueTags.Select(i => i.ParentTag).OfType<Tag>().Distinct().ToList();
         }
-        return new Operation(db.Id, db.WalletId, db.OperationType, allTags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, db.DateTime.ToUniversalTime());
+        return new Operation(db.Id, db.WalletId, db.OperationType, allTags.Select(i=>i.Name).ToList(),db.Amount, db.Comment, db.WalletToId, DateConverter.ToLocalDateTime(db.DateTime));
     }
 
     protected override HomeFinance.DataAccess.Core.DBModels.Operation ToNewDb(Operation domain, string userId)
@@ -39,7 +39,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataA
             WalletToId = domain.WalletToId,
             Amount = domain.Amount,
             Comment = domain.Comment,
-            DateTime = domain.DateTime,
+            DateTime = DateConverter.ToUtcDateTime( domain.DateTime),
             HomeFinanceUserId = userId
         };
     }
@@ -56,7 +56,7 @@ class OperationRepository : UserDependentRepository<Operation, HomeFinance.DataA
         entity.WalletToId = domain.WalletToId;
         entity.Amount = domain.Amount;
         entity.Comment = domain.Comment;
-        entity.DateTime = domain.DateTime;
+        entity.DateTime = DateConverter.ToUtcDateTime(domain.DateTime);
 
         return entity;
     }

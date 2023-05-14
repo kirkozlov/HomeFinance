@@ -5,7 +5,7 @@ using TagDB = HomeFinance.DataAccess.Core.DBModels.Tag;
 
 namespace HomeFinance.DataAccess.EFBasic.Repositories;
 
-class TagRepository : UserDependentRepository<Tag, TagDB, string>
+class TagRepository : UserDependentCollectionRepository<Tag, TagDB, string>
 {
     public TagRepository(HomeFinanceContextBase homeFinanceContext, string userId) : base(homeFinanceContext, homeFinanceContext.Tags, userId)
     {
